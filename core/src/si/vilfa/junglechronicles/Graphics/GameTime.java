@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Graphics;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Graphics
  **/
-public class Renderer
+public class GameTime
 {
 
 }

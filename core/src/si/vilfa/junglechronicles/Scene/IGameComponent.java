@@ -5,6 +5,9 @@ package si.vilfa.junglechronicles.Scene;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Scene
  **/
-public class Level
+public abstract class IGameComponent
 {
+	public IGameComponent() {}
+
+	protected abstract void init();
 }

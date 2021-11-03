@@ -5,6 +5,6 @@ package si.vilfa.junglechronicles.Physics;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public class PhysicsEngine
+public interface IMove
 {
 }
