@@ -1,21 +1,29 @@
 package si.vilfa.junglechronicles.Player.Human;
 
-import si.vilfa.junglechronicles.Scene.IGameComponent;
+import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.Human
  **/
-public class HumanPlayer extends IGameComponent
+public class HumanPlayer extends DrawableGameComponent
 {
-	public HumanPlayer()
+	@Override
+	public void initialize()
 	{
-		super();
+
 	}
 
 	@Override
-	protected void init()
+	public void draw(GameTime gameTime)
+	{
+
+	}
+
+	@Override
+	public void update(GameTime gameTime)
 	{
 
 	}

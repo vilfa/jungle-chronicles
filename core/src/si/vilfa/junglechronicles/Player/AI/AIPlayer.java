@@ -1,21 +1,23 @@
 package si.vilfa.junglechronicles.Player.AI;
 
-import si.vilfa.junglechronicles.Scene.IGameComponent;
+import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.AI
  **/
-public class AIPlayer extends IGameComponent
+public class AIPlayer extends GameComponent
 {
-	public AIPlayer()
+	@Override
+	public void initialize()
 	{
-		super();
+
 	}
 
 	@Override
-	protected void init()
+	public void update(GameTime gameTime)
 	{
 
 	}

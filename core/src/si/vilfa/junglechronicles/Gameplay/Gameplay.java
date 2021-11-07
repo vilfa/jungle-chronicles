@@ -3,7 +3,7 @@ package si.vilfa.junglechronicles.Gameplay;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
-import si.vilfa.junglechronicles.Scene.Level;
+import si.vilfa.junglechronicles.Scene.Levels.Level;
 
 /**
  * @author luka
