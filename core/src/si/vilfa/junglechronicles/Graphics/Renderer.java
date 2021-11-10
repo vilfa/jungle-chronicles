@@ -17,16 +17,28 @@ public class Renderer implements IScreenAdapter
 
 	private final Camera camera;
 	private final Viewport viewport;
+	private final GameTime gameTime;
 
-	public Renderer()
+	public Renderer(GameTime gameTime)
 	{
-		this(new OrthographicCamera(), new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT));
+		this(new OrthographicCamera(), new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT), gameTime);
 	}
 
-	public Renderer(Camera camera, Viewport viewport)
+	public Renderer(Camera camera, Viewport viewport, GameTime gameTime)
 	{
 		this.camera = camera;
 		this.viewport = viewport;
+		this.gameTime = gameTime;
+	}
+
+	public static float getMinWorldWidth()
+	{
+		return Renderer.MIN_WORLD_WIDTH;
+	}
+
+	public static float getMinWorldHeight()
+	{
+		return Renderer.MIN_WORLD_HEIGHT;
 	}
 
 	@Override
@@ -39,15 +51,5 @@ public class Renderer implements IScreenAdapter
 	public Viewport getViewport()
 	{
 		return this.viewport;
-	}
-
-	public static float getMinWorldWidth()
-	{
-		return Renderer.MIN_WORLD_WIDTH;
-	}
-
-	public static float getMinWorldHeight()
-	{
-		return Renderer.MIN_WORLD_HEIGHT;
 	}
 }

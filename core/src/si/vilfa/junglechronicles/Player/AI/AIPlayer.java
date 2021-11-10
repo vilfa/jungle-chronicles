@@ -1,6 +1,6 @@
 package si.vilfa.junglechronicles.Player.AI;
 
-import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
@@ -8,17 +8,11 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.AI
  **/
-public class AIPlayer extends GameComponent
+public abstract class AIPlayer extends DrawableGameComponent
 {
 	@Override
-	public void initialize()
-	{
-
-	}
+	public abstract void draw(GameTime gameTime);
 
 	@Override
-	public void update(GameTime gameTime)
-	{
-
-	}
+	public abstract void update(GameTime gameTime);
 }

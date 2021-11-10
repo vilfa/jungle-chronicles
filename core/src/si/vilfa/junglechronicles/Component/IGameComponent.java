@@ -7,5 +7,5 @@ package si.vilfa.junglechronicles.Component;
  **/
 public interface IGameComponent
 {
-	void initialize();
+	void initialize(int updateOrder, boolean isUpdatable);
 }

@@ -13,7 +13,11 @@ public abstract class GameComponent implements IUpdatable, IGameComponent
 	protected int updateOrder;
 
 	@Override
-	public abstract void initialize();
+	public void initialize(int updateOrder, boolean isUpdatable)
+	{
+		this.updateOrder = updateOrder;
+		this.isUpdatable = isUpdatable;
+	}
 
 	@Override
 	public abstract void update(GameTime gameTime);

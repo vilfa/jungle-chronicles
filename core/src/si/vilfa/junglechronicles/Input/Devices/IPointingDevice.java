@@ -5,7 +5,10 @@ package si.vilfa.junglechronicles.Input.Devices;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Input.Devices
  **/
-public interface IMouse
+public interface IPointingDevice
 {
 	boolean hasMouse();
+
+	boolean hasMultitouchScreen();
+
 }

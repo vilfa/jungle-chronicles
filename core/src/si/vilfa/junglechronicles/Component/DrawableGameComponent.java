@@ -7,15 +7,28 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public abstract class DrawableGameComponent implements IDrawable, IUpdatable, IGameComponent
+public abstract class DrawableGameComponent implements IDrawable, IUpdatable
 {
 	protected boolean isDrawable;
 	protected boolean isUpdatable;
+
 	protected int drawOrder;
 	protected int updateOrder;
 
 	@Override
-	public abstract void initialize();
+	public void initialize(int updateOrder, boolean isUpdatable)
+	{
+		this.updateOrder = updateOrder;
+		this.isUpdatable = isUpdatable;
+	}
+
+	@Override
+	public void initializeDrawable(int updateOrder, boolean isUpdatable, int drawOrder, boolean isDrawable)
+	{
+		this.initialize(updateOrder, isUpdatable);
+		this.drawOrder = drawOrder;
+		this.isDrawable = isDrawable;
+	}
 
 	@Override
 	public abstract void draw(GameTime gameTime);

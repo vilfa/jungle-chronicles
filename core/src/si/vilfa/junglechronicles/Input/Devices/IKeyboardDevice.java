@@ -5,8 +5,10 @@ package si.vilfa.junglechronicles.Input.Devices;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Input.Devices
  **/
-public interface IOnScreenKeyboard
+public interface IKeyboardDevice
 {
+	boolean hasHardwareKeyboard();
+
 	boolean hasOnScreenKeyboard();
 
 	void showOnScreenKeyboard();

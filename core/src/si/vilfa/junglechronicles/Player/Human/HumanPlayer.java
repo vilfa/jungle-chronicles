@@ -8,23 +8,11 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.Human
  **/
-public class HumanPlayer extends DrawableGameComponent
+public abstract class HumanPlayer extends DrawableGameComponent
 {
 	@Override
-	public void initialize()
-	{
-
-	}
+	public abstract void draw(GameTime gameTime);
 
 	@Override
-	public void draw(GameTime gameTime)
-	{
-
-	}
-
-	@Override
-	public void update(GameTime gameTime)
-	{
-
-	}
+	public abstract void update(GameTime gameTime);
 }

@@ -4,12 +4,9 @@ import com.badlogic.gdx.math.Vector;
 
 /**
  * @author luka
- * @date 07/11/2021
+ * @date 08/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface IPosition<T extends Vector<T>>
+public interface IPhysicsActor<T extends Vector<T>> extends ICollidable, IMovable<T>, IMass
 {
-	T getPosition();
-
-	void setPosition(T position);
 }
