@@ -15,12 +15,12 @@ public class MouseMovedInputEvent extends InputEvent
 
 	public int getScreenX()
 	{
-		return this.screenX;
+		return screenX;
 	}
 
 	public int getScreenY()
 	{
-		return this.screenY;
+		return screenY;
 	}
 
 	@Override

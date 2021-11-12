@@ -19,5 +19,5 @@ public interface IDrawableComponent extends IComponent
 
 	boolean getDrawableEnabled();
 
-	void setDrawableEnabled(boolean enabled);
+	void setDrawableEnabled(boolean isDrawable);
 }

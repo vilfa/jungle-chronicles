@@ -15,12 +15,12 @@ public class ScrolledInputEvent extends InputEvent
 
 	public float getAmountX()
 	{
-		return this.amountX;
+		return amountX;
 	}
 
 	public float getAmountY()
 	{
-		return this.amountY;
+		return amountY;
 	}
 
 	@Override

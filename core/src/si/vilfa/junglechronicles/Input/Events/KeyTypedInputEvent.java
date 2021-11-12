@@ -14,7 +14,7 @@ public class KeyTypedInputEvent extends InputEvent
 
 	public char getCharacter()
 	{
-		return this.character;
+		return character;
 	}
 
 	@Override

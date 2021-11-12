@@ -17,22 +17,22 @@ public class TouchUpInputEvent extends InputEvent
 
 	public int getScreenX()
 	{
-		return this.screenX;
+		return screenX;
 	}
 
 	public int getScreenY()
 	{
-		return this.screenY;
+		return screenY;
 	}
 
 	public int getPointer()
 	{
-		return this.pointer;
+		return pointer;
 	}
 
 	public int getButton()
 	{
-		return this.button;
+		return button;
 	}
 
 	@Override

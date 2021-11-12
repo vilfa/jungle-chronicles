@@ -25,7 +25,7 @@ public abstract class GameComponent implements IComponent, IUpdatable, IDisposab
 	@Override
 	public int getUpdateOrder()
 	{
-		return this.updateOrder;
+		return updateOrder;
 	}
 
 	@Override
@@ -37,13 +37,13 @@ public abstract class GameComponent implements IComponent, IUpdatable, IDisposab
 	@Override
 	public boolean getUpdatableEnabled()
 	{
-		return this.isUpdatable;
+		return isUpdatable;
 	}
 
 	@Override
-	public void setUpdatableEnabled(boolean enabled)
+	public void setUpdatableEnabled(boolean isUpdatable)
 	{
-		this.isUpdatable = enabled;
+		this.isUpdatable = isUpdatable;
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public abstract class DrawableGameComponent implements IDrawableComponent, IUpda
 	@Override
 	public int getDrawOrder()
 	{
-		return this.drawOrder;
+		return drawOrder;
 	}
 
 	@Override
@@ -48,13 +48,13 @@ public abstract class DrawableGameComponent implements IDrawableComponent, IUpda
 	@Override
 	public boolean getDrawableEnabled()
 	{
-		return this.isDrawable;
+		return isDrawable;
 	}
 
 	@Override
-	public void setDrawableEnabled(boolean enabled)
+	public void setDrawableEnabled(boolean isDrawable)
 	{
-		this.isDrawable = enabled;
+		this.isDrawable = isDrawable;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public abstract class DrawableGameComponent implements IDrawableComponent, IUpda
 	@Override
 	public int getUpdateOrder()
 	{
-		return this.updateOrder;
+		return updateOrder;
 	}
 
 	@Override
@@ -78,12 +78,12 @@ public abstract class DrawableGameComponent implements IDrawableComponent, IUpda
 	@Override
 	public boolean getUpdatableEnabled()
 	{
-		return this.isUpdatable;
+		return isUpdatable;
 	}
 
 	@Override
-	public void setUpdatableEnabled(boolean enabled)
+	public void setUpdatableEnabled(boolean isUpdatable)
 	{
-		this.isUpdatable = enabled;
+		this.isUpdatable = isUpdatable;
 	}
 }

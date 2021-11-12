@@ -34,24 +34,24 @@ public class SimpleScene extends GameComponent implements IScene
 	@Override
 	public void addItem(Object item)
 	{
-		this.items.add(item);
+		items.add(item);
 	}
 
 	@Override
 	public void removeItem(Object item)
 	{
-		this.items.remove(item);
+		items.remove(item);
 	}
 
 	@Override
 	public List<Object> getItems()
 	{
-		return this.items;
+		return items;
 	}
 
 	@Override
 	public void clear()
 	{
-		this.items.clear();
+		items.clear();
 	}
 }

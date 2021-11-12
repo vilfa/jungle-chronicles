@@ -30,6 +30,6 @@ public abstract class GameLevel extends GameComponent
 
 	public SimpleScene getScene()
 	{
-		return this.scene;
+		return scene;
 	}
 }

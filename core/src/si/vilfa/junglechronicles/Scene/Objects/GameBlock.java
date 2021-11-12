@@ -30,7 +30,7 @@ public abstract class GameBlock extends GameComponent implements IPhysicsActor<V
 	@Override
 	public float getMass()
 	{
-		return this.mass;
+		return mass;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public abstract class GameBlock extends GameComponent implements IPhysicsActor<V
 	@Override
 	public BoundingBox getBoundingBox()
 	{
-		return this.boundingBox;
+		return boundingBox;
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public abstract class GameBlock extends GameComponent implements IPhysicsActor<V
 	@Override
 	public boolean isCollided(BoundingBox other)
 	{
-		return this.boundingBox.intersects(other);
+		return boundingBox.intersects(other);
 	}
 
 	@Override
 	public Vector2 getPosition()
 	{
-		return this.position;
+		return position;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public abstract class GameBlock extends GameComponent implements IPhysicsActor<V
 	@Override
 	public Vector2 getVelocity()
 	{
-		return this.velocity;
+		return velocity;
 	}
 
 	@Override

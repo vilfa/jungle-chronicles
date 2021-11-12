@@ -17,5 +17,5 @@ public interface IUpdatable
 
 	boolean getUpdatableEnabled();
 
-	void setUpdatableEnabled(boolean enabled);
+	void setUpdatableEnabled(boolean isUpdatable);
 }

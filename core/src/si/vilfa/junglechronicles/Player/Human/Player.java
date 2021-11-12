@@ -96,7 +96,7 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	@Override
 	public float getMass()
 	{
-		return this.mass;
+		return mass;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	@Override
 	public Vector2 getPosition()
 	{
-		return this.position;
+		return position;
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	@Override
 	public Vector2 getVelocity()
 	{
-		return this.velocity;
+		return velocity;
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	@Override
 	public BoundingBox getBoundingBox()
 	{
-		return this.boundingBox;
+		return boundingBox;
 	}
 
 	@Override
@@ -144,6 +144,6 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	@Override
 	public boolean isCollided(BoundingBox other)
 	{
-		return this.boundingBox.intersects(other);
+		return boundingBox.intersects(other);
 	}
 }

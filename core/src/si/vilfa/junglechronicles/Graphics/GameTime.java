@@ -20,25 +20,25 @@ public class GameTime implements ITimeProvider
 	@Override
 	public long getElapsedGameTimeMillis()
 	{
-		return TimeUtils.timeSinceMillis(this.startGameTime);
+		return TimeUtils.timeSinceMillis(startGameTime);
 	}
 
 	@Override
 	public long getElapsedGameTimeSeconds()
 	{
-		return TimeUtils.timeSinceMillis(this.startGameTime) / 1000;
+		return TimeUtils.timeSinceMillis(startGameTime) / 1000;
 	}
 
 	@Override
 	public long getStartGameTimeMillis()
 	{
-		return this.startGameTime;
+		return startGameTime;
 	}
 
 	@Override
 	public long getStartGameTimeSeconds()
 	{
-		return this.startGameTime / 1000;
+		return startGameTime / 1000;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class KeyUpInputEvent extends InputEvent
 
 	public int getKeyCode()
 	{
-		return this.keycode;
+		return keycode;
 	}
 
 	@Override

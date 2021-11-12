@@ -16,17 +16,17 @@ public class TouchDraggedInputEvent extends InputEvent
 
 	public int getScreenX()
 	{
-		return this.screenX;
+		return screenX;
 	}
 
 	public int getScreenY()
 	{
-		return this.screenY;
+		return screenY;
 	}
 
 	public int getPointer()
 	{
-		return this.pointer;
+		return pointer;
 	}
 
 	@Override

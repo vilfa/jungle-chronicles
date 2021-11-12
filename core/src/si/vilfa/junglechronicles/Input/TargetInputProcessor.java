@@ -51,36 +51,36 @@ public abstract class TargetInputProcessor<T extends IInputEventReceiver> implem
 	@Override
 	public boolean hasHardwareKeyboard()
 	{
-		return this.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard);
+		return input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard);
 	}
 
 	@Override
 	public boolean hasOnScreenKeyboard()
 	{
-		return this.input.isPeripheralAvailable(Input.Peripheral.OnscreenKeyboard);
+		return input.isPeripheralAvailable(Input.Peripheral.OnscreenKeyboard);
 	}
 
 	@Override
 	public void showOnScreenKeyboard()
 	{
-		this.input.setOnscreenKeyboardVisible(true);
+		input.setOnscreenKeyboardVisible(true);
 	}
 
 	@Override
 	public void hideOnScreenKeyboard()
 	{
-		this.input.setOnscreenKeyboardVisible(false);
+		input.setOnscreenKeyboardVisible(false);
 	}
 
 	@Override
 	public boolean hasMouse()
 	{
-		return this.input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen);
+		return input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen);
 	}
 
 	@Override
 	public boolean hasMultitouchScreen()
 	{
-		return this.input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen);
+		return input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen);
 	}
 }

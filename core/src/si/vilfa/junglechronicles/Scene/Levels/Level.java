@@ -30,6 +30,6 @@ public class Level extends GameLevel
 	@Override
 	public void dispose()
 	{
-		this.scene.dispose();
+		scene.dispose();
 	}
 }
