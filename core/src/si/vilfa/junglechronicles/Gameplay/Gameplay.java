@@ -26,11 +26,11 @@ public class Gameplay
 	public Gameplay()
 	{
 		this.gameTime = new GameTime();
-		this.renderer = new Renderer(this.gameTime);
-		this.player = new Player();
-		this.inputMultiplexer = new InputMultiplexer(new PlayerInputProcessor(this.player));
-		this.physics = new PhysicsEngine();
 		this.level = new Level();
+		this.player = new Player();
+		this.physics = new PhysicsEngine();
+		this.renderer = new Renderer(this.gameTime, this.level);
+		this.inputMultiplexer = new InputMultiplexer(new PlayerInputProcessor(this.player));
 
 		Gdx.input.setInputProcessor(this.inputMultiplexer);
 	}

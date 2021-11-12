@@ -4,6 +4,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Graphics.GameTime;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author luka
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  **/
 public class SimpleScene extends GameComponent implements IScene
 {
-	private final ArrayList<Object> items;
+	protected final ArrayList<Object> items;
 
 	public SimpleScene()
 	{
@@ -26,6 +27,11 @@ public class SimpleScene extends GameComponent implements IScene
 	}
 
 	@Override
+	public void dispose()
+	{
+	}
+
+	@Override
 	public void addItem(Object item)
 	{
 		this.items.add(item);
@@ -35,6 +41,12 @@ public class SimpleScene extends GameComponent implements IScene
 	public void removeItem(Object item)
 	{
 		this.items.remove(item);
+	}
+
+	@Override
+	public List<Object> getItems()
+	{
+		return this.items;
 	}
 
 	@Override

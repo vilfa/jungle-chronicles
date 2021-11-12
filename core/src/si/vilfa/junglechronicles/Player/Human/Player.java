@@ -27,11 +27,70 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 
 	public Player(Vector2 position, Vector2 velocity, float mass, BoundingBox boundingBox)
 	{
-		this.initializeDrawable(0, true, 0, true);
+		this.initialize(0, true);
 		this.position = position;
 		this.velocity = velocity;
 		this.mass = mass;
 		this.boundingBox = boundingBox;
+	}
+
+	@Override
+	public void update(GameTime gameTime)
+	{
+	}
+
+	@Override
+	public void dispose()
+	{
+
+	}
+
+	@Override
+	public void handleKeyDown(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleKeyUp(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleKeyTyped(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleTouchDown(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleTouchUp(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleTouchDragged(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleMouseMoved(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
+	}
+
+	@Override
+	public void handleScrolled(InputEvent event)
+	{
+		Gdx.app.debug(Player.class.getName(), "Input event received: " + event);
 	}
 
 	@Override
@@ -44,16 +103,6 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	public void setMass(float mass)
 	{
 		this.mass = mass;
-	}
-
-	@Override
-	public void draw(GameTime gameTime)
-	{
-	}
-
-	@Override
-	public void update(GameTime gameTime)
-	{
 	}
 
 	@Override
@@ -96,53 +145,5 @@ public class Player extends HumanPlayer implements IPhysicsActor<Vector2>, IInpu
 	public boolean isCollided(BoundingBox other)
 	{
 		return this.boundingBox.intersects(other);
-	}
-
-	@Override
-	public void handleKeyDown(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler",  "Input event received:" + event);
-	}
-
-	@Override
-	public void handleKeyUp(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleKeyTyped(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleTouchDown(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleTouchUp(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleTouchDragged(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleMouseMoved(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
-	}
-
-	@Override
-	public void handleScrolled(InputEvent event)
-	{
-		Gdx.app.log("Player::InputEvent::handler", "Input event received:" + event);
 	}
 }

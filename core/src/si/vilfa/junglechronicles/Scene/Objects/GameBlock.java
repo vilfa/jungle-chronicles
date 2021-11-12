@@ -2,7 +2,7 @@ package si.vilfa.junglechronicles.Scene.Objects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Graphics.GameTime;
 import si.vilfa.junglechronicles.Physics.IPhysicsActor;
 
@@ -11,21 +11,16 @@ import si.vilfa.junglechronicles.Physics.IPhysicsActor;
  * @date 08/11/2021
  * @package si.vilfa.junglechronicles.Scene.Objects
  **/
-public class GrassBlock extends DrawableGameComponent implements IPhysicsActor<Vector2>
+public abstract class GameBlock extends GameComponent implements IPhysicsActor<Vector2>
 {
-	private Vector2 position;
-	private Vector2 velocity;
-	private float mass;
-	private BoundingBox boundingBox;
+	protected Vector2 position;
+	protected Vector2 velocity;
+	protected float mass;
+	protected BoundingBox boundingBox;
 
-	public GrassBlock()
+	public GameBlock(Vector2 position, Vector2 velocity, float mass, BoundingBox boundingBox)
 	{
-		this(new Vector2(0, 0), new Vector2(0, 0), 1, new BoundingBox());
-	}
-
-	public GrassBlock(Vector2 position, Vector2 velocity, float mass, BoundingBox boundingBox)
-	{
-		this.initializeDrawable(1, true, 1, true);
+		this.initialize(1, true);
 		this.position = position;
 		this.velocity = velocity;
 		this.mass = mass;
@@ -45,16 +40,7 @@ public class GrassBlock extends DrawableGameComponent implements IPhysicsActor<V
 	}
 
 	@Override
-	public void draw(GameTime gameTime)
-	{
-
-	}
-
-	@Override
-	public void update(GameTime gameTime)
-	{
-
-	}
+	public abstract void update(GameTime gameTime);
 
 	@Override
 	public BoundingBox getBoundingBox()

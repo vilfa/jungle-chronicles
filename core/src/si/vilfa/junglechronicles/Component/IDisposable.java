@@ -2,10 +2,10 @@ package si.vilfa.junglechronicles.Component;
 
 /**
  * @author luka
- * @date 03/11/2021
+ * @date 12/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public interface IGameComponent
+public interface IDisposable
 {
-	void initialize(int updateOrder, boolean isUpdatable);
+	void dispose();
 }

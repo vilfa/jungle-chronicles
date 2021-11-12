@@ -7,7 +7,7 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  * @date 04/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public interface IDrawable extends IGameComponent
+public interface IDrawableComponent extends IComponent
 {
 	void initializeDrawable(int updateOrder, boolean isUpdatable, int drawOrder, boolean isDrawable);
 
