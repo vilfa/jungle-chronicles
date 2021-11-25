@@ -2,12 +2,12 @@ package si.vilfa.junglechronicles.Physics;
 
 /**
  * @author luka
- * @date 09/11/2021
+ * @date 25/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface IMass
+public interface Rotation
 {
-	float getMass();
+	float getRotation();
 
-	void setMass(float mass);
+	void setRotation(float rotation);
 }

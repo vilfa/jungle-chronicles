@@ -9,6 +9,7 @@ public class MouseMovedInputEvent extends InputEvent
 {
 	public MouseMovedInputEvent(int screenX, int screenY)
 	{
+		super();
 		this.screenX = screenX;
 		this.screenY = screenY;
 	}

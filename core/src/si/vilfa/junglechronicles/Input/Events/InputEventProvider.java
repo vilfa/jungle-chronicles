@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Input.Events;
  * @date 09/11/2021
  * @package si.vilfa.junglechronicles.Input.Events
  **/
-public interface IInputEventProvider
+public interface InputEventProvider
 {
 	InputEventType getInputEventType();
 }

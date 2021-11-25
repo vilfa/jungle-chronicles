@@ -1,7 +1,6 @@
 package si.vilfa.junglechronicles.Scene.Levels;
 
 import com.badlogic.gdx.math.Vector2;
-import si.vilfa.junglechronicles.Graphics.GameTime;
 import si.vilfa.junglechronicles.Scene.SimpleScene;
 
 /**
@@ -16,15 +15,12 @@ public class Level extends GameLevel
 		super(new SimpleScene(), new Vector2(0, 0));
 	}
 
-	public Level(SimpleScene scene, Vector2 playerSpawn)
-	{
-		super(scene, playerSpawn);
-	}
-
 	@Override
-	public void update(GameTime gameTime)
+	public void update()
 	{
+		if (!isUpdatable) {return;}
 
+		scene.update();
 	}
 
 	@Override

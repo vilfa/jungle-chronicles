@@ -1,8 +1,6 @@
 package si.vilfa.junglechronicles.Scene.Objects;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import si.vilfa.junglechronicles.Graphics.GameTime;
+import com.badlogic.gdx.physics.box2d.Body;
 
 /**
  * @author luka
@@ -11,15 +9,15 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  **/
 public class GoldCollectible extends GameCollectible
 {
-	public GoldCollectible(Vector2 position, Vector2 velocity, float mass, BoundingBox boundingBox)
+	public GoldCollectible(Body body)
 	{
-		super(position, velocity, mass, boundingBox);
+		super(body);
 	}
 
 	@Override
-	public void update(GameTime gameTime)
+	public void update()
 	{
-
+		if (!isUpdatable) {return;}
 	}
 
 	@Override

@@ -5,6 +5,6 @@ package si.vilfa.junglechronicles.Input.Devices;
  * @date 09/11/2021
  * @package si.vilfa.junglechronicles.Input.Devices
  **/
-public interface IDeviceInput extends IKeyboardDevice, IPointingDevice
+public interface DeviceInput extends KeyboardDevice, PointingDevice
 {
 }

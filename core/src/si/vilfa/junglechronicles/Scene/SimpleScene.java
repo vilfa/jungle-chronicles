@@ -1,34 +1,49 @@
 package si.vilfa.junglechronicles.Scene;
 
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Graphics.GameTime;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author luka
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Scene
  **/
-public class SimpleScene extends GameComponent implements IScene
+public class SimpleScene extends GameComponent implements Scene
 {
 	protected final ArrayList<Object> items;
 
 	public SimpleScene()
 	{
+		super();
 		this.initialize(0, true);
 		this.items = new ArrayList<>();
 	}
 
 	@Override
-	public void update(GameTime gameTime)
+	public void update()
 	{
+		if (!isUpdatable) {return;}
+
+		for (Object item : items)
+		{
+			if (item instanceof GameComponent)
+			{
+				((GameComponent) item).update();
+			}
+		}
 	}
 
 	@Override
 	public void dispose()
 	{
+		for (Object item : items)
+		{
+			if (item instanceof GameComponent)
+			{
+				((GameComponent) item).dispose();
+			}
+		}
 	}
 
 	@Override
@@ -44,7 +59,7 @@ public class SimpleScene extends GameComponent implements IScene
 	}
 
 	@Override
-	public List<Object> getItems()
+	public ArrayList<Object> getItems()
 	{
 		return items;
 	}

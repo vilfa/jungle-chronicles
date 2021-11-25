@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Input.Devices;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Input.Devices
  **/
-public interface IKeyboardDevice
+public interface KeyboardDevice
 {
 	boolean hasHardwareKeyboard();
 

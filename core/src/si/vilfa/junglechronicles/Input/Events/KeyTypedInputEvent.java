@@ -9,6 +9,7 @@ public class KeyTypedInputEvent extends InputEvent
 {
 	public KeyTypedInputEvent(char character)
 	{
+		super();
 		this.character = character;
 	}
 

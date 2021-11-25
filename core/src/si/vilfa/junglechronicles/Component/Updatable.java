@@ -1,15 +1,13 @@
 package si.vilfa.junglechronicles.Component;
 
-import si.vilfa.junglechronicles.Graphics.GameTime;
-
 /**
  * @author luka
  * @date 04/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public interface IUpdatable
+public interface Updatable
 {
-	void update(GameTime gameTime);
+	void update();
 
 	int getUpdateOrder();
 

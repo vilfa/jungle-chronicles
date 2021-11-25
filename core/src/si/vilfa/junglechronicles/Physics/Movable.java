@@ -7,6 +7,6 @@ import com.badlogic.gdx.math.Vector;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface IMovable<T extends Vector<T>> extends IPosition<T>, IVelocity<T>
+public interface Movable<T extends Vector<T>> extends Position<T>, Velocity<T>, Rotation
 {
 }

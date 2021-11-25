@@ -1,13 +1,13 @@
 package si.vilfa.junglechronicles.Component;
 
-import si.vilfa.junglechronicles.Graphics.GameTime;
+import com.badlogic.gdx.Gdx;
 
 /**
  * @author luka
  * @date 04/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public abstract class GameComponent implements IComponent, IUpdatable, IDisposable
+public abstract class GameComponent implements Component, Updatable, Disposable
 {
 	protected boolean isUpdatable;
 	protected int updateOrder;
@@ -20,7 +20,19 @@ public abstract class GameComponent implements IComponent, IUpdatable, IDisposab
 	}
 
 	@Override
-	public abstract void update(GameTime gameTime);
+	public String getId()
+	{
+		return getClass().getSimpleName() + "#" + hashCode();
+	}
+
+	@Override
+	public void log(String message)
+	{
+		Gdx.app.debug(getId(), message);
+	}
+
+	@Override
+	public abstract void update();
 
 	@Override
 	public int getUpdateOrder()

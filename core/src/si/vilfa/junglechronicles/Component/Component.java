@@ -5,7 +5,11 @@ package si.vilfa.junglechronicles.Component;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public interface IComponent
+public interface Component
 {
 	void initialize(int updateOrder, boolean isUpdatable);
+
+	String getId();
+
+	void log(String message);
 }

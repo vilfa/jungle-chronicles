@@ -9,6 +9,7 @@ public class ScrolledInputEvent extends InputEvent
 {
 	public ScrolledInputEvent(float amountX, float amountY)
 	{
+		super();
 		this.amountX = amountX;
 		this.amountY = amountY;
 	}

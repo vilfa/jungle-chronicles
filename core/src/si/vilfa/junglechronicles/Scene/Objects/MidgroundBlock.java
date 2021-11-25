@@ -1,8 +1,6 @@
 package si.vilfa.junglechronicles.Scene.Objects;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
  * @author luka
@@ -11,15 +9,15 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  **/
 public class MidgroundBlock extends GameBlock
 {
-	public MidgroundBlock(Vector2 position, Vector2 velocity, float mass, BoundingBox boundingBox)
+	public MidgroundBlock(Vector2 position, Vector2 velocity, float density)
 	{
-		super(position, velocity, mass, boundingBox);
+		super(position, velocity, density);
 	}
 
 	@Override
-	public void update(GameTime gameTime)
+	public void update()
 	{
-
+		if (!isUpdatable) {return;}
 	}
 
 	@Override

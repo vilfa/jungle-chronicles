@@ -1,7 +1,6 @@
 package si.vilfa.junglechronicles.Player.Human;
 
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
  * @author luka
@@ -10,6 +9,14 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
  **/
 public abstract class HumanPlayer extends GameComponent
 {
+	public HumanPlayer()
+	{
+		this.initialize(0, true);
+	}
+
 	@Override
-	public abstract void update(GameTime gameTime);
+	public abstract void update();
+
+	@Override
+	public abstract void dispose();
 }

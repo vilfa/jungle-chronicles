@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Graphics;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Graphics
  **/
-public interface ITimeProvider
+public interface TimeProvider
 {
 	long getElapsedGameTimeMillis();
 

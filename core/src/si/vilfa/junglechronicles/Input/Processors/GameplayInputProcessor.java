@@ -1,17 +1,18 @@
 package si.vilfa.junglechronicles.Input.Processors;
 
-import si.vilfa.junglechronicles.Input.Events.*;
+import si.vilfa.junglechronicles.Gameplay.Gameplay;
+import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
+import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Input.TargetInputProcessor;
-import si.vilfa.junglechronicles.Player.Human.Player;
 
 /**
  * @author luka
- * @date 09/11/2021
+ * @date 10/11/2021
  * @package si.vilfa.junglechronicles.Input.Processors
  **/
-public class PlayerInputProcessor extends TargetInputProcessor<Player>
+public class GameplayInputProcessor extends TargetInputProcessor<Gameplay>
 {
-	public PlayerInputProcessor(Player target)
+	public GameplayInputProcessor(Gameplay target)
 	{
 		super(target);
 	}
@@ -20,7 +21,7 @@ public class PlayerInputProcessor extends TargetInputProcessor<Player>
 	public boolean keyDown(int keycode)
 	{
 		target.handleKeyDown(new KeyDownInputEvent(keycode));
-		return false;
+		return true;
 	}
 
 	@Override
@@ -33,47 +34,41 @@ public class PlayerInputProcessor extends TargetInputProcessor<Player>
 	@Override
 	public boolean keyTyped(char character)
 	{
-		target.handleKeyTyped(new KeyTypedInputEvent(character));
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		target.handleTouchDown(new TouchDownInputEvent(screenX, screenY, pointer, button));
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		target.handleTouchUp(new TouchUpInputEvent(screenX, screenY, pointer, button));
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		target.handleTouchDragged(new TouchDraggedInputEvent(screenX, screenY, pointer));
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		target.handleMouseMoved(new MouseMovedInputEvent(screenX, screenY));
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean scrolled(float amountX, float amountY)
 	{
-		target.handleScrolled(new ScrolledInputEvent(amountX, amountY));
-		return true;
+		return false;
 	}
 
 	@Override
-	public Player getTarget()
+	public Gameplay getTarget()
 	{
 		return target;
 	}

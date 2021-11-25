@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface IPosition<T extends Vector<T>>
+public interface Position<T extends Vector<T>>
 {
 	T getPosition();
 

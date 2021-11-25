@@ -1,7 +1,6 @@
 package si.vilfa.junglechronicles.Player.AI;
 
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Graphics.GameTime;
 
 /**
  * @author luka
@@ -11,5 +10,5 @@ import si.vilfa.junglechronicles.Graphics.GameTime;
 public abstract class AIPlayer extends GameComponent
 {
 	@Override
-	public abstract void update(GameTime gameTime);
+	public abstract void update();
 }

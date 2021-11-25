@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.TimeUtils;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Graphics
  **/
-public class GameTime implements ITimeProvider
+public class GameTime implements TimeProvider
 {
 	private final long startGameTime;
 

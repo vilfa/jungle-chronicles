@@ -9,6 +9,7 @@ public class KeyUpInputEvent extends InputEvent
 {
 	public KeyUpInputEvent(int keycode)
 	{
+		super();
 		this.keycode = keycode;
 	}
 

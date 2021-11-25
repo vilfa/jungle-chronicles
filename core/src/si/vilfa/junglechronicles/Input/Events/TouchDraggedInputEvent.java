@@ -9,6 +9,7 @@ public class TouchDraggedInputEvent extends InputEvent
 {
 	public TouchDraggedInputEvent(int screenX, int screenY, int pointer)
 	{
+		super();
 		this.screenX = screenX;
 		this.screenY = screenY;
 		this.pointer = pointer;
