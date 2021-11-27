@@ -1,6 +1,7 @@
 package si.vilfa.junglechronicles.Component;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * @author luka
@@ -9,55 +10,54 @@ import com.badlogic.gdx.Gdx;
  **/
 public abstract class GameComponent implements Component, Updatable, Disposable
 {
-	protected boolean isUpdatable;
-	protected int updateOrder;
+    protected boolean isUpdatable;
+    protected int updateOrder;
 
-	@Override
-	public void initialize(int updateOrder, boolean isUpdatable)
-	{
-		this.updateOrder = updateOrder;
-		this.isUpdatable = isUpdatable;
-	}
+    public GameComponent(int updateOrder, boolean isUpdatable)
+    {
+        this.updateOrder = updateOrder;
+        this.isUpdatable = isUpdatable;
+    }
 
-	@Override
-	public String getId()
-	{
-		return getClass().getSimpleName() + "#" + hashCode();
-	}
+    @Override
+    public String getId()
+    {
+        return getClass().getSimpleName() + "#" + hashCode();
+    }
 
-	@Override
-	public void log(String message)
-	{
-		Gdx.app.debug(getId(), message);
-	}
+    @Override
+    public void log(String message)
+    {
+        Gdx.app.debug(getId(), message);
+    }
 
-	@Override
-	public abstract void update();
+    @Override
+    public abstract void update();
 
-	@Override
-	public int getUpdateOrder()
-	{
-		return updateOrder;
-	}
+    @Override
+    public int getUpdateOrder()
+    {
+        return updateOrder;
+    }
 
-	@Override
-	public void setUpdateOrder(int updateOrder)
-	{
-		this.updateOrder = updateOrder;
-	}
+    @Override
+    public void setUpdateOrder(int updateOrder)
+    {
+        this.updateOrder = updateOrder;
+    }
 
-	@Override
-	public boolean getUpdatableEnabled()
-	{
-		return isUpdatable;
-	}
+    @Override
+    public boolean getUpdatableEnabled()
+    {
+        return isUpdatable;
+    }
 
-	@Override
-	public void setUpdatableEnabled(boolean isUpdatable)
-	{
-		this.isUpdatable = isUpdatable;
-	}
+    @Override
+    public void setUpdatableEnabled(boolean isUpdatable)
+    {
+        this.isUpdatable = isUpdatable;
+    }
 
-	@Override
-	public abstract void dispose();
+    @Override
+    public abstract void dispose();
 }

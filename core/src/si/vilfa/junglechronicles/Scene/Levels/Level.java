@@ -10,22 +10,22 @@ import si.vilfa.junglechronicles.Scene.SimpleScene;
  **/
 public class Level extends GameLevel
 {
-	public Level()
-	{
-		super(new SimpleScene(), new Vector2(0, 0));
-	}
+    public Level()
+    {
+        super(new SimpleScene(), new Vector2(0, 0));
+    }
 
-	@Override
-	public void update()
-	{
-		if (!isUpdatable) {return;}
+    @Override
+    public void update()
+    {
+        if (!isUpdatable) { return; }
 
-		scene.update();
-	}
+        scene.update();
+    }
 
-	@Override
-	public void dispose()
-	{
-		scene.dispose();
-	}
+    @Override
+    public void dispose()
+    {
+        scene.dispose();
+    }
 }

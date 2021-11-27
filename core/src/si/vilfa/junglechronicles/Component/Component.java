@@ -7,9 +7,7 @@ package si.vilfa.junglechronicles.Component;
  **/
 public interface Component
 {
-	void initialize(int updateOrder, boolean isUpdatable);
+    String getId();
 
-	String getId();
-
-	void log(String message);
+    void log(String message);
 }

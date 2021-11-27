@@ -12,15 +12,15 @@ import com.badlogic.gdx.physics.box2d.Manifold;
  **/
 public interface CollisionEventProvider extends ContactListener
 {
-	@Override
-	void beginContact(Contact contact);
+    @Override
+    void beginContact(Contact contact);
 
-	@Override
-	void endContact(Contact contact);
+    @Override
+    void endContact(Contact contact);
 
-	@Override
-	void preSolve(Contact contact, Manifold oldManifold);
+    @Override
+    void preSolve(Contact contact, Manifold oldManifold);
 
-	@Override
-	void postSolve(Contact contact, ContactImpulse impulse);
+    @Override
+    void postSolve(Contact contact, ContactImpulse impulse);
 }

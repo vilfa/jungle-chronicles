@@ -7,26 +7,26 @@ package si.vilfa.junglechronicles.Input.Events;
  **/
 public class ScrolledInputEvent extends InputEvent
 {
-	public ScrolledInputEvent(float amountX, float amountY)
-	{
-		super();
-		this.amountX = amountX;
-		this.amountY = amountY;
-	}
+    public ScrolledInputEvent(float amountX, float amountY)
+    {
+        super();
+        this.amountX = amountX;
+        this.amountY = amountY;
+    }
 
-	public float getAmountX()
-	{
-		return amountX;
-	}
+    public float getAmountX()
+    {
+        return amountX;
+    }
 
-	public float getAmountY()
-	{
-		return amountY;
-	}
+    public float getAmountY()
+    {
+        return amountY;
+    }
 
-	@Override
-	public InputEventType getInputEventType()
-	{
-		return InputEventType.SCROLLED;
-	}
+    @Override
+    public InputEventType getInputEventType()
+    {
+        return InputEventType.SCROLLED;
+    }
 }

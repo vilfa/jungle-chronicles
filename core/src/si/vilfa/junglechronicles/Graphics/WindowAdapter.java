@@ -7,9 +7,11 @@ package si.vilfa.junglechronicles.Graphics;
  **/
 public interface WindowAdapter
 {
-	void resize(int width, int height);
+    void resize(int width, int height);
 
-	float getAspectRatio();
+    float getScreenAspectRatio();
 
-	void setAspectRatio(float aspectRatio);
+    void setScreenAspectRatio(float aspectRatio);
+
+    int getScreenRefreshRate();
 }

@@ -7,26 +7,26 @@ package si.vilfa.junglechronicles.Input.Events;
  **/
 public class MouseMovedInputEvent extends InputEvent
 {
-	public MouseMovedInputEvent(int screenX, int screenY)
-	{
-		super();
-		this.screenX = screenX;
-		this.screenY = screenY;
-	}
+    public MouseMovedInputEvent(int screenX, int screenY)
+    {
+        super();
+        this.screenX = screenX;
+        this.screenY = screenY;
+    }
 
-	public int getScreenX()
-	{
-		return screenX;
-	}
+    public int getScreenX()
+    {
+        return screenX;
+    }
 
-	public int getScreenY()
-	{
-		return screenY;
-	}
+    public int getScreenY()
+    {
+        return screenY;
+    }
 
-	@Override
-	public InputEventType getInputEventType()
-	{
-		return InputEventType.MOUSE_MOVED;
-	}
+    @Override
+    public InputEventType getInputEventType()
+    {
+        return InputEventType.MOUSE_MOVED;
+    }
 }

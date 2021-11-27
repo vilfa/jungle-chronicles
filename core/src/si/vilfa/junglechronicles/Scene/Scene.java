@@ -1,8 +1,7 @@
 package si.vilfa.junglechronicles.Scene;
 
+import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.Updatable;
-
-import java.util.ArrayList;
 
 /**
  * @author luka
@@ -11,11 +10,13 @@ import java.util.ArrayList;
  **/
 public interface Scene extends Updatable
 {
-	void addItem(Object item);
+    void addItem(Object item);
 
-	void removeItem(Object item);
+    void addItems(Array<Object> items);
 
-	ArrayList<Object> getItems();
+    void removeItem(Object item);
 
-	void clear();
+    Array<Object> getItems();
+
+    void clear();
 }

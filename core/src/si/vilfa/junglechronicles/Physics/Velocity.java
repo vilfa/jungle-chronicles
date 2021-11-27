@@ -9,7 +9,11 @@ import com.badlogic.gdx.math.Vector;
  **/
 public interface Velocity<T extends Vector<T>>
 {
-	T getVelocity();
+    T getVelocity();
 
-	void setVelocity(T velocity);
+    void setVelocity(T velocity);
+
+    float getAngularVelocity();
+
+    void setAngularVelocity(float velocity);
 }

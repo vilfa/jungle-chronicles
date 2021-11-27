@@ -7,13 +7,13 @@ package si.vilfa.junglechronicles.Graphics;
  **/
 public interface TimeProvider
 {
-	long getElapsedGameTimeMillis();
+    long getElapsedGameTimeMillis();
 
-	long getElapsedGameTimeSeconds();
+    long getElapsedGameTimeSeconds();
 
-	long getStartGameTimeMillis();
+    long getStartGameTimeMillis();
 
-	long getStartGameTimeSeconds();
+    long getStartGameTimeSeconds();
 
-	float getDeltaTime();
+    float getDeltaTime();
 }

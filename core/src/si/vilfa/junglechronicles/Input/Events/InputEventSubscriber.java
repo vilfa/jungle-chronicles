@@ -7,19 +7,19 @@ package si.vilfa.junglechronicles.Input.Events;
  **/
 public interface InputEventSubscriber
 {
-	void handleKeyDown(KeyDownInputEvent event);
+    void handleKeyDown(KeyDownInputEvent event);
 
-	void handleKeyUp(KeyUpInputEvent event);
+    void handleKeyUp(KeyUpInputEvent event);
 
-	void handleKeyTyped(KeyTypedInputEvent event);
+    void handleKeyTyped(KeyTypedInputEvent event);
 
-	void handleTouchDown(TouchDownInputEvent event);
+    void handleTouchDown(TouchDownInputEvent event);
 
-	void handleTouchUp(TouchUpInputEvent event);
+    void handleTouchUp(TouchUpInputEvent event);
 
-	void handleTouchDragged(TouchDraggedInputEvent event);
+    void handleTouchDragged(TouchDraggedInputEvent event);
 
-	void handleMouseMoved(MouseMovedInputEvent event);
+    void handleMouseMoved(MouseMovedInputEvent event);
 
-	void handleScrolled(ScrolledInputEvent event);
+    void handleScrolled(ScrolledInputEvent event);
 }

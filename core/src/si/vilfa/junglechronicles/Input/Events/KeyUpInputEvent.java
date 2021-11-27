@@ -7,20 +7,20 @@ package si.vilfa.junglechronicles.Input.Events;
  **/
 public class KeyUpInputEvent extends InputEvent
 {
-	public KeyUpInputEvent(int keycode)
-	{
-		super();
-		this.keycode = keycode;
-	}
+    public KeyUpInputEvent(int keycode)
+    {
+        super();
+        this.keycode = keycode;
+    }
 
-	public int getKeyCode()
-	{
-		return keycode;
-	}
+    public int getKeyCode()
+    {
+        return keycode;
+    }
 
-	@Override
-	public InputEventType getInputEventType()
-	{
-		return InputEventType.KEY_UP;
-	}
+    @Override
+    public InputEventType getInputEventType()
+    {
+        return InputEventType.KEY_UP;
+    }
 }

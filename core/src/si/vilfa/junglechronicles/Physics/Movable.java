@@ -8,5 +8,4 @@ import com.badlogic.gdx.math.Vector;
  * @package si.vilfa.junglechronicles.Physics
  **/
 public interface Movable<T extends Vector<T>> extends Position<T>, Velocity<T>, Rotation
-{
-}
+{ }

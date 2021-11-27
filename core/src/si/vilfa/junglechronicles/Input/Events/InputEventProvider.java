@@ -7,5 +7,5 @@ package si.vilfa.junglechronicles.Input.Events;
  **/
 public interface InputEventProvider
 {
-	InputEventType getInputEventType();
+    InputEventType getInputEventType();
 }

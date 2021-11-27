@@ -9,14 +9,14 @@ import si.vilfa.junglechronicles.Component.GameComponent;
  **/
 public abstract class HumanPlayer extends GameComponent
 {
-	public HumanPlayer()
-	{
-		this.initialize(0, true);
-	}
+    public HumanPlayer()
+    {
+        super(0, true);
+    }
 
-	@Override
-	public abstract void update();
+    @Override
+    public abstract void update();
 
-	@Override
-	public abstract void dispose();
+    @Override
+    public abstract void dispose();
 }

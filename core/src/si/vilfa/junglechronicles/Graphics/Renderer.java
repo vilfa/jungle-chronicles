@@ -5,18 +5,17 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Player.Human.Player;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Scene.Objects.GoldCollectible;
-import si.vilfa.junglechronicles.Scene.Objects.MidgroundBlock;
-import si.vilfa.junglechronicles.Scene.Objects.TerrainBlock;
-
-import java.util.ArrayList;
+import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
+import si.vilfa.junglechronicles.Scene.Objects.WorldBlock;
 
 /**
  * @author luka
@@ -25,158 +24,178 @@ import java.util.ArrayList;
  **/
 public class Renderer extends DrawableGameComponent implements WindowAdapter
 {
-	public static GameTime gameTime;
-	private final int screenRefreshRate;
-	private final Viewport viewport;
-	private final Level level;
-	private final SpriteBatch spriteBatch;
-	private float WORLD_WIDTH = 100.0f;
-	private float WORLD_HEIGHT = 100.0f;
-	private int screenWidth;
-	private int screenHeight;
-	private float aspectRatio;
-	private ArrayList<Sprite> worldBackgroundSprites;
-	private Sprite playerSprite;
-	private Sprite terrainBlockSprite;
-	private Sprite midgroundBlockSprite;
-	private Sprite goldCollectibleSprite;
+    public static GameTime gameTime;
+    private final float visibleWorldWidth;
+    private final float visibleWorldHeight;
+    private final float worldWidth;
+    private final float worldHeight;
+    private final Viewport viewport;
+    private final SpriteBatch spriteBatch;
+    private final Level level;
+    private final int screenWidthMax;
+    private final int screenHeightMax;
+    private final int screenRefreshRate;
+    private int screenWidth;
+    private int screenHeight;
+    private float screenAspectRatio;
 
-	// TODO Remove this after no longer needed for debugging.
-	private float timer = 0f;
+    private Array<Sprite> worldBackgroundSprites;
+    private Sprite playerSprite;
+    private Sprite terrainBlockSprite;
+    private Sprite midgroundBlockSprite;
+    private Sprite goldCollectibleSprite;
 
-	public Renderer(Level level)
-	{
-		super();
-		Renderer.gameTime = new GameTime();
+    // TODO Remove this after no longer needed for debugging.
+    private float timer = 0f;
 
-		this.initializeDrawable(0, true, 0, true);
-		this.level = level;
-		this.spriteBatch = new SpriteBatch();
-		this.initializeSprites();
+    public Renderer(Level gameLevel, float gameWorldWidth, float gameWorldHeight)
+    {
+        super(0, true, 0, true);
 
-		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode(
-				Gdx.graphics.getPrimaryMonitor());
-		this.screenWidth = displayMode.width;
-		this.screenHeight = displayMode.height;
-		this.screenRefreshRate = displayMode.refreshRate;
-		this.aspectRatio = (float) this.screenWidth / (float) this.screenHeight;
-		this.WORLD_WIDTH *= aspectRatio;
+        Renderer.gameTime = new GameTime();
+        initializeSprites();
 
-		this.viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
-		this.viewport.apply(true);
-	}
+        level = gameLevel;
+        spriteBatch = new SpriteBatch();
 
-	private void initializeSprites()
-	{
-		// TODO Make these sprites scene objects and draw them by draw order.
-		worldBackgroundSprites = new ArrayList<>();
-		worldBackgroundSprites.add(
-				new Sprite(new Texture("World@2x/WorldForestBackground@2x.png")));
-		worldBackgroundSprites.add(
-				new Sprite(new Texture("World@2x/WorldForestShadowsNight@2x.png")));
-		worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldForestNight@2x.png")));
-		worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldForestTreetops@2x.png")));
-		worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldGroundGrass@2x.png")));
-		worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldGroundBushes@2x.png")));
+        Graphics.DisplayMode displayMode
+                = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());
+        screenWidth = displayMode.width;
+        screenWidthMax = displayMode.width;
+        screenHeight = displayMode.height;
+        screenHeightMax = displayMode.height;
+        screenRefreshRate = displayMode.refreshRate;
+        screenAspectRatio = (float) screenWidth / (float) screenHeight;
 
-		playerSprite = new Sprite(new Texture("128/Player/PlayerR1@128x128.png"));
-		terrainBlockSprite = new Sprite(new Texture(
-				"128/Terrain/TerrainTopCenter@128x128.png"));
-		midgroundBlockSprite = new Sprite(new Texture(
-				"128/Midground/MidgroundCenter@128x128.png"));
-		goldCollectibleSprite = new Sprite(new Texture(
-				"128/Gold/Gold6@128x128.png"));
-	}
+        visibleWorldHeight = 13;
+        visibleWorldWidth = visibleWorldHeight * screenAspectRatio;
+        worldWidth = gameWorldWidth;
+        worldHeight = gameWorldHeight;
 
-	@Override
-	public void resize(int width, int height)
-	{
-		screenWidth = width;
-		screenHeight = height;
-		aspectRatio = (float) screenWidth / (float) screenHeight;
-		viewport.update(screenWidth, screenHeight, true);
-		log("Resize: width=" + width + ", height=" + height);
-	}
+        Gdx.graphics.setForegroundFPS(screenRefreshRate);
 
-	@Override
-	public float getAspectRatio()
-	{
-		return aspectRatio;
-	}
+        viewport = new ExtendViewport(visibleWorldWidth,
+                                      visibleWorldHeight,
+                                      worldWidth,
+                                      worldHeight);
+        viewport.apply(true);
+    }
 
-	@Override
-	public void setAspectRatio(float aspectRatio)
-	{
-		this.aspectRatio = aspectRatio;
-	}
+    private void initializeSprites()
+    {
+        // TODO Make these sprites scene objects and draw them by draw order.
+        worldBackgroundSprites = new Array<>();
+        worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldForestBackground@2x.png")));
+        worldBackgroundSprites.add(new Sprite(new Texture(
+                "World@2x/WorldForestShadowsNight@2x" + ".png")));
+        worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldForestNight@2x.png")));
+        worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldForestTreetops@2x.png")));
+        worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldGroundGrass@2x.png")));
+        worldBackgroundSprites.add(new Sprite(new Texture("World@2x/WorldGroundBushes@2x.png")));
 
-	@Override
-	public void draw()
-	{
-		if (!isDrawable) {return;}
-		// TODO Make draw calls use draw order.
-		ScreenUtils.clear(1, 1, 1, 1);
-		spriteBatch.begin();
-		for (Sprite sprite : worldBackgroundSprites)
-		{
-			sprite.setPosition(0, 0);
-			sprite.draw(spriteBatch);
-		}
-		for (Object item : level.getItems())
-		{
-			Vector2 position;
-			if (item instanceof Player)
-			{
-				position = ((Player) item).getPosition();
-				playerSprite.setPosition(position.x, position.y);
-				playerSprite.draw(spriteBatch);
-			} else if (item instanceof TerrainBlock)
-			{
-				position = ((TerrainBlock) item).getPosition();
-				terrainBlockSprite.setPosition(position.x, position.y);
-				terrainBlockSprite.draw(spriteBatch);
-			} else if (item instanceof MidgroundBlock)
-			{
-				position = ((MidgroundBlock) item).getPosition();
-				midgroundBlockSprite.setPosition(position.x, position.y);
-				midgroundBlockSprite.draw(spriteBatch);
-			} else if (item instanceof GoldCollectible)
-			{
-				position = ((GoldCollectible) item).getPosition();
-				goldCollectibleSprite.setPosition(position.x, position.y);
-				goldCollectibleSprite.draw(spriteBatch);
-			}
-		}
-		spriteBatch.end();
-	}
+        playerSprite = new Sprite(new Texture("128/Player/PlayerR1@128x128.png"));
+        terrainBlockSprite = new Sprite(new Texture("128/Terrain/TerrainTopCenter@128x128.png"));
+        midgroundBlockSprite = new Sprite(new Texture("128/Midground/MidgroundCenter@128x128.png"));
+        goldCollectibleSprite = new Sprite(new Texture("128/Gold/Gold6@128x128.png"));
+    }
 
-	@Override
-	public void dispose()
-	{
-		level.dispose();
+    public Matrix4 getCombined()
+    {
+        return viewport.getCamera().combined;
+    }
 
-		for (Sprite sprite : worldBackgroundSprites)
-		{
-			sprite.getTexture().dispose();
-		}
-		playerSprite.getTexture().dispose();
-		terrainBlockSprite.getTexture().dispose();
-		midgroundBlockSprite.getTexture().dispose();
-		goldCollectibleSprite.getTexture().dispose();
+    @Override
+    public void resize(int width, int height)
+    {
+        screenWidth = width;
+        screenHeight = height;
+        viewport.update(screenWidth, screenHeight, true);
+        log("Resize: width=" + width + ",height=" + height);
+    }
 
-		spriteBatch.dispose();
-	}
+    @Override
+    public float getScreenAspectRatio()
+    {
+        return screenAspectRatio;
+    }
 
-	@Override
-	public void update()
-	{
-		if (!isUpdatable) {return;}
-		// TODO Remove this after no longer needed for debugging.
-		timer += Renderer.gameTime.getDeltaTime();
-		if (timer > 1f)
-		{
-			log("FPS:" + Gdx.graphics.getFramesPerSecond());
-			timer = 0;
-		}
-	}
+    @Override
+    public void setScreenAspectRatio(float screenAspectRatio)
+    {
+        this.screenAspectRatio = screenAspectRatio;
+    }
+
+    @Override
+    public int getScreenRefreshRate()
+    {
+        return screenRefreshRate;
+    }
+
+    @Override
+    public void draw()
+    {
+        if (!isDrawable) { return; }
+        // TODO Make draw calls use draw order.
+        ScreenUtils.clear(1, 1, 1, 1);
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.begin();
+        for (Sprite sprite : worldBackgroundSprites)
+        {
+            sprite.setBounds(0, 0, visibleWorldWidth, visibleWorldHeight);
+            sprite.draw(spriteBatch);
+        }
+        for (Object item : level.getItems())
+        {
+            Vector2 position;
+            if (item instanceof Player)
+            {
+                position = ((Player) item).getPosition();
+                playerSprite.setSize(1.75f, 1.75f);
+                playerSprite.setCenter(position.x, position.y);
+                playerSprite.draw(spriteBatch);
+            } else if (item instanceof WorldBlock)
+            {
+                position = ((WorldBlock) item).getPosition();
+                terrainBlockSprite.setSize(1f, 1f);
+                terrainBlockSprite.setCenter(position.x, position.y);
+                terrainBlockSprite.draw(spriteBatch);
+            } else if (item instanceof CollectibleBlock)
+            {
+                position = ((CollectibleBlock) item).getPosition();
+                goldCollectibleSprite.setCenter(position.x, position.y);
+                goldCollectibleSprite.draw(spriteBatch);
+            }
+        }
+        spriteBatch.end();
+    }
+
+    @Override
+    public void dispose()
+    {
+        level.dispose();
+
+        for (Sprite sprite : worldBackgroundSprites)
+        {
+            sprite.getTexture().dispose();
+        }
+        playerSprite.getTexture().dispose();
+        terrainBlockSprite.getTexture().dispose();
+        midgroundBlockSprite.getTexture().dispose();
+        goldCollectibleSprite.getTexture().dispose();
+
+        spriteBatch.dispose();
+    }
+
+    @Override
+    public void update()
+    {
+        if (!isUpdatable) { return; }
+        // TODO Remove this after no longer needed for debugging.
+        timer += Renderer.gameTime.getDeltaTime();
+        if (timer > 1f)
+        {
+            log("FPS:" + Gdx.graphics.getFramesPerSecond());
+            timer = 0;
+        }
+    }
 }

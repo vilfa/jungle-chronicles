@@ -12,19 +12,19 @@ import org.robovm.apple.uikit.UIApplication;
  **/
 public class IOSLauncher extends IOSApplication.Delegate
 {
-	public static void main(String[] argv)
-	{
-		NSAutoreleasePool pool = new NSAutoreleasePool();
-		UIApplication.main(argv, null, IOSLauncher.class);
-		pool.close();
-	}
+    public static void main(String[] argv)
+    {
+        NSAutoreleasePool pool = new NSAutoreleasePool();
+        UIApplication.main(argv, null, IOSLauncher.class);
+        pool.close();
+    }
 
-	@Override
-	protected IOSApplication createApplication()
-	{
-		IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-		config.useAccelerometer = false;
-		config.useCompass = false;
-		return new IOSApplication(new JungleChronicles(), config);
-	}
+    @Override
+    protected IOSApplication createApplication()
+    {
+        IOSApplicationConfiguration config = new IOSApplicationConfiguration();
+        config.useAccelerometer = false;
+        config.useCompass = false;
+        return new IOSApplication(new JungleChronicles(), config);
+    }
 }

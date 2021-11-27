@@ -7,8 +7,7 @@ package si.vilfa.junglechronicles.Input.Devices;
  **/
 public interface PointingDevice
 {
-	boolean hasMouse();
+    boolean hasMouse();
 
-	boolean hasMultitouchScreen();
-
+    boolean hasMultitouchScreen();
 }

@@ -9,6 +9,11 @@ import si.vilfa.junglechronicles.Component.GameComponent;
  **/
 public abstract class AIPlayer extends GameComponent
 {
-	@Override
-	public abstract void update();
+    public AIPlayer()
+    {
+        super(0, true);
+    }
+
+    @Override
+    public abstract void update();
 }

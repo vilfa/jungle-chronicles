@@ -1,8 +1,7 @@
 package si.vilfa.junglechronicles.Scene;
 
+import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
-
-import java.util.ArrayList;
 
 /**
  * @author luka
@@ -11,62 +10,67 @@ import java.util.ArrayList;
  **/
 public class SimpleScene extends GameComponent implements Scene
 {
-	protected final ArrayList<Object> items;
+    protected final Array<Object> items;
 
-	public SimpleScene()
-	{
-		super();
-		this.initialize(0, true);
-		this.items = new ArrayList<>();
-	}
+    public SimpleScene()
+    {
+        super(0, true);
+        items = new Array<>();
+    }
 
-	@Override
-	public void update()
-	{
-		if (!isUpdatable) {return;}
+    @Override
+    public void update()
+    {
+        if (!isUpdatable) { return; }
 
-		for (Object item : items)
-		{
-			if (item instanceof GameComponent)
-			{
-				((GameComponent) item).update();
-			}
-		}
-	}
+        for (Object item : items)
+        {
+            if (item instanceof GameComponent)
+            {
+                ((GameComponent) item).update();
+            }
+        }
+    }
 
-	@Override
-	public void dispose()
-	{
-		for (Object item : items)
-		{
-			if (item instanceof GameComponent)
-			{
-				((GameComponent) item).dispose();
-			}
-		}
-	}
+    @Override
+    public void dispose()
+    {
+        for (Object item : items)
+        {
+            if (item instanceof GameComponent)
+            {
+                ((GameComponent) item).dispose();
+            }
+        }
+    }
 
-	@Override
-	public void addItem(Object item)
-	{
-		items.add(item);
-	}
+    @Override
+    public void addItem(Object item)
+    {
+        items.add(item);
+    }
 
-	@Override
-	public void removeItem(Object item)
-	{
-		items.remove(item);
-	}
+    @Override
+    public void addItems(Array<Object> items)
+    {
+        items.addAll(items);
+    }
 
-	@Override
-	public ArrayList<Object> getItems()
-	{
-		return items;
-	}
+    @Override
+    public void removeItem(Object item)
+    {
+        items.removeValue(item, false);
+    }
 
-	@Override
-	public void clear()
-	{
-		items.clear();
-	}
+    @Override
+    public Array<Object> getItems()
+    {
+        return items;
+    }
+
+    @Override
+    public void clear()
+    {
+        items.clear();
+    }
 }

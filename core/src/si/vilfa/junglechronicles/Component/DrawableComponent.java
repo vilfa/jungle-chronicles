@@ -7,15 +7,13 @@ package si.vilfa.junglechronicles.Component;
  **/
 public interface DrawableComponent extends Component
 {
-	void initializeDrawable(int updateOrder, boolean isUpdatable, int drawOrder, boolean isDrawable);
+    void draw();
 
-	void draw();
+    int getDrawOrder();
 
-	int getDrawOrder();
+    void setDrawOrder(int drawOrder);
 
-	void setDrawOrder(int drawOrder);
+    boolean getDrawableEnabled();
 
-	boolean getDrawableEnabled();
-
-	void setDrawableEnabled(boolean isDrawable);
+    void setDrawableEnabled(boolean isDrawable);
 }

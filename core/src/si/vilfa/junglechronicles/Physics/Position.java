@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector;
  **/
 public interface Position<T extends Vector<T>>
 {
-	T getPosition();
+    T getPosition();
 
-	void setPosition(T position);
+    void setPosition(T position);
 }

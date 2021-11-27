@@ -11,11 +11,11 @@ import com.badlogic.gdx.physics.box2d.Manifold;
  **/
 public interface CollisionEventSubscriber
 {
-	void handleBeginContact(Contact contact);
+    void handleBeginContact(Contact contact);
 
-	void handleEndContact(Contact contact);
+    void handleEndContact(Contact contact);
 
-	void handlePreSolve(Contact contact, Manifold oldManifold);
+    void handlePreSolve(Contact contact, Manifold oldManifold);
 
-	void handlePostSolve(Contact contact, ContactImpulse impulse);
+    void handlePostSolve(Contact contact, ContactImpulse impulse);
 }

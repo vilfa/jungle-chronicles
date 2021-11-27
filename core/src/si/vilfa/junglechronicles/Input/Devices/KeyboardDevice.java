@@ -7,11 +7,11 @@ package si.vilfa.junglechronicles.Input.Devices;
  **/
 public interface KeyboardDevice
 {
-	boolean hasHardwareKeyboard();
+    boolean hasHardwareKeyboard();
 
-	boolean hasOnScreenKeyboard();
+    boolean hasOnScreenKeyboard();
 
-	void showOnScreenKeyboard();
+    void showOnScreenKeyboard();
 
-	void hideOnScreenKeyboard();
+    void hideOnScreenKeyboard();
 }

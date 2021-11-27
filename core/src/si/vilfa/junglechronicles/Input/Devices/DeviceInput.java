@@ -6,5 +6,4 @@ package si.vilfa.junglechronicles.Input.Devices;
  * @package si.vilfa.junglechronicles.Input.Devices
  **/
 public interface DeviceInput extends KeyboardDevice, PointingDevice
-{
-}
+{ }

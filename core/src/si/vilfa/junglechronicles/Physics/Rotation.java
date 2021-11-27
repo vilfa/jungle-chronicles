@@ -7,7 +7,7 @@ package si.vilfa.junglechronicles.Physics;
  **/
 public interface Rotation
 {
-	float getRotation();
+    float getRotation();
 
-	void setRotation(float rotation);
+    void setRotation(float rotation);
 }

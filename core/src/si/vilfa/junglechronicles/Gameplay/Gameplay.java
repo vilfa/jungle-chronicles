@@ -4,136 +4,176 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
-import si.vilfa.junglechronicles.Component.Disposable;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
 import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
+import si.vilfa.junglechronicles.Physics.BodyFactory;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.Player;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Scene.Objects.TerrainBlock;
+import si.vilfa.junglechronicles.Scene.Objects.GameObjectFactory;
+import si.vilfa.junglechronicles.Scene.Objects.WorldBlock;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Gameplay
  **/
-public class Gameplay extends DrawableGameComponent implements Disposable, WindowAdapter, InputEventSubscriber
+public class Gameplay extends DrawableGameComponent
+        implements Disposable, WindowAdapter, InputEventSubscriber
 {
-	private final Renderer renderer;
-	private final Player player;
-	private final InputMultiplexer inputMultiplexer;
-	private final PhysicsEngine physics;
-	private final Level level;
+    private final Level level;
+    private final Player player;
+    private final PhysicsEngine physics;
+    private final Renderer renderer;
+    private final Box2DDebugRenderer debugRenderer;
+    private final InputMultiplexer inputMultiplexer;
 
-	public Gameplay()
-	{
-		super();
-		this.initializeDrawable(0, true, 0, true);
-		this.level = new Level();
-		this.physics = new PhysicsEngine();
-		this.player = new Player();
-		this.renderer = new Renderer(this.level);
-		this.inputMultiplexer = new InputMultiplexer();
-		this.inputMultiplexer.addProcessor(new PlayerInputProcessor(this.player));
-		this.inputMultiplexer.addProcessor(new GameplayInputProcessor(this));
+    public Gameplay()
+    {
+        super(0, true, 0, true);
+        level = new Level();
+        physics = new PhysicsEngine();
+        renderer = new Renderer(this.level, physics.getWorldWidth(), physics.getWorldHeight());
+        debugRenderer = new Box2DDebugRenderer();
 
-		this.level.addItem(player);
-		this.level.addItem(new TerrainBlock(new Vector2(128, 256), new Vector2(100, 0),
-		                                    Float.POSITIVE_INFINITY));
-		this.level.addItem(new TerrainBlock(new Vector2(256, 256), new Vector2(100, 0),
-		                                    Float.POSITIVE_INFINITY));
-		Gdx.input.setInputProcessor(this.inputMultiplexer);
-	}
 
-	@Override
-	public void draw()
-	{
-		if (!isDrawable) {return;}
-		renderer.draw();
-	}
+        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance(BodyFactory.getInstance(
+                physics.getWorld()));
 
-	@Override
-	public void dispose()
-	{
-		log("Called dispose");
-		level.dispose();
-		player.dispose();
-		physics.dispose();
-		renderer.dispose();
-	}
+        player = gameObjectFactory.createDynamicWithPolygonFixture(new Vector2(1f, 2f),
+                                                                   new Vector2(0f, 0f),
+                                                                   0f,
+                                                                   65f,
+                                                                   0f,
+                                                                   0.1f,
+                                                                   new Vector2(.4f, .7f),
+                                                                   Player.class,
+                                                                   Body.class);
+        level.addItem(player);
 
-	@Override
-	public void update()
-	{
-		if (!isUpdatable) {return;}
-		player.update();
-		level.update();
-		renderer.update();
-	}
+        for (int i = 0; i < 200; i++)
+        {
+            WorldBlock groundBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i,
+                                                                                                  .5f),
+                                                                                      0,
+                                                                                      Float.POSITIVE_INFINITY,
+                                                                                      0f,
+                                                                                      .1f,
+                                                                                      new Vector2(
+                                                                                              .5f,
+                                                                                              .5f),
+                                                                                      WorldBlock.class,
+                                                                                      Body.class);
+            level.addItem(groundBlock);
+        }
 
-	@Override
-	public void resize(int width, int height)
-	{
-		renderer.resize(width, height);
-	}
+        for (int i = 1; i < 3; i++)
+        {
+            WorldBlock worldBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i,
+                                                                                                 5),
+                                                                                     0,
+                                                                                     Float.POSITIVE_INFINITY,
+                                                                                     0f,
+                                                                                     .1f,
+                                                                                     new Vector2(.5f,
+                                                                                                 .5f),
+                                                                                     WorldBlock.class,
+                                                                                     Body.class);
+            level.addItem(worldBlock);
+        }
 
-	@Override
-	public float getAspectRatio()
-	{
-		return renderer.getAspectRatio();
-	}
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(new PlayerInputProcessor(player));
+        inputMultiplexer.addProcessor(new GameplayInputProcessor(this));
+        Gdx.input.setInputProcessor(this.inputMultiplexer);
+    }
 
-	@Override
-	public void setAspectRatio(float aspectRatio)
-	{
-		renderer.setAspectRatio(aspectRatio);
-	}
+    @Override
+    public void draw()
+    {
+        if (!isDrawable) { return; }
+        renderer.draw();
+        debugRenderer.render(physics.getWorld(), renderer.getCombined());
+    }
 
-	@Override
-	public void handleKeyDown(KeyDownInputEvent event)
-	{
-	}
+    @Override
+    public void dispose()
+    {
+        inputMultiplexer.clear();
+        level.dispose();
+        player.dispose();
+        physics.dispose();
+        renderer.dispose();
+    }
 
-	@Override
-	public void handleKeyUp(KeyUpInputEvent event)
-	{
-		if (event.getKeyCode() == Input.Keys.ESCAPE)
-		{
-			System.exit(0);
-		}
-	}
+    @Override
+    public void update()
+    {
+        if (!isUpdatable) { return; }
+        physics.update();
+        player.update();
+        level.update();
+        renderer.update();
+    }
 
-	@Override
-	public void handleKeyTyped(KeyTypedInputEvent event)
-	{
-	}
+    @Override
+    public void resize(int width, int height)
+    {
+        renderer.resize(width, height);
+    }
 
-	@Override
-	public void handleTouchDown(TouchDownInputEvent event)
-	{
-	}
+    @Override
+    public float getScreenAspectRatio()
+    {
+        return renderer.getScreenAspectRatio();
+    }
 
-	@Override
-	public void handleTouchUp(TouchUpInputEvent event)
-	{
-	}
+    @Override
+    public void setScreenAspectRatio(float aspectRatio)
+    {
+        renderer.setScreenAspectRatio(aspectRatio);
+    }
 
-	@Override
-	public void handleTouchDragged(TouchDraggedInputEvent event)
-	{
-	}
+    @Override
+    public int getScreenRefreshRate()
+    {
+        return renderer.getScreenRefreshRate();
+    }
 
-	@Override
-	public void handleMouseMoved(MouseMovedInputEvent event)
-	{
-	}
+    @Override
+    public void handleKeyDown(KeyDownInputEvent event) { }
 
-	@Override
-	public void handleScrolled(ScrolledInputEvent event)
-	{
-	}
+    @Override
+    public void handleKeyUp(KeyUpInputEvent event)
+    {
+        if (event.getKeyCode() == Input.Keys.ESCAPE)
+        {
+            log("Menu");
+        }
+    }
+
+    @Override
+    public void handleKeyTyped(KeyTypedInputEvent event) { }
+
+    @Override
+    public void handleTouchDown(TouchDownInputEvent event) { }
+
+    @Override
+    public void handleTouchUp(TouchUpInputEvent event) { }
+
+    @Override
+    public void handleTouchDragged(TouchDraggedInputEvent event) { }
+
+    @Override
+    public void handleMouseMoved(MouseMovedInputEvent event) { }
+
+    @Override
+    public void handleScrolled(ScrolledInputEvent event) { }
 }

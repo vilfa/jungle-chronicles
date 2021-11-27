@@ -7,5 +7,5 @@ package si.vilfa.junglechronicles.Input;
  **/
 public interface InputTarget<T>
 {
-	T getTarget();
+    T getTarget();
 }

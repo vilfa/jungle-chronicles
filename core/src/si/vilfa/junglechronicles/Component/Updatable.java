@@ -7,13 +7,13 @@ package si.vilfa.junglechronicles.Component;
  **/
 public interface Updatable
 {
-	void update();
+    void update();
 
-	int getUpdateOrder();
+    int getUpdateOrder();
 
-	void setUpdateOrder(int updateOrder);
+    void setUpdateOrder(int updateOrder);
 
-	boolean getUpdatableEnabled();
+    boolean getUpdatableEnabled();
 
-	void setUpdatableEnabled(boolean isUpdatable);
+    void setUpdatableEnabled(boolean isUpdatable);
 }
