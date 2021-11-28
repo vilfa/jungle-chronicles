@@ -1,6 +1,7 @@
 package si.vilfa.junglechronicles.Player.Human;
 
 import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Gameplay.GameState;
 
 /**
  * @author luka
@@ -9,9 +10,33 @@ import si.vilfa.junglechronicles.Component.GameComponent;
  **/
 public abstract class HumanPlayer extends GameComponent
 {
+    protected GameState gameState;
+    protected boolean isActive;
+
     public HumanPlayer()
     {
         super(0, true);
+        this.isActive = true;
+    }
+
+    public GameState getGameState()
+    {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState)
+    {
+        this.gameState = gameState;
+    }
+
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive)
+    {
+        this.isActive = isActive;
     }
 
     @Override

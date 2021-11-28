@@ -47,13 +47,13 @@ public abstract class GameComponent implements Component, Updatable, Disposable
     }
 
     @Override
-    public boolean getUpdatableEnabled()
+    public boolean isUpdatable()
     {
         return isUpdatable;
     }
 
     @Override
-    public void setUpdatableEnabled(boolean isUpdatable)
+    public void setUpdatable(boolean isUpdatable)
     {
         this.isUpdatable = isUpdatable;
     }

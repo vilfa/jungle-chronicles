@@ -13,7 +13,7 @@ public interface DrawableComponent extends Component
 
     void setDrawOrder(int drawOrder);
 
-    boolean getDrawableEnabled();
+    boolean isDrawable();
 
-    void setDrawableEnabled(boolean isDrawable);
+    void setDrawable(boolean isDrawable);
 }

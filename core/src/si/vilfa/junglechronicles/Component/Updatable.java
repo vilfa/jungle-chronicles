@@ -13,7 +13,7 @@ public interface Updatable
 
     void setUpdateOrder(int updateOrder);
 
-    boolean getUpdatableEnabled();
+    boolean isUpdatable();
 
-    void setUpdatableEnabled(boolean isUpdatable);
+    void setUpdatable(boolean isUpdatable);
 }

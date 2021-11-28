@@ -38,7 +38,7 @@ public class Player extends HumanPlayer
     @Override
     public void handleKeyDown(KeyDownInputEvent event)
     {
-        if (!isUpdatable) { return; }
+        if (!isUpdatable) return;
 
         log(event.toString());
         switch (event.getKeyCode())

@@ -17,8 +17,9 @@ import si.vilfa.junglechronicles.Physics.BodyFactory;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.Player;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
+import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
 import si.vilfa.junglechronicles.Scene.Objects.GameObjectFactory;
-import si.vilfa.junglechronicles.Scene.Objects.WorldBlock;
+import si.vilfa.junglechronicles.Scene.Objects.TerrainBlock;
 
 /**
  * @author luka
@@ -34,16 +35,18 @@ public class Gameplay extends DrawableGameComponent
     private final Renderer renderer;
     private final Box2DDebugRenderer debugRenderer;
     private final InputMultiplexer inputMultiplexer;
+    private final GameState gameState;
 
     public Gameplay()
     {
         super(0, true, 0, true);
         level = new Level();
         physics = new PhysicsEngine();
-        renderer = new Renderer(this.level, physics.getWorldWidth(), physics.getWorldHeight());
+        renderer = new Renderer(level, physics.getWorldWidth(), physics.getWorldHeight());
         debugRenderer = new Box2DDebugRenderer();
+        gameState = new GameState(level);
 
-
+        // TODO Move this to a level factory.
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance(BodyFactory.getInstance(
                 physics.getWorld()));
 
@@ -56,37 +59,56 @@ public class Gameplay extends DrawableGameComponent
                                                                    new Vector2(.4f, .7f),
                                                                    Player.class,
                                                                    Body.class);
+        player.setGameState(gameState);
         level.addItem(player);
 
         for (int i = 0; i < 200; i++)
         {
-            WorldBlock groundBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i,
-                                                                                                  .5f),
-                                                                                      0,
-                                                                                      Float.POSITIVE_INFINITY,
-                                                                                      0f,
-                                                                                      .1f,
-                                                                                      new Vector2(
-                                                                                              .5f,
-                                                                                              .5f),
-                                                                                      WorldBlock.class,
-                                                                                      Body.class);
+            TerrainBlock groundBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(
+                                                                                                i,
+                                                                                                .5f),
+                                                                                        0,
+                                                                                        Float.POSITIVE_INFINITY,
+                                                                                        0f,
+                                                                                        .1f,
+                                                                                        new Vector2(
+                                                                                                .5f,
+                                                                                                .5f),
+                                                                                        TerrainBlock.class,
+                                                                                        Body.class);
+            groundBlock.setGameState(gameState);
             level.addItem(groundBlock);
         }
 
         for (int i = 1; i < 3; i++)
         {
-            WorldBlock worldBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i,
-                                                                                                 5),
-                                                                                     0,
-                                                                                     Float.POSITIVE_INFINITY,
-                                                                                     0f,
-                                                                                     .1f,
-                                                                                     new Vector2(.5f,
-                                                                                                 .5f),
-                                                                                     WorldBlock.class,
-                                                                                     Body.class);
+            TerrainBlock worldBlock
+                    = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i, 5),
+                                                                       0,
+                                                                       Float.POSITIVE_INFINITY,
+                                                                       0f,
+                                                                       .1f,
+                                                                       new Vector2(.5f, .5f),
+                                                                       TerrainBlock.class,
+                                                                       Body.class);
+            worldBlock.setGameState(gameState);
             level.addItem(worldBlock);
+        }
+        // !TODO
+
+        for (int i = 0; i < 5; i++)
+        {
+            CollectibleBlock collectibleBlock
+                    = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(5 + i, 1.5f),
+                                                                       0f,
+                                                                       1f,
+                                                                       0f,
+                                                                       0f,
+                                                                       new Vector2(.25f, .25f),
+                                                                       CollectibleBlock.class,
+                                                                       Body.class);
+            collectibleBlock.setGameState(gameState);
+            level.addItem(collectibleBlock);
         }
 
         inputMultiplexer = new InputMultiplexer();
@@ -98,7 +120,7 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void draw()
     {
-        if (!isDrawable) { return; }
+        if (!isDrawable) return;
         renderer.draw();
         debugRenderer.render(physics.getWorld(), renderer.getCombined());
     }
@@ -116,7 +138,7 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void update()
     {
-        if (!isUpdatable) { return; }
+        if (!isUpdatable) return;
         physics.update();
         player.update();
         level.update();

@@ -54,13 +54,13 @@ public abstract class DrawableGameComponent implements DrawableComponent, Updata
     }
 
     @Override
-    public boolean getDrawableEnabled()
+    public boolean isDrawable()
     {
         return isDrawable;
     }
 
     @Override
-    public void setDrawableEnabled(boolean isDrawable)
+    public void setDrawable(boolean isDrawable)
     {
         this.isDrawable = isDrawable;
     }
@@ -84,13 +84,13 @@ public abstract class DrawableGameComponent implements DrawableComponent, Updata
     }
 
     @Override
-    public boolean getUpdatableEnabled()
+    public boolean isUpdatable()
     {
         return isUpdatable;
     }
 
     @Override
-    public void setUpdatableEnabled(boolean isUpdatable)
+    public void setUpdatable(boolean isUpdatable)
     {
         this.isUpdatable = isUpdatable;
     }

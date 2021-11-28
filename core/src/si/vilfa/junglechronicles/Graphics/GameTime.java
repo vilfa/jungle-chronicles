@@ -18,6 +18,12 @@ public class GameTime implements TimeProvider
     }
 
     @Override
+    public float getDeltaTime()
+    {
+        return Gdx.graphics.getDeltaTime();
+    }
+
+    @Override
     public long getElapsedGameTimeMillis()
     {
         return TimeUtils.timeSinceMillis(startGameTime);
@@ -39,11 +45,5 @@ public class GameTime implements TimeProvider
     public long getStartGameTimeSeconds()
     {
         return startGameTime / 1000;
-    }
-
-    @Override
-    public float getDeltaTime()
-    {
-        return Gdx.graphics.getDeltaTime();
     }
 }

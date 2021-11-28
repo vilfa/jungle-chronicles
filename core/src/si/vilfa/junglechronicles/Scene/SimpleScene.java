@@ -21,7 +21,7 @@ public class SimpleScene extends GameComponent implements Scene
     @Override
     public void update()
     {
-        if (!isUpdatable) { return; }
+        if (!isUpdatable) return;
 
         for (Object item : items)
         {

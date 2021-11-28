@@ -38,7 +38,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     @Override
     public void update()
     {
-        if (!isUpdatable) { return; }
+        if (!isUpdatable) return;
         world.step(timeStep, velocityIterations, positionIterations);
     }
 

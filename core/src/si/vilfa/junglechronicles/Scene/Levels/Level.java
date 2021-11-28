@@ -18,7 +18,7 @@ public class Level extends GameLevel
     @Override
     public void update()
     {
-        if (!isUpdatable) { return; }
+        if (!isUpdatable) return;
 
         scene.update();
     }

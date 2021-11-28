@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
 
 /**
@@ -15,12 +16,37 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
 public abstract class GameObject extends GameComponent implements PhysicsActor
 {
     protected final Body body;
+    protected boolean isActive;
+    protected GameState gameState;
 
     public GameObject(Body body)
     {
         super(0, true);
         this.body = body;
+        this.isActive = true;
     }
+
+    public GameState getGameState()
+    {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState)
+    {
+        this.gameState = gameState;
+    }
+
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive)
+    {
+        this.isActive = isActive;
+    }
+
+    public abstract BlockType getBlockType();
 
     @Override
     public abstract void update();
