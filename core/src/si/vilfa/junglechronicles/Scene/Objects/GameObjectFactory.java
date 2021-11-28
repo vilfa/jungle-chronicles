@@ -9,7 +9,6 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Physics.BodyFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 /**
  * @author luka
@@ -52,7 +51,7 @@ public class GameObjectFactory
             gameObject = objectType.getDeclaredConstructor(ctorParamType).newInstance(body);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
-            Gdx.app.log(this.getClass().getSimpleName(), e.getMessage());
+            Gdx.app.log(this.getClass().getSimpleName(), e.getMessage(), e);
             System.exit(-1);
         }
 
@@ -80,7 +79,7 @@ public class GameObjectFactory
             gameObject = objectType.getDeclaredConstructor(ctorParamType).newInstance(body);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
-            Gdx.app.log(this.getClass().getSimpleName(), e.getMessage());
+            Gdx.app.log(this.getClass().getSimpleName(), e.getMessage(), e);
             System.exit(-1);
         }
 
@@ -109,7 +108,7 @@ public class GameObjectFactory
             gameObject = objectType.getDeclaredConstructor(ctorParamType).newInstance(body);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
-            Gdx.app.log(this.getClass().getSimpleName(), Arrays.toString(e.getStackTrace()));
+            Gdx.app.error(this.getClass().getSimpleName(), e.getMessage(), e);
             System.exit(-1);
         }
 
@@ -138,7 +137,7 @@ public class GameObjectFactory
             gameObject = objectType.getDeclaredConstructor(ctorParamType).newInstance(body);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
-            Gdx.app.log(this.getClass().getSimpleName(), e.getMessage());
+            Gdx.app.error(this.getClass().getSimpleName(), e.getMessage(), e);
             System.exit(-1);
         }
 

@@ -21,7 +21,7 @@ public enum TrapBlockType implements BlockType
         return FULL_HEALTH;
     }
 
-    public int healthPoints()
+    public int getHealthPoints()
     {
         return healthPoints;
     }

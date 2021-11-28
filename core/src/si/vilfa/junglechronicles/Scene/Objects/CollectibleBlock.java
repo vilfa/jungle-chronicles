@@ -1,10 +1,8 @@
 package si.vilfa.junglechronicles.Scene.Objects;
 
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
+import si.vilfa.junglechronicles.Player.Human.Player;
 
 /**
  * @author luka
@@ -39,26 +37,19 @@ public class CollectibleBlock extends GameObject implements CollisionEventSubscr
     }
 
     @Override
-    public void handleBeginContact(Contact contact)
+    public void handleBeginContact(Object contact)
     {
-
+        log("Begin collision:" + contact);
+        if (contact instanceof Player)
+        {
+            isActive = false;
+        }
     }
 
     @Override
-    public void handleEndContact(Contact contact)
+    public void handleEndContact(Object contact)
     {
-
-    }
-
-    @Override
-    public void handlePreSolve(Contact contact, Manifold oldManifold)
-    {
-
-    }
-
-    @Override
-    public void handlePostSolve(Contact contact, ContactImpulse impulse)
-    {
-
+        log("End collision:" + contact);
+        log("Active:" + isActive);
     }
 }

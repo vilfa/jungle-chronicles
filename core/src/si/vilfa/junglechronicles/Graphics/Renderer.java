@@ -74,7 +74,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
         playerAnimationKeyframeDuration = 1 / 20f;
         playerAnimationState = 0f;
-        playerLastVelocityX = 0f;
+        playerLastVelocityX = 0.1f;
         playerRightKeyframes = new Array<>();
         playerLeftKeyframes = new Array<>();
 
@@ -142,13 +142,25 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                                             textureScalePixels,
                                                             textureScalePixels);
             atlas.addRegion(key.name(), textureRegion);
-            if (PlayerBlockType.getLeftKeyframes().contains(key, false))
-            {
-                playerLeftKeyframes.add(textureRegion);
-            } else if (PlayerBlockType.getRightKeyframes().contains(key, false))
-            {
-                playerRightKeyframes.add(textureRegion);
-            }
+            //            if (PlayerBlockType.getLeftKeyframes().contains(key, false))
+            //            {
+            //                int keyframeIndex = PlayerBlockType.getLeftKeyframes().indexOf(key,
+            //                false);
+            //                playerLeftKeyframes.insert(keyframeIndex, textureRegion);
+            //            } else if (PlayerBlockType.getRightKeyframes().contains(key, false))
+            //            {
+            //                int keyframeIndex = PlayerBlockType.getRightKeyframes().indexOf
+            //                (key, false);
+            //                playerRightKeyframes.insert(keyframeIndex, textureRegion);
+            //            }
+        }
+        for (PlayerBlockType keyframe : PlayerBlockType.getLeftKeyframes())
+        {
+            playerLeftKeyframes.add(atlas.findRegion(keyframe.name()));
+        }
+        for (PlayerBlockType keyframe : PlayerBlockType.getRightKeyframes())
+        {
+            playerRightKeyframes.add(atlas.findRegion(keyframe.name()));
         }
         playerLeftAnimation = new Animation<>(playerAnimationKeyframeDuration, playerLeftKeyframes);
         playerRightAnimation = new Animation<>(playerAnimationKeyframeDuration,
@@ -205,54 +217,66 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             if (item instanceof Player)
             {
                 Player p = ((Player) item);
-                position = p.getPosition();
-                velocity = p.getVelocity();
-                TextureRegion region;
-                if (velocity.x > 0f)
+                if (p.isActive())
                 {
-                    playerLastVelocityX = velocity.x;
-                    playerAnimationState += deltaTime;
-                    region = playerRightAnimation.getKeyFrame(playerAnimationState, true);
-                } else if (velocity.x < 0f)
-                {
-                    playerLastVelocityX = velocity.x;
-                    playerAnimationState += deltaTime;
-                    region = playerLeftAnimation.getKeyFrame(playerAnimationState, true);
-                } else if (playerLastVelocityX > 0f)
-                {
-                    region = playerRightKeyframes.first();
-                } else
-                {
-                    region = playerLeftKeyframes.first();
+                    position = p.getPosition();
+                    velocity = p.getVelocity();
+                    TextureRegion region;
+                    if (velocity.x > 0f)
+                    {
+                        playerLastVelocityX = velocity.x;
+                        playerAnimationState += deltaTime;
+                        region = playerRightAnimation.getKeyFrame(playerAnimationState, true);
+                    } else if (velocity.x < 0f)
+                    {
+                        playerLastVelocityX = velocity.x;
+                        playerAnimationState += deltaTime;
+                        region = playerLeftAnimation.getKeyFrame(playerAnimationState, true);
+                    } else if (playerLastVelocityX > 0f)
+                    {
+                        region = playerRightKeyframes.first();
+                    } else
+                    {
+                        region = playerLeftKeyframes.first();
+                    }
+                    sprite = new Sprite(region);
+                    sprite.setSize(1.75f, 1.75f);
+                    sprite.setCenter(position.x, position.y);
+                    sprite.draw(spriteBatch);
                 }
-                sprite = new Sprite(region);
-                sprite.setSize(1.75f, 1.75f);
-                sprite.setCenter(position.x, position.y);
-                sprite.draw(spriteBatch);
             } else if (item instanceof TerrainBlock)
             {
                 TerrainBlock b = ((TerrainBlock) item);
-                position = b.getPosition();
-                sprite = atlas.createSprite(b.getBlockType().name());
-                sprite.setSize(1f, 1f);
-                sprite.setCenter(position.x, position.y);
-                sprite.draw(spriteBatch);
+                if (b.isActive())
+                {
+                    position = b.getPosition();
+                    sprite = atlas.createSprite(b.getBlockType().name());
+                    sprite.setSize(1f, 1f);
+                    sprite.setCenter(position.x, position.y);
+                    sprite.draw(spriteBatch);
+                }
             } else if (item instanceof CollectibleBlock)
             {
                 CollectibleBlock b = ((CollectibleBlock) item);
-                position = b.getPosition();
-                sprite = atlas.createSprite(b.getBlockType().name());
-                sprite.setSize(1f, 1f);
-                sprite.setCenter(position.x, position.y);
-                sprite.draw(spriteBatch);
+                if (b.isActive())
+                {
+                    position = b.getPosition();
+                    sprite = atlas.createSprite(b.getBlockType().name());
+                    sprite.setSize(1f, 1f);
+                    sprite.setCenter(position.x, position.y);
+                    sprite.draw(spriteBatch);
+                }
             } else if (item instanceof TrapBlock)
             {
                 TrapBlock b = ((TrapBlock) item);
-                position = b.getPosition();
-                sprite = atlas.createSprite(b.getBlockType().name());
-                sprite.setSize(1f, 1f);
-                sprite.setCenter(position.x, position.y);
-                sprite.draw(spriteBatch);
+                if (b.isActive())
+                {
+                    position = b.getPosition();
+                    sprite = atlas.createSprite(b.getBlockType().name());
+                    sprite.setSize(1f, 1f);
+                    sprite.setCenter(position.x, position.y);
+                    sprite.draw(spriteBatch);
+                }
             }
         }
         spriteBatch.end();

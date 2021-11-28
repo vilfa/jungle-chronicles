@@ -44,7 +44,7 @@ public class Gameplay extends DrawableGameComponent
         physics = new PhysicsEngine();
         renderer = new Renderer(level, physics.getWorldWidth(), physics.getWorldHeight());
         debugRenderer = new Box2DDebugRenderer();
-        gameState = new GameState(level);
+        gameState = new GameState(level, physics);
 
         // TODO Move this to a level factory.
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance(BodyFactory.getInstance(
@@ -142,6 +142,7 @@ public class Gameplay extends DrawableGameComponent
         physics.update();
         player.update();
         level.update();
+        gameState.update();
         renderer.update();
     }
 

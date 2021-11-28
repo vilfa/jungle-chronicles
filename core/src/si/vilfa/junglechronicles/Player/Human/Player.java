@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
+import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
+import si.vilfa.junglechronicles.Scene.Objects.TrapBlock;
 
 /**
  * @author luka
@@ -40,7 +42,7 @@ public class Player extends HumanPlayer
     {
         if (!isUpdatable) return;
 
-        log(event.toString());
+//        log(event.toString());
         switch (event.getKeyCode())
         {
             case Input.Keys.LEFT:
@@ -60,15 +62,14 @@ public class Player extends HumanPlayer
                 setVelocity(new Vector2(0f, -6.5f));
                 break;
         }
-        log("P" + getPosition().toString());
-        log("V" + getVelocity().toString());
     }
 
     @Override
     public void handleKeyUp(KeyUpInputEvent event)
     {
-        log(event.toString());
+        if (!isUpdatable) return;
 
+//        log(event.toString());
         switch (event.getKeyCode())
         {
             case Input.Keys.LEFT:
@@ -82,8 +83,6 @@ public class Player extends HumanPlayer
                 setVelocity(new Vector2(0f, 0f));
                 break;
         }
-        log("P" + getPosition().toString());
-        log("V" + getVelocity().toString());
     }
 
     @Override
@@ -117,27 +116,25 @@ public class Player extends HumanPlayer
     }
 
     @Override
-    public void handleBeginContact(Contact contact)
+    public void handleBeginContact(Object contact)
     {
-        log(contact.toString());
+        log("Begin collision:" + contact);
+        if (contact instanceof CollectibleBlock)
+        {
+            int points = ((CollectibleBlock) contact).getBlockType().getPoints();
+            gameState.setPlayerScore(gameState.getPlayerScore() + points);
+            gameState.notifyStateChange(contact, false);
+        } else if (contact instanceof TrapBlock)
+        {
+            int healthPoints = ((TrapBlock) contact).getBlockType().getHealthPoints();
+            gameState.setPlayerHealth(gameState.getPlayerHealth() - healthPoints);
+        }
     }
 
     @Override
-    public void handleEndContact(Contact contact)
+    public void handleEndContact(Object contact)
     {
-        log(contact.toString());
-    }
-
-    @Override
-    public void handlePreSolve(Contact contact, Manifold oldManifold)
-    {
-        log(contact.toString() + oldManifold.toString());
-    }
-
-    @Override
-    public void handlePostSolve(Contact contact, ContactImpulse impulse)
-    {
-        log(contact.toString() + impulse.toString());
+        log("End collision:" +  contact);
     }
 
     @Override
