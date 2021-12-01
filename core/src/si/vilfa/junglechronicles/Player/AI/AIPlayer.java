@@ -1,19 +1,29 @@
 package si.vilfa.junglechronicles.Player.AI;
 
-import si.vilfa.junglechronicles.Component.GameComponent;
+import com.badlogic.gdx.physics.box2d.Body;
+import si.vilfa.junglechronicles.Player.Player;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.AI
  **/
-public abstract class AIPlayer extends GameComponent
+public class AIPlayer extends Player
 {
-    public AIPlayer()
+    public AIPlayer(Body body)
     {
-        super(0, true);
+        super(body);
     }
 
     @Override
-    public abstract void update();
+    public void update()
+    {
+
+    }
+
+    @Override
+    public void dispose()
+    {
+
+    }
 }

@@ -11,7 +11,7 @@ import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
  **/
 public class TerrainBlock extends GameObject implements CollisionEventSubscriber
 {
-    private final TerrainBlockType blockType;
+    private TerrainBlockType blockType;
 
     public TerrainBlock(Body body)
     {
@@ -23,6 +23,12 @@ public class TerrainBlock extends GameObject implements CollisionEventSubscriber
     public TerrainBlockType getBlockType()
     {
         return blockType;
+    }
+
+    @Override
+    public void setBlockType(BlockType blockType)
+    {
+        this.blockType = (TerrainBlockType) blockType;
     }
 
     @Override

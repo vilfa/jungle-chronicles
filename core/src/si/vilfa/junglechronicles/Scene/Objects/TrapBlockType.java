@@ -7,7 +7,10 @@ package si.vilfa.junglechronicles.Scene.Objects;
  **/
 public enum TrapBlockType implements BlockType
 {
-    FULL_HEALTH(100), HALF_HEALTH(50), QUARTER_HEALTH(25);
+    FULL_HEALTH(100),
+    THREE_QUARTER_HEALTH(75),
+    HALF_HEALTH(50),
+    QUARTER_HEALTH(25);
 
     private final int healthPoints;
 

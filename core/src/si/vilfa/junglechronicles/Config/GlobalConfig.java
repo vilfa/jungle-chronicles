@@ -4,12 +4,14 @@ import com.badlogic.gdx.math.Vector2;
 import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlockType;
 import si.vilfa.junglechronicles.Scene.Objects.PlayerBlockType;
 import si.vilfa.junglechronicles.Scene.Objects.TerrainBlockType;
+import si.vilfa.junglechronicles.Scene.Objects.TrapBlockType;
 
 import java.util.HashMap;
 
 import static si.vilfa.junglechronicles.Scene.Objects.CollectibleBlockType.*;
 import static si.vilfa.junglechronicles.Scene.Objects.PlayerBlockType.*;
 import static si.vilfa.junglechronicles.Scene.Objects.TerrainBlockType.*;
+import static si.vilfa.junglechronicles.Scene.Objects.TrapBlockType.*;
 
 /**
  * @author luka
@@ -270,12 +272,26 @@ public class GlobalConfig
                             new Vector2(10 * RESOLUTION_SCALE_TWO, 3 * RESOLUTION_SCALE_TWO)));
     }};
 
-    //    public static HashMap<TrapBlockType, ConfigEntry> TRAP_BLOCK_CONFIG
-    //            = new HashMap<TrapBlockType, ConfigEntry>()
-    //    {{
-    //        put(FULL_HEALTH, new ConfigEntry("", )); put(HALF_HEALTH, new ConfigEntry("", ));
-    //        put(QUARTER_HEALTH, new ConfigEntry("", , ));
-    //    }};
+    public static HashMap<TrapBlockType, ConfigEntry> TRAP_BLOCK_CONFIG
+            = new HashMap<TrapBlockType, ConfigEntry>()
+    {{
+        put(FULL_HEALTH,
+            new ConfigEntry("",
+                            new Vector2(27 * RESOLUTION_SCALE_ONE, RESOLUTION_SCALE_ONE),
+                            new Vector2(11 * RESOLUTION_SCALE_TWO, 3 * RESOLUTION_SCALE_TWO)));
+        put(THREE_QUARTER_HEALTH,
+            new ConfigEntry("",
+                            new Vector2(28 * RESOLUTION_SCALE_ONE, RESOLUTION_SCALE_ONE),
+                            new Vector2(12 * RESOLUTION_SCALE_TWO, 3 * RESOLUTION_SCALE_TWO)));
+        put(HALF_HEALTH,
+            new ConfigEntry("",
+                            new Vector2(29 * RESOLUTION_SCALE_ONE, RESOLUTION_SCALE_ONE),
+                            new Vector2(13 * RESOLUTION_SCALE_TWO, 3 * RESOLUTION_SCALE_TWO)));
+        put(QUARTER_HEALTH,
+            new ConfigEntry("",
+                            new Vector2(30 * RESOLUTION_SCALE_ONE, RESOLUTION_SCALE_ONE),
+                            new Vector2(14 * RESOLUTION_SCALE_TWO, 3 * RESOLUTION_SCALE_TWO)));
+    }};
 
     public static class ConfigEntry
     {

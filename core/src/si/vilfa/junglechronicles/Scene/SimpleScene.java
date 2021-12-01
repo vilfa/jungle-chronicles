@@ -1,5 +1,6 @@
 package si.vilfa.junglechronicles.Scene;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 
@@ -11,11 +12,13 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 public class SimpleScene extends GameComponent implements Scene
 {
     protected final Array<Object> items;
+    protected final Array<Actor> actors;
 
     public SimpleScene()
     {
         super(0, true);
         items = new Array<>();
+        actors = new Array<>();
     }
 
     @Override
@@ -29,6 +32,9 @@ public class SimpleScene extends GameComponent implements Scene
             {
                 ((GameComponent) item).update();
             }
+        }
+        for (Actor actor : actors)
+        {
         }
     }
 

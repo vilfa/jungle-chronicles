@@ -2,7 +2,7 @@ package si.vilfa.junglechronicles.Scene.Objects;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
-import si.vilfa.junglechronicles.Player.Human.Player;
+import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 
 /**
  * @author luka
@@ -11,7 +11,7 @@ import si.vilfa.junglechronicles.Player.Human.Player;
  **/
 public class CollectibleBlock extends GameObject implements CollisionEventSubscriber
 {
-    CollectibleBlockType blockType;
+    private CollectibleBlockType blockType;
 
     public CollectibleBlock(Body body)
     {
@@ -23,6 +23,12 @@ public class CollectibleBlock extends GameObject implements CollisionEventSubscr
     public CollectibleBlockType getBlockType()
     {
         return blockType;
+    }
+
+    @Override
+    public void setBlockType(BlockType blockType)
+    {
+        this.blockType = (CollectibleBlockType) blockType;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class CollectibleBlock extends GameObject implements CollisionEventSubscr
     public void handleBeginContact(Object contact)
     {
         log("Begin collision:" + contact);
-        if (contact instanceof Player)
+        if (contact instanceof HumanPlayer)
         {
             isActive = false;
         }

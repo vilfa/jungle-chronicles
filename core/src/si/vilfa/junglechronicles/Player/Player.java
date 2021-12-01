@@ -1,88 +1,48 @@
-package si.vilfa.junglechronicles.Player.Human;
+package si.vilfa.junglechronicles.Player;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
+import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
-import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
-import si.vilfa.junglechronicles.Scene.Objects.TrapBlock;
 
 /**
  * @author luka
- * @date 07/11/2021
+ * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Player.Human
  **/
-public class Player extends HumanPlayer
+public abstract class Player extends GameComponent
         implements PhysicsActor, InputEventSubscriber, CollisionEventSubscriber
 {
     private final Body body;
+    protected GameState gameState;
+    protected boolean isActive;
 
     public Player(Body body)
     {
-        super();
+        super(0, true);
+        this.isActive = true;
         this.body = body;
     }
 
     @Override
-    public void update()
-    {
-        if (!isUpdatable) return;
-    }
+    public abstract void update();
 
     @Override
-    public void dispose()
-    {
-    }
+    public abstract void dispose();
 
     @Override
     public void handleKeyDown(KeyDownInputEvent event)
     {
-        if (!isUpdatable) return;
-
-//        log(event.toString());
-        switch (event.getKeyCode())
-        {
-            case Input.Keys.LEFT:
-            case Input.Keys.A:
-                setVelocity(new Vector2(-5f, 0f));
-                break;
-            case Input.Keys.RIGHT:
-            case Input.Keys.D:
-                setVelocity(new Vector2(5f, 0f));
-                break;
-            case Input.Keys.UP:
-            case Input.Keys.W:
-                setVelocity(new Vector2(0f, 6.5f));
-                break;
-            case Input.Keys.DOWN:
-            case Input.Keys.S:
-                setVelocity(new Vector2(0f, -6.5f));
-                break;
-        }
     }
 
     @Override
     public void handleKeyUp(KeyUpInputEvent event)
     {
-        if (!isUpdatable) return;
-
-//        log(event.toString());
-        switch (event.getKeyCode())
-        {
-            case Input.Keys.LEFT:
-            case Input.Keys.A:
-            case Input.Keys.RIGHT:
-            case Input.Keys.D:
-            case Input.Keys.UP:
-            case Input.Keys.W:
-            case Input.Keys.DOWN:
-            case Input.Keys.S:
-                setVelocity(new Vector2(0f, 0f));
-                break;
-        }
     }
 
     @Override
@@ -118,23 +78,31 @@ public class Player extends HumanPlayer
     @Override
     public void handleBeginContact(Object contact)
     {
-        log("Begin collision:" + contact);
-        if (contact instanceof CollectibleBlock)
-        {
-            int points = ((CollectibleBlock) contact).getBlockType().getPoints();
-            gameState.setPlayerScore(gameState.getPlayerScore() + points);
-            gameState.notifyStateChange(contact, false);
-        } else if (contact instanceof TrapBlock)
-        {
-            int healthPoints = ((TrapBlock) contact).getBlockType().getHealthPoints();
-            gameState.setPlayerHealth(gameState.getPlayerHealth() - healthPoints);
-        }
     }
 
     @Override
     public void handleEndContact(Object contact)
     {
-        log("End collision:" +  contact);
+    }
+
+    public GameState getGameState()
+    {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState)
+    {
+        this.gameState = gameState;
+    }
+
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive)
+    {
+        this.isActive = isActive;
     }
 
     @Override

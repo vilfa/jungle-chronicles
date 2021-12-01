@@ -48,6 +48,8 @@ public abstract class GameObject extends GameComponent implements PhysicsActor
 
     public abstract BlockType getBlockType();
 
+    public abstract void setBlockType(BlockType blockType);
+
     @Override
     public abstract void update();
 

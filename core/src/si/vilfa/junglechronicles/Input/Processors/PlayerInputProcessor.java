@@ -2,16 +2,16 @@ package si.vilfa.junglechronicles.Input.Processors;
 
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.TargetInputProcessor;
-import si.vilfa.junglechronicles.Player.Human.Player;
+import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 
 /**
  * @author luka
  * @date 09/11/2021
  * @package si.vilfa.junglechronicles.Input.Processors
  **/
-public class PlayerInputProcessor extends TargetInputProcessor<Player>
+public class PlayerInputProcessor extends TargetInputProcessor<HumanPlayer>
 {
-    public PlayerInputProcessor(Player target)
+    public PlayerInputProcessor(HumanPlayer target)
     {
         super(target);
     }
@@ -73,7 +73,7 @@ public class PlayerInputProcessor extends TargetInputProcessor<Player>
     }
 
     @Override
-    public Player getTarget()
+    public HumanPlayer getTarget()
     {
         return target;
     }

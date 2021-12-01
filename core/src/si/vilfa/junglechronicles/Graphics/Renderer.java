@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Config.GlobalConfig;
-import si.vilfa.junglechronicles.Player.Human.Player;
+import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
 import si.vilfa.junglechronicles.Scene.Objects.*;
 
@@ -72,7 +72,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         level = gameLevel;
         spriteBatch = new SpriteBatch();
 
-        playerAnimationKeyframeDuration = 1 / 20f;
+        playerAnimationKeyframeDuration = 1 / 15f;
         playerAnimationState = 0f;
         playerLastVelocityX = 0.1f;
         playerRightKeyframes = new Array<>();
@@ -121,6 +121,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                               textureScalePixels,
                                               textureScalePixels));
         }
+
         for (CollectibleBlockType key : GlobalConfig.COLLECTIBLE_BLOCK_CONFIG.keySet())
         {
             configEntry = GlobalConfig.COLLECTIBLE_BLOCK_CONFIG.get(key);
@@ -132,6 +133,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                               textureScalePixels,
                                               textureScalePixels));
         }
+
         for (PlayerBlockType key : GlobalConfig.PLAYER_BLOCK_CONFIG.keySet())
         {
             configEntry = GlobalConfig.PLAYER_BLOCK_CONFIG.get(key);
@@ -142,17 +144,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                                             textureScalePixels,
                                                             textureScalePixels);
             atlas.addRegion(key.name(), textureRegion);
-            //            if (PlayerBlockType.getLeftKeyframes().contains(key, false))
-            //            {
-            //                int keyframeIndex = PlayerBlockType.getLeftKeyframes().indexOf(key,
-            //                false);
-            //                playerLeftKeyframes.insert(keyframeIndex, textureRegion);
-            //            } else if (PlayerBlockType.getRightKeyframes().contains(key, false))
-            //            {
-            //                int keyframeIndex = PlayerBlockType.getRightKeyframes().indexOf
-            //                (key, false);
-            //                playerRightKeyframes.insert(keyframeIndex, textureRegion);
-            //            }
         }
         for (PlayerBlockType keyframe : PlayerBlockType.getLeftKeyframes())
         {
@@ -165,6 +156,18 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         playerLeftAnimation = new Animation<>(playerAnimationKeyframeDuration, playerLeftKeyframes);
         playerRightAnimation = new Animation<>(playerAnimationKeyframeDuration,
                                                playerRightKeyframes);
+
+        for (TrapBlockType key : GlobalConfig.TRAP_BLOCK_CONFIG.keySet())
+        {
+            configEntry = GlobalConfig.TRAP_BLOCK_CONFIG.get(key);
+            textureLoc = configEntry.getAtlasLocation(textureScale);
+            TextureRegion textureRegion = new TextureRegion(atlasTexture,
+                                                            (int) textureLoc.x,
+                                                            (int) textureLoc.y,
+                                                            textureScalePixels,
+                                                            textureScalePixels);
+            atlas.addRegion(key.name(), textureRegion);
+        }
     }
 
     public Matrix4 getCombined()
@@ -214,9 +217,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             Vector2 position;
             Vector2 velocity;
             Sprite sprite;
-            if (item instanceof Player)
+            if (item instanceof HumanPlayer)
             {
-                Player p = ((Player) item);
+                HumanPlayer p = ((HumanPlayer) item);
                 if (p.isActive())
                 {
                     position = p.getPosition();

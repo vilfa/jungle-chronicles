@@ -10,7 +10,7 @@ import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
  **/
 public class TrapBlock extends GameObject implements CollisionEventSubscriber
 {
-    private final TrapBlockType blockType;
+    private TrapBlockType blockType;
 
     public TrapBlock(Body body)
     {
@@ -22,6 +22,12 @@ public class TrapBlock extends GameObject implements CollisionEventSubscriber
     public TrapBlockType getBlockType()
     {
         return blockType;
+    }
+
+    @Override
+    public void setBlockType(BlockType blockType)
+    {
+        this.blockType = (TrapBlockType) blockType;
     }
 
     @Override

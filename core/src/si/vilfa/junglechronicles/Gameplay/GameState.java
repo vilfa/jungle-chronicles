@@ -1,9 +1,15 @@
 package si.vilfa.junglechronicles.Gameplay;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Physics.BodyFactory;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
+import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
+import si.vilfa.junglechronicles.Scene.Levels.LevelFactory;
+import si.vilfa.junglechronicles.Scene.Objects.GameObjectFactory;
 
 /**
  * @author luka
@@ -12,22 +18,55 @@ import si.vilfa.junglechronicles.Scene.Levels.Level;
  **/
 public class GameState extends GameComponent implements StateChange
 {
+    private final GameObjectFactory gameObjectFactory;
+    private final LevelFactory levelFactory;
+
     private Level currentLevel;
-    private PhysicsEngine physicsEngine;
+    private final PhysicsEngine physics;
+    private HumanPlayer player;
     private float currentLevelDuration;
     private int playerHealth;
     private int playerScore;
     private boolean isPaused;
 
-    public GameState(Level currentLevel, PhysicsEngine physicsEngine)
+    public GameState()
     {
         super(0, true);
-        this.currentLevel = currentLevel;
-        this.physicsEngine = physicsEngine;
+        physics = new PhysicsEngine();
+
+        // TODO Move this so this class can only interact with the level factory.
+        gameObjectFactory
+                = GameObjectFactory.getInstance(BodyFactory.getInstance(physics.getWorld()));
+        levelFactory = LevelFactory.getInstance(gameObjectFactory);
+
+        player = gameObjectFactory.createDynamicWithPolygonFixture(new Vector2(1f, 2f),
+                                                                   new Vector2(0f, 0f),
+                                                                   0f,
+                                                                   65f,
+                                                                   0f,
+                                                                   0.1f,
+                                                                   new Vector2(.4f, .7f),
+                                                                   HumanPlayer.class,
+                                                                   Body.class);
+        player.setGameState(this);
+
+        currentLevel = levelFactory.createDefaultLevel(this);
+        currentLevel.addItem(player);
+
         currentLevelDuration = 0f;
         playerHealth = 100;
         playerScore = 0;
         isPaused = false;
+    }
+
+    public PhysicsEngine getPhysics()
+    {
+        return physics;
+    }
+
+    public HumanPlayer getPlayer()
+    {
+        return player;
     }
 
     public float getCurrentLevelDuration()
@@ -43,7 +82,7 @@ public class GameState extends GameComponent implements StateChange
     @Override
     public void notifyStateChange(Object object, boolean isActive)
     {
-        physicsEngine.notifyStateChange(object, isActive);
+        physics.notifyStateChange(object, isActive);
     }
 
     public void setCurrentLevel(Level currentLevel)
@@ -103,11 +142,18 @@ public class GameState extends GameComponent implements StateChange
     @Override
     public void update()
     {
+        if (!isUpdatable) return;
         currentLevelDuration += Renderer.gameTime.getDeltaTime();
+        physics.update();
+        player.update();
+        currentLevel.update();
     }
 
     @Override
     public void dispose()
     {
+        currentLevel.dispose();
+        player.dispose();
+        physics.dispose();
     }
 }
