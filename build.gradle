@@ -23,6 +23,7 @@ allprojects {
         ashleyVersion = '1.7.3'
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.1.0'
+        apacheLang3Version = '3.12.0'
     }
 
     repositories {
@@ -67,6 +68,8 @@ project(":core") {
     apply plugin: "java-library"
 
     dependencies {
+        implementation "org.apache.commons:commons-lang3:3.12.0"
+        implementation 'com.google.code.gson:gson:2.8.9'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

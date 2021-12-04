@@ -33,6 +33,10 @@ task dist(type: Jar) {
     with jar
 }
 
+dependencies {
+    api 'org.apache.commons:commons-lang3:3.12.0'
+}
+
 dist.dependsOn classes
 
 eclipse.project.name = appName + "-desktop"

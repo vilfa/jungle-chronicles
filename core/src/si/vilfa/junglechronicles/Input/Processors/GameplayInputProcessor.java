@@ -5,7 +5,6 @@ import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Input.Events.TouchDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.TouchUpInputEvent;
-import si.vilfa.junglechronicles.Input.TargetInputProcessor;
 
 /**
  * @author luka

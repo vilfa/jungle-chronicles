@@ -2,19 +2,26 @@ package si.vilfa.junglechronicles.Graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.google.gson.GsonBuilder;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
-import si.vilfa.junglechronicles.Config.GlobalConfig;
+import si.vilfa.junglechronicles.Config.GlobalConfig.TiledMapLayer;
+import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Scene.Objects.*;
 
 /**
  * @author luka
@@ -34,10 +41,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private final int screenWidthMax;
     private final int screenHeightMax;
     private final int screenRefreshRate;
-    private final int textureScale;
-    private final int textureScalePixels;
-    private final Texture atlasTexture;
-    private final TextureAtlas atlas;
+    public final float worldPpmMul;
     private final float playerAnimationKeyframeDuration;
     private final Array<TextureRegion> playerLeftKeyframes;
     private final Array<TextureRegion> playerRightKeyframes;
@@ -46,13 +50,14 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private float screenAspectRatio;
     private float playerAnimationState;
     private float playerLastVelocityX;
+    private Vector2 playerLastPosition;
     private Animation<TextureRegion> playerLeftAnimation;
     private Animation<TextureRegion> playerRightAnimation;
 
     private float deltaTime;
     private float fpsTimer;
 
-    public Renderer(Level gameLevel, float gameWorldWidth, float gameWorldHeight)
+    public Renderer(GameState gameState)
     {
         super(0, true, 0, true);
 
@@ -69,33 +74,21 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         screenRefreshRate = displayMode.refreshRate;
         screenAspectRatio = (float) screenWidth / (float) screenHeight;
 
-        level = gameLevel;
+        level = gameState.getCurrentLevel();
+        worldPpmMul = gameState.getPhysics().getWorldPpmMul();
         spriteBatch = new SpriteBatch();
 
         playerAnimationKeyframeDuration = 1 / 15f;
         playerAnimationState = 0f;
         playerLastVelocityX = 0.1f;
+        playerLastPosition = new Vector2();
         playerRightKeyframes = new Array<>();
         playerLeftKeyframes = new Array<>();
 
-        if (screenWidth > 1920 && screenHeight > 1080)
-        {
-            textureScale = 2;
-            textureScalePixels = GlobalConfig.RESOLUTION_SCALE_TWO;
-            atlasTexture = new Texture("2x/Atlas@2x.png");
-        } else
-        {
-            textureScale = 1;
-            textureScalePixels = GlobalConfig.RESOLUTION_SCALE_ONE;
-            atlasTexture = new Texture("1x/Atlas@1x.png");
-        }
-        atlas = new TextureAtlas();
-        initializeTextureAtlas();
-
         visibleWorldHeight = 13;
         visibleWorldWidth = visibleWorldHeight * screenAspectRatio;
-        worldWidth = gameWorldWidth;
-        worldHeight = gameWorldHeight;
+        worldWidth = gameState.getPhysics().getWorldWidth();
+        worldHeight = gameState.getPhysics().getWorldHeight();
 
         Gdx.graphics.setForegroundFPS(screenRefreshRate);
 
@@ -104,70 +97,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                       worldWidth,
                                       worldHeight);
         viewport.apply(true);
-    }
-
-    private void initializeTextureAtlas()
-    {
-        GlobalConfig.ConfigEntry configEntry;
-        Vector2 textureLoc;
-        for (TerrainBlockType key : GlobalConfig.TERRAIN_BLOCK_CONFIG.keySet())
-        {
-            configEntry = GlobalConfig.TERRAIN_BLOCK_CONFIG.get(key);
-            textureLoc = configEntry.getAtlasLocation(textureScale);
-            atlas.addRegion(key.name(),
-                            new TextureRegion(atlasTexture,
-                                              (int) textureLoc.x,
-                                              (int) textureLoc.y,
-                                              textureScalePixels,
-                                              textureScalePixels));
-        }
-
-        for (CollectibleBlockType key : GlobalConfig.COLLECTIBLE_BLOCK_CONFIG.keySet())
-        {
-            configEntry = GlobalConfig.COLLECTIBLE_BLOCK_CONFIG.get(key);
-            textureLoc = configEntry.getAtlasLocation(textureScale);
-            atlas.addRegion(key.name(),
-                            new TextureRegion(atlasTexture,
-                                              (int) textureLoc.x,
-                                              (int) textureLoc.y,
-                                              textureScalePixels,
-                                              textureScalePixels));
-        }
-
-        for (PlayerBlockType key : GlobalConfig.PLAYER_BLOCK_CONFIG.keySet())
-        {
-            configEntry = GlobalConfig.PLAYER_BLOCK_CONFIG.get(key);
-            textureLoc = configEntry.getAtlasLocation(textureScale);
-            TextureRegion textureRegion = new TextureRegion(atlasTexture,
-                                                            (int) textureLoc.x,
-                                                            (int) textureLoc.y,
-                                                            textureScalePixels,
-                                                            textureScalePixels);
-            atlas.addRegion(key.name(), textureRegion);
-        }
-        for (PlayerBlockType keyframe : PlayerBlockType.getLeftKeyframes())
-        {
-            playerLeftKeyframes.add(atlas.findRegion(keyframe.name()));
-        }
-        for (PlayerBlockType keyframe : PlayerBlockType.getRightKeyframes())
-        {
-            playerRightKeyframes.add(atlas.findRegion(keyframe.name()));
-        }
-        playerLeftAnimation = new Animation<>(playerAnimationKeyframeDuration, playerLeftKeyframes);
-        playerRightAnimation = new Animation<>(playerAnimationKeyframeDuration,
-                                               playerRightKeyframes);
-
-        for (TrapBlockType key : GlobalConfig.TRAP_BLOCK_CONFIG.keySet())
-        {
-            configEntry = GlobalConfig.TRAP_BLOCK_CONFIG.get(key);
-            textureLoc = configEntry.getAtlasLocation(textureScale);
-            TextureRegion textureRegion = new TextureRegion(atlasTexture,
-                                                            (int) textureLoc.x,
-                                                            (int) textureLoc.y,
-                                                            textureScalePixels,
-                                                            textureScalePixels);
-            atlas.addRegion(key.name(), textureRegion);
-        }
     }
 
     public Matrix4 getCombined()
@@ -182,6 +111,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         screenHeight = height;
         viewport.update(screenWidth, screenHeight, true);
         log("Resize: width=" + width + ",height=" + height);
+        log(new GsonBuilder().setPrettyPrinting().create().toJson(viewport));
     }
 
     @Override
@@ -202,6 +132,17 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         return screenRefreshRate;
     }
 
+    private void followPlayer()
+    {
+        Vector2 newCameraPos = new Vector2(playerLastPosition);
+        if (playerLastPosition.y < visibleWorldHeight / 2f)
+        {
+            newCameraPos.y = visibleWorldHeight / 2f;
+        }
+        viewport.getCamera().position.set(newCameraPos, 0f);
+        viewport.getCamera().update();
+    }
+
     @Override
     public void draw()
     {
@@ -209,14 +150,54 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         // TODO Make draw calls use draw order.
         deltaTime = gameTime.getDeltaTime();
         ScreenUtils.clear(1, 1, 1, 1);
+
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
         // TODO Add background rendering.
+
+        MapLayer terrainLayer = level.getTiledMap()
+                                     .getLayers()
+                                     .get(TiledMapLayer.TERRAIN_LAYER.getLayerName());
+        if (terrainLayer instanceof TiledMapTileLayer && terrainLayer.isVisible())
+        {
+            TiledMapTileLayer layer = ((TiledMapTileLayer) terrainLayer);
+            for (int i = 0; i < layer.getHeight(); i++)
+            {
+                for (int j = 0; j < layer.getWidth(); j++)
+                {
+                    TiledMapTileLayer.Cell cell = layer.getCell(i, j);
+
+                    if (cell == null) continue;
+
+                    TiledMapTile tile = cell.getTile();
+                    TextureRegion textureRegion = tile.getTextureRegion();
+                    Vector2 offset = new Vector2(textureRegion.getRegionWidth() * worldPpmMul * 0.5f,
+                                                 textureRegion.getRegionHeight() * worldPpmMul
+                                                 * 0.5f);
+                    Vector2 position = new Vector2(i * layer.getTileWidth() * worldPpmMul,
+                                                   j * layer.getTileHeight() * worldPpmMul);
+                    Sprite sprite = new Sprite(textureRegion);
+                    sprite.setSize(textureRegion.getRegionWidth() * worldPpmMul,
+                                   textureRegion.getRegionHeight() * worldPpmMul);
+                    sprite.setPosition(position.x, position.y);
+                    sprite.draw(spriteBatch);
+                }
+            }
+        }
+
+        MapLayer backgroundLayer = level.getTiledMap()
+                                        .getLayers()
+                                        .get(TiledMapLayer.BACKGROUND_LAYER.getLayerName());
+        if (backgroundLayer instanceof TiledMapImageLayer && backgroundLayer.isVisible())
+        {
+            TiledMapImageLayer layer = ((TiledMapImageLayer) backgroundLayer);
+        }
+
         for (Object item : level.getItems())
         {
             Vector2 position;
             Vector2 velocity;
-            Sprite sprite;
+            //            Sprite sprite;
             if (item instanceof HumanPlayer)
             {
                 HumanPlayer p = ((HumanPlayer) item);
@@ -224,63 +205,66 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                 {
                     position = p.getPosition();
                     velocity = p.getVelocity();
-                    TextureRegion region;
+                    playerLastPosition = position;
+                    //                    TextureRegion region;
                     if (velocity.x > 0f)
                     {
                         playerLastVelocityX = velocity.x;
                         playerAnimationState += deltaTime;
-                        region = playerRightAnimation.getKeyFrame(playerAnimationState, true);
+                        //                        region = playerRightAnimation.getKeyFrame
+                        //                        (playerAnimationState, true);
                     } else if (velocity.x < 0f)
                     {
                         playerLastVelocityX = velocity.x;
                         playerAnimationState += deltaTime;
-                        region = playerLeftAnimation.getKeyFrame(playerAnimationState, true);
+                        //                        region = playerLeftAnimation.getKeyFrame
+                        //                        (playerAnimationState, true);
                     } else if (playerLastVelocityX > 0f)
                     {
-                        region = playerRightKeyframes.first();
+                        //                        region = playerRightKeyframes.first();
                     } else
                     {
-                        region = playerLeftKeyframes.first();
+                        //                        region = playerLeftKeyframes.first();
                     }
-                    sprite = new Sprite(region);
-                    sprite.setSize(1.75f, 1.75f);
-                    sprite.setCenter(position.x, position.y);
-                    sprite.draw(spriteBatch);
+                    //                    sprite = new Sprite(region);
+                    //                    sprite.setSize(1.75f, 1.75f);
+                    //                    sprite.setCenter(position.x, position.y);
+                    //                    sprite.draw(spriteBatch);
                 }
-            } else if (item instanceof TerrainBlock)
-            {
-                TerrainBlock b = ((TerrainBlock) item);
-                if (b.isActive())
-                {
-                    position = b.getPosition();
-                    sprite = atlas.createSprite(b.getBlockType().name());
-                    sprite.setSize(1f, 1f);
-                    sprite.setCenter(position.x, position.y);
-                    sprite.draw(spriteBatch);
-                }
-            } else if (item instanceof CollectibleBlock)
-            {
-                CollectibleBlock b = ((CollectibleBlock) item);
-                if (b.isActive())
-                {
-                    position = b.getPosition();
-                    sprite = atlas.createSprite(b.getBlockType().name());
-                    sprite.setSize(1f, 1f);
-                    sprite.setCenter(position.x, position.y);
-                    sprite.draw(spriteBatch);
-                }
-            } else if (item instanceof TrapBlock)
-            {
-                TrapBlock b = ((TrapBlock) item);
-                if (b.isActive())
-                {
-                    position = b.getPosition();
-                    sprite = atlas.createSprite(b.getBlockType().name());
-                    sprite.setSize(1f, 1f);
-                    sprite.setCenter(position.x, position.y);
-                    sprite.draw(spriteBatch);
-                }
-            }
+            }/* else if (item instanceof TerrainBlock)*/
+            //            {
+            //                TerrainBlock b = ((TerrainBlock) item);
+            //                if (b.isActive())
+            //                {
+            //                    position = b.getPosition();
+            //                    sprite = atlas.createSprite(b.getBlockType().name());
+            //                    sprite.setSize(1f, 1f);
+            //                    sprite.setCenter(position.x, position.y);
+            //                    sprite.draw(spriteBatch);
+            //                }
+            //            } else if (item instanceof CollectibleBlock)
+            //            {
+            //                CollectibleBlock b = ((CollectibleBlock) item);
+            //                if (b.isActive())
+            //                {
+            //                    position = b.getPosition();
+            //                    sprite = atlas.createSprite(b.getBlockType().name());
+            //                    sprite.setSize(1f, 1f);
+            //                    sprite.setCenter(position.x, position.y);
+            //                    sprite.draw(spriteBatch);
+            //                }
+            //            } else if (item instanceof TrapBlock)
+            //            {
+            //                TrapBlock b = ((TrapBlock) item);
+            //                if (b.isActive())
+            //                {
+            //                    position = b.getPosition();
+            //                    sprite = atlas.createSprite(b.getBlockType().name());
+            //                    sprite.setSize(1f, 1f);
+            //                    sprite.setCenter(position.x, position.y);
+            //                    sprite.draw(spriteBatch);
+            //                }
+            //            }
         }
         spriteBatch.end();
     }
@@ -288,8 +272,8 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     @Override
     public void dispose()
     {
-        atlas.dispose();
-        atlasTexture.dispose();
+        //        atlas.dispose();
+        //        atlasTexture.dispose();
         spriteBatch.dispose();
     }
 
@@ -305,5 +289,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             log("FPS:" + Gdx.graphics.getFramesPerSecond());
             fpsTimer = 0;
         }
+
+        followPlayer();
     }
 }

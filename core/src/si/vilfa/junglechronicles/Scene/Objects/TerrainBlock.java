@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Scene.Objects;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
 
@@ -35,14 +34,6 @@ public class TerrainBlock extends GameObject implements CollisionEventSubscriber
     public void update()
     {
         if (!isUpdatable) return;
-
-        Vector2 position = getPosition();
-        if (position.x < 100 || position.x > 800)
-        {
-            Vector2 velocity = getVelocity();
-            velocity.x *= -1;
-            setVelocity(velocity);
-        }
     }
 
     @Override
@@ -53,12 +44,10 @@ public class TerrainBlock extends GameObject implements CollisionEventSubscriber
     @Override
     public void handleBeginContact(Object contact)
     {
-//        log("Begin collision:" + contact);
     }
 
     @Override
     public void handleEndContact(Object contact)
     {
-//        log("End collision:" + contact);
     }
 }

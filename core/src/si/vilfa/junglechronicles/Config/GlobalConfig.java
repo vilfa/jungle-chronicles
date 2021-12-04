@@ -20,8 +20,26 @@ import static si.vilfa.junglechronicles.Scene.Objects.TrapBlockType.*;
  **/
 public class GlobalConfig
 {
-    public static final int RESOLUTION_SCALE_ONE = 128;
-    public static final int RESOLUTION_SCALE_TWO = 256;
+    public enum TiledMapLayer {
+        OBJECT_LAYER("Objects"),
+        TERRAIN_LAYER("Terrain"),
+        BACKGROUND_LAYER("Background");
+
+        final String layerName;
+
+        TiledMapLayer(String layerName)
+        {
+            this.layerName = layerName;
+        }
+
+        public String getLayerName()
+        {
+            return layerName;
+        }
+    }
+
+    public static final float RESOLUTION_SCALE_ONE = 128f;
+    public static final float RESOLUTION_SCALE_TWO = 256f;
 
     public static HashMap<TerrainBlockType, ConfigEntry> TERRAIN_BLOCK_CONFIG
             = new HashMap<TerrainBlockType, ConfigEntry>()

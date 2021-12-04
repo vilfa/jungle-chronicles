@@ -16,4 +16,8 @@ robovm {
     archs = "thumbv7:arm64"
 }
 
+dependencies {
+    api 'org.apache.commons:commons-lang3:3.12.0'
+}
+
 eclipse.project.name = appName + "-ios"

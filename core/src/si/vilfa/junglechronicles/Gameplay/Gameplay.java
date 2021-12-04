@@ -28,9 +28,7 @@ public class Gameplay extends DrawableGameComponent
     {
         super(0, true, 0, true);
         gameState = new GameState();
-        renderer = new Renderer(gameState.getCurrentLevel(),
-                                gameState.getPhysics().getWorldWidth(),
-                                gameState.getPhysics().getWorldHeight());
+        renderer = new Renderer(gameState);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new PlayerInputProcessor(gameState.getPlayer()));

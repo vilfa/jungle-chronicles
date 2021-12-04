@@ -1,7 +1,6 @@
 package si.vilfa.junglechronicles.Input.Processors;
 
 import si.vilfa.junglechronicles.Input.Events.*;
-import si.vilfa.junglechronicles.Input.TargetInputProcessor;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 
 /**

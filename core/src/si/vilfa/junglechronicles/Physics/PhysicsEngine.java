@@ -1,5 +1,7 @@
 package si.vilfa.junglechronicles.Physics;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -22,6 +24,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     private final int positionIterations;
     private final float WORLD_WIDTH;
     private final float WORLD_HEIGHT;
+    private final float WORLD_PPM;
 
     private final HashMap<Body, Boolean> bodiesWithStateChange;
 
@@ -35,11 +38,15 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
         super(0, true);
         this.WORLD_WIDTH = 200f;
         this.WORLD_HEIGHT = 50f;
+        this.WORLD_PPM = 32;
         this.world = new World(new Vector2(0f, -9.81f), true);
         this.timeStep = timeStep;
         this.velocityIterations = 6;
         this.positionIterations = 6;
         this.bodiesWithStateChange = new HashMap<>();
+
+        Graphics.DisplayMode displayMode
+                = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());
 
         world.setContactListener(this);
     }
@@ -77,7 +84,6 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     {
         for (Body body : bodiesWithStateChange.keySet())
         {
-//            body.setActive(bodiesWithStateChange.get(body));
             world.destroyBody(body);
         }
         bodiesWithStateChange.clear();
@@ -114,12 +120,10 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     }
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold)
-    { }
+    public void preSolve(Contact contact, Manifold oldManifold) { }
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse)
-    { }
+    public void postSolve(Contact contact, ContactImpulse impulse) { }
 
     public World getWorld()
     {
@@ -134,5 +138,25 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     public float getWorldHeight()
     {
         return WORLD_HEIGHT;
+    }
+
+    public Vector2 toWorldUnits(Vector2 vector)
+    {
+        return new Vector2(vector.x / WORLD_PPM, vector.y / WORLD_PPM);
+    }
+
+    public Vector2 toWorldUnits(float x, float y)
+    {
+        return new Vector2(x / WORLD_PPM, y / WORLD_PPM);
+    }
+
+    public float getWorldPpm()
+    {
+        return WORLD_PPM;
+    }
+
+    public float getWorldPpmMul()
+    {
+        return 1f / WORLD_PPM;
     }
 }

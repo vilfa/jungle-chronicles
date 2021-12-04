@@ -1,14 +1,13 @@
 package si.vilfa.junglechronicles.Component;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public abstract class DrawableGameComponent implements DrawableComponent, Updatable, Disposable
+public abstract class DrawableGameComponent implements DrawableComponent
 {
     protected boolean isDrawable;
     protected boolean isUpdatable;
