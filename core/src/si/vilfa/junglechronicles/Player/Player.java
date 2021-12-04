@@ -13,7 +13,7 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
 /**
  * @author luka
  * @date 03/11/2021
- * @package si.vilfa.junglechronicles.Player.Human
+ * @package si.vilfa.junglechronicles.Player
  **/
 public abstract class Player extends GameComponent
         implements PhysicsActor, InputEventSubscriber, CollisionEventSubscriber
@@ -36,54 +36,34 @@ public abstract class Player extends GameComponent
     public abstract void dispose();
 
     @Override
-    public void handleKeyDown(KeyDownInputEvent event)
-    {
-    }
+    public void handleKeyDown(KeyDownInputEvent event) { }
 
     @Override
-    public void handleKeyUp(KeyUpInputEvent event)
-    {
-    }
+    public void handleKeyUp(KeyUpInputEvent event) { }
 
     @Override
-    public void handleKeyTyped(KeyTypedInputEvent event)
-    {
-    }
+    public void handleKeyTyped(KeyTypedInputEvent event) { }
 
     @Override
-    public void handleTouchDown(TouchDownInputEvent event)
-    {
-    }
+    public void handleTouchDown(TouchDownInputEvent event) { }
 
     @Override
-    public void handleTouchUp(TouchUpInputEvent event)
-    {
-    }
+    public void handleTouchUp(TouchUpInputEvent event) { }
 
     @Override
-    public void handleTouchDragged(TouchDraggedInputEvent event)
-    {
-    }
+    public void handleTouchDragged(TouchDraggedInputEvent event) { }
 
     @Override
-    public void handleMouseMoved(MouseMovedInputEvent event)
-    {
-    }
+    public void handleMouseMoved(MouseMovedInputEvent event) { }
 
     @Override
-    public void handleScrolled(ScrolledInputEvent event)
-    {
-    }
+    public void handleScrolled(ScrolledInputEvent event) { }
 
     @Override
-    public void handleBeginContact(Object contact)
-    {
-    }
+    public void handleBeginContact(Object contact) { }
 
     @Override
-    public void handleEndContact(Object contact)
-    {
-    }
+    public void handleEndContact(Object contact) { }
 
     public GameState getGameState()
     {

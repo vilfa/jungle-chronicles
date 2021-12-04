@@ -8,5 +8,4 @@ import com.badlogic.gdx.utils.Disposable;
  * @package si.vilfa.junglechronicles.Component
  **/
 public interface Component extends Updatable, Disposable, Loggable
-{
-}
+{ }

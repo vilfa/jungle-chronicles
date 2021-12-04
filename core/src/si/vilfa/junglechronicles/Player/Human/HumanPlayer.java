@@ -5,9 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
+import si.vilfa.junglechronicles.Level.Objects.CollectibleBlock;
+import si.vilfa.junglechronicles.Level.Objects.TrapBlock;
 import si.vilfa.junglechronicles.Player.Player;
-import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
-import si.vilfa.junglechronicles.Scene.Objects.TrapBlock;
 
 /**
  * @author luka
@@ -28,9 +28,7 @@ public class HumanPlayer extends Player
     }
 
     @Override
-    public void dispose()
-    {
-    }
+    public void dispose() { }
 
     @Override
     public void handleKeyDown(KeyDownInputEvent event)
@@ -84,14 +82,14 @@ public class HumanPlayer extends Player
         if (contact instanceof CollectibleBlock)
         {
             log("Begin collision:" + contact);
-            int points = ((CollectibleBlock) contact).getBlockType().getPoints();
-            gameState.setPlayerScore(gameState.getPlayerScore() + points);
+            //            int points = ((CollectibleBlock) contact).getBlockType().getPoints();
+            //            gameState.setPlayerScore(gameState.getPlayerScore() + points);
             gameState.notifyStateChange(contact, false);
         } else if (contact instanceof TrapBlock)
         {
             log("Begin collision:" + contact);
-            int healthPoints = ((TrapBlock) contact).getBlockType().getHealthPoints();
-            gameState.setPlayerHealth(gameState.getPlayerHealth() - healthPoints);
+            //            int healthPoints = ((TrapBlock) contact).getBlockType().getHealthPoints();
+            //            gameState.setPlayerHealth(gameState.getPlayerHealth() - healthPoints);
         }
     }
 }

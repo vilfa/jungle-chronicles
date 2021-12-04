@@ -1,32 +1,33 @@
-package si.vilfa.junglechronicles.Scene.Levels;
+package si.vilfa.junglechronicles.Level;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
-import si.vilfa.junglechronicles.Scene.SimpleScene;
+import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
 
 /**
  * @author luka
  * @date 11/11/2021
- * @package si.vilfa.junglechronicles.Scene.Levels
+ * @package si.vilfa.junglechronicles.Level
  **/
 public class Level extends GameLevel
 {
-    private TiledMap tiledMap;
+    private final TiledMap map;
 
-    public Level()
+    public Level(TiledMap map)
     {
         super(new SimpleScene(), new Vector2());
+        this.map = map;
     }
 
-    public Level(TiledMap tiledMap)
+    public Level(TiledMap map, Vector2 playerSpawn)
     {
-        super(new SimpleScene(), new Vector2());
-        this.tiledMap = tiledMap;
+        super(new SimpleScene(), playerSpawn);
+        this.map = map;
     }
 
-    public TiledMap getTiledMap()
+    public TiledMap getMap()
     {
-        return tiledMap;
+        return map;
     }
 
     @Override

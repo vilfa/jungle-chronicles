@@ -1,4 +1,4 @@
-package si.vilfa.junglechronicles.Scene.Objects;
+package si.vilfa.junglechronicles.Level.Objects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -11,7 +11,7 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
 /**
  * @author luka
  * @date 08/11/2021
- * @package si.vilfa.junglechronicles.Scene.Objects
+ * @package si.vilfa.junglechronicles.Level.Objects
  **/
 public abstract class GameObject extends GameComponent implements PhysicsActor
 {
@@ -45,10 +45,6 @@ public abstract class GameObject extends GameComponent implements PhysicsActor
     {
         this.isActive = isActive;
     }
-
-    public abstract BlockType getBlockType();
-
-    public abstract void setBlockType(BlockType blockType);
 
     @Override
     public abstract void update();

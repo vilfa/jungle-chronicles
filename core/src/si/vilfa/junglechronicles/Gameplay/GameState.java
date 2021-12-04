@@ -3,10 +3,9 @@ package si.vilfa.junglechronicles.Gameplay;
 import com.badlogic.gdx.math.Vector2;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
-import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Utils.GameObjectFactory;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
 
 /**
@@ -16,12 +15,9 @@ import si.vilfa.junglechronicles.Utils.LevelFactory;
  **/
 public class GameState extends GameComponent implements StateChange
 {
-    private final GameObjectFactory gameObjectFactory;
-    private final LevelFactory levelFactory;
-
-    private Level currentLevel;
     private final PhysicsEngine physics;
-    private HumanPlayer player;
+    private final HumanPlayer player;
+    private Level currentLevel;
     private float currentLevelDuration;
     private int playerHealth;
     private int playerScore;
@@ -30,15 +26,14 @@ public class GameState extends GameComponent implements StateChange
     public GameState()
     {
         super(0, true);
+
         physics = new PhysicsEngine();
 
-        // TODO Move this so this class can only interact with the level factory.
-        gameObjectFactory = GameObjectFactory.getInstance();
-        levelFactory = LevelFactory.getInstance();
-
-        currentLevel = levelFactory.createLevelFromTmx(this, "levels/Level1.tmx");
-
-        player = (HumanPlayer) levelFactory.createPlayer(this, HumanPlayer.class, new Vector2(1f, 1f));
+        LevelFactory levelFactory = LevelFactory.getInstance();
+        currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
+        player = (HumanPlayer) levelFactory.createPlayer(this,
+                                                         HumanPlayer.class,
+                                                         new Vector2(1f, 1f));
 
         currentLevelDuration = 0f;
         playerHealth = 100;
@@ -66,15 +61,15 @@ public class GameState extends GameComponent implements StateChange
         return currentLevel;
     }
 
+    public void setCurrentLevel(Level currentLevel)
+    {
+        this.currentLevel = currentLevel;
+    }
+
     @Override
     public void notifyStateChange(Object object, boolean isActive)
     {
         physics.notifyStateChange(object, isActive);
-    }
-
-    public void setCurrentLevel(Level currentLevel)
-    {
-        this.currentLevel = currentLevel;
     }
 
     public int getPlayerHealth()

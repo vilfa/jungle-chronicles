@@ -1,14 +1,16 @@
-package si.vilfa.junglechronicles.Scene.Objects;
+package si.vilfa.junglechronicles.Level.Objects;
 
 import com.badlogic.gdx.utils.Array;
 
 /**
  * @author luka
  * @date 28/11/2021
- * @package si.vilfa.junglechronicles.Scene.Objects
+ * @package si.vilfa.junglechronicles.Level.Objects
  **/
 public enum PlayerBlockType implements BlockType
 {
+    // TODO Do this differently / Get rid of this.
+
     PLAYER_LEFT_ONE,
     PLAYER_LEFT_TWO,
     PLAYER_LEFT_THREE,

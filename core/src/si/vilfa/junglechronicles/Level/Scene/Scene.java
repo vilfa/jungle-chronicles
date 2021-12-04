@@ -1,4 +1,4 @@
-package si.vilfa.junglechronicles.Scene;
+package si.vilfa.junglechronicles.Level.Scene;
 
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.Updatable;
@@ -6,7 +6,7 @@ import si.vilfa.junglechronicles.Component.Updatable;
 /**
  * @author luka
  * @date 07/11/2021
- * @package si.vilfa.junglechronicles.Scene
+ * @package si.vilfa.junglechronicles.Level.Scene
  **/
 public interface Scene extends Updatable
 {

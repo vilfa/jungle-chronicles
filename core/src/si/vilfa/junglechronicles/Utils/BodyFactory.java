@@ -46,6 +46,35 @@ public class BodyFactory implements Loggable
         return body;
     }
 
+    public Body createWithShapeWithParams(Shape shape,
+                                          BodyDef.BodyType bodyType,
+                                          Vector2 position,
+                                          float density,
+                                          float friction,
+                                          float restitution)
+    {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = bodyType;
+        bodyDef.active = true;
+        bodyDef.awake = true;
+        bodyDef.allowSleep = true;
+        bodyDef.bullet = false;
+        bodyDef.angle = 0f;
+        bodyDef.position.set(position);
+
+        Body body = world.createBody(bodyDef);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = density;
+        fixtureDef.friction = friction;
+        fixtureDef.restitution = restitution;
+
+        body.createFixture(fixtureDef);
+
+        return body;
+    }
+
     /**
      * Creates a static body, and places it into the world.
      * <p>

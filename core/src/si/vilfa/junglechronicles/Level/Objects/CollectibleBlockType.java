@@ -1,12 +1,14 @@
-package si.vilfa.junglechronicles.Scene.Objects;
+package si.vilfa.junglechronicles.Level.Objects;
 
 /**
  * @author luka
  * @date 27/11/2021
- * @package si.vilfa.junglechronicles.Scene.Objects
+ * @package si.vilfa.junglechronicles.Level.Objects
  **/
 public enum CollectibleBlockType implements BlockType
 {
+    // TODO Do this differently / Get rid of this.
+
     COLLECTIBLE_GOLD_COIN(1),
     COLLECTIBLE_GOLD_COIN_TWO(2),
     COLLECTIBLE_GOLD_COIN_FOUR(4),

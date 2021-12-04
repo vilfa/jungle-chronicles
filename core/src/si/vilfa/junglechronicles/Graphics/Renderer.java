@@ -16,13 +16,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.google.gson.GsonBuilder;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
-import si.vilfa.junglechronicles.Config.GlobalConfig.TiledMapLayer;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Level.Level;
+import si.vilfa.junglechronicles.Level.LevelMap;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
-import si.vilfa.junglechronicles.Scene.Levels.Level;
 
 /**
  * @author luka
@@ -109,8 +108,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         screenWidth = width;
         screenHeight = height;
         viewport.update(screenWidth, screenHeight, true);
-        log("Resize: width=" + width + ",height=" + height);
-        log(new GsonBuilder().setPrettyPrinting().create().toJson(viewport));
     }
 
     @Override
@@ -149,14 +146,12 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         // TODO Make draw calls use draw order.
         deltaTime = gameTime.getDeltaTime();
         ScreenUtils.clear(1, 1, 1, 1);
-
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-        // TODO Add background rendering.
 
-        MapLayer terrainLayer = level.getTiledMap()
+        MapLayer terrainLayer = level.getMap()
                                      .getLayers()
-                                     .get(TiledMapLayer.TERRAIN_LAYER.getLayerName());
+                                     .get(LevelMap.LevelMapLayer.TERRAIN_LAYER.getLayerName());
         if (terrainLayer instanceof TiledMapTileLayer && terrainLayer.isVisible())
         {
             TiledMapTileLayer layer = ((TiledMapTileLayer) terrainLayer);
@@ -183,14 +178,16 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             }
         }
 
-        MapLayer backgroundLayer = level.getTiledMap()
+        MapLayer backgroundLayer = level.getMap()
                                         .getLayers()
-                                        .get(TiledMapLayer.BACKGROUND_LAYER.getLayerName());
+                                        .get(LevelMap.LevelMapLayer.BACKGROUND_LAYER.getLayerName());
         if (backgroundLayer instanceof TiledMapImageLayer && backgroundLayer.isVisible())
         {
+            // TODO Implement background rendering.
             TiledMapImageLayer layer = ((TiledMapImageLayer) backgroundLayer);
         }
 
+        // TODO Clean this up.
         for (Object item : level.getItems())
         {
             Vector2 position;
@@ -264,14 +261,13 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             //                }
             //            }
         }
+        // !TODO
         spriteBatch.end();
     }
 
     @Override
     public void dispose()
     {
-        //        atlas.dispose();
-        //        atlasTexture.dispose();
         spriteBatch.dispose();
     }
 

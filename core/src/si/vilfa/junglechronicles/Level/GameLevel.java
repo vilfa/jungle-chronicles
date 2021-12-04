@@ -1,28 +1,36 @@
-package si.vilfa.junglechronicles.Scene.Levels;
+package si.vilfa.junglechronicles.Level;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Scene.Scene;
-import si.vilfa.junglechronicles.Scene.SimpleScene;
+import si.vilfa.junglechronicles.Level.Scene.Scene;
+import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
 
 /**
  * @author luka
  * @date 03/11/2021
- * @package si.vilfa.junglechronicles.Scene.Levels
+ * @package si.vilfa.junglechronicles.Level
  **/
 public abstract class GameLevel extends GameComponent implements Scene
 {
-    protected SimpleScene scene;
-    protected Vector2 playerSpawn;
-    protected Array<Vector2> collectiblesSpawn;
+    protected final SimpleScene scene;
+    protected final Vector2 playerSpawn;
 
     public GameLevel(SimpleScene scene, Vector2 playerSpawn)
     {
         super(0, true);
         this.scene = scene;
         this.playerSpawn = playerSpawn;
-        this.collectiblesSpawn = new Array<>();
+    }
+
+    public Vector2 getPlayerSpawn()
+    {
+        return playerSpawn;
+    }
+
+    public void setPlayerSpawn(Vector2 playerSpawn)
+    {
+        this.playerSpawn.set(playerSpawn);
     }
 
     @Override

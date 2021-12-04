@@ -15,10 +15,10 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Level.Level;
+import si.vilfa.junglechronicles.Level.Objects.TerrainBlock;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Player;
-import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Scene.Objects.TerrainBlock;
 
 /**
  * @author luka
@@ -50,7 +50,13 @@ public class LevelFactory implements Loggable
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         PolygonShape shape = shapeFactory.createPlayerShape(new Vector2(0.75f, 1f));
-        Body body = bodyFactory.createWithShape(shape, BodyDef.BodyType.DynamicBody, position);
+        Body body = bodyFactory.createWithShapeWithParams(shape,
+                                                          BodyDef.BodyType.DynamicBody,
+                                                          position,
+                                                          65f,
+                                                          0f,
+                                                          0f);
+        body.setFixedRotation(true);
 
         T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
         player.setGameState(gameState);
@@ -61,6 +67,7 @@ public class LevelFactory implements Loggable
 
     public Level createLevelFromTmx(GameState gameState, String fileName)
     {
+        //        ExternalFileHandleResolver fileHandleResolver = new ExternalFileHandleResolver();
         TiledMap map = new TmxMapLoader().load(fileName);
         Level level = new Level(map);
 
