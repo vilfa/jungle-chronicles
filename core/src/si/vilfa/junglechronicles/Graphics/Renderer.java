@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Config.GlobalConfig.TiledMapLayer;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
 
@@ -41,7 +42,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private final int screenWidthMax;
     private final int screenHeightMax;
     private final int screenRefreshRate;
-    public final float worldPpmMul;
     private final float playerAnimationKeyframeDuration;
     private final Array<TextureRegion> playerLeftKeyframes;
     private final Array<TextureRegion> playerRightKeyframes;
@@ -75,7 +75,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         screenAspectRatio = (float) screenWidth / (float) screenHeight;
 
         level = gameState.getCurrentLevel();
-        worldPpmMul = gameState.getPhysics().getWorldPpmMul();
         spriteBatch = new SpriteBatch();
 
         playerAnimationKeyframeDuration = 1 / 15f;
@@ -171,14 +170,13 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
                     TiledMapTile tile = cell.getTile();
                     TextureRegion textureRegion = tile.getTextureRegion();
-                    Vector2 offset = new Vector2(textureRegion.getRegionWidth() * worldPpmMul * 0.5f,
-                                                 textureRegion.getRegionHeight() * worldPpmMul
-                                                 * 0.5f);
-                    Vector2 position = new Vector2(i * layer.getTileWidth() * worldPpmMul,
-                                                   j * layer.getTileHeight() * worldPpmMul);
+                    Vector2 position = PhysicsEngine.toUnits(new Vector2(i * layer.getTileWidth(),
+                                                                         j
+                                                                         * layer.getTileHeight()));
+
                     Sprite sprite = new Sprite(textureRegion);
-                    sprite.setSize(textureRegion.getRegionWidth() * worldPpmMul,
-                                   textureRegion.getRegionHeight() * worldPpmMul);
+                    sprite.setSize(PhysicsEngine.toUnits(textureRegion.getRegionWidth()),
+                                   PhysicsEngine.toUnits(textureRegion.getRegionHeight()));
                     sprite.setPosition(position.x, position.y);
                     sprite.draw(spriteBatch);
                 }

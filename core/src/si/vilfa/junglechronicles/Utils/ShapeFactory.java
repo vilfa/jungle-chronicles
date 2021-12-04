@@ -10,9 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.google.gson.GsonBuilder;
 import si.vilfa.junglechronicles.Component.Loggable;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 
 /**
  * @author luka
@@ -22,101 +21,61 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
 public class ShapeFactory implements Loggable
 {
     public static ShapeFactory INSTANCE;
-    private final float worldPpm;
-    private final float worldPpmMul;
 
-    private ShapeFactory(GameState gameState)
-    {
-        this.worldPpm = gameState.getPhysics().getWorldPpm();
-        this.worldPpmMul = gameState.getPhysics().getWorldPpmMul();
-    }
+    private ShapeFactory() { }
 
-    public static ShapeFactory getInstance(GameState gameState)
+    public static ShapeFactory getInstance()
     {
         if (INSTANCE == null)
         {
-            INSTANCE = new ShapeFactory(gameState);
+            INSTANCE = new ShapeFactory();
         }
         return INSTANCE;
+    }
+
+    public PolygonShape createPlayerShape(Vector2 box)
+    {
+        PolygonShape rectangleShape = new PolygonShape();
+        rectangleShape.setAsBox(box.x * 0.5f, box.y * 0.5f);
+        return rectangleShape;
     }
 
     public PolygonShape createRectangleShape(RectangleMapObject rectangleMapObject,
                                              Vector2 position)
     {
         Rectangle rectangle = rectangleMapObject.getRectangle();
-
-        rectangle.x *= worldPpmMul;
-        rectangle.y *= worldPpmMul;
-        rectangle.width *= worldPpmMul;
-        rectangle.height *= worldPpmMul;
-
-        Vector2 rectanglePosition = rectangle.getCenter(new Vector2());
-
-//        Vector2 rectanglePosition = new Vector2(rectangle.x + rectangle.width * 0.5f,
-//                                                rectangle.y + rectangle.height * 0.5f);
         PolygonShape rectangleShape = new PolygonShape();
-        rectangleShape.setAsBox(rectangle.width * 0.5f,
-                                rectangle.height * 0.5f,
-                                rectanglePosition,
-                                0f);
+        rectangleShape.setAsBox(PhysicsEngine.toUnits(rectangle.getWidth() * 0.5f),
+                                PhysicsEngine.toUnits(rectangle.getHeight() * 0.5f));
 
-        position.set(rectanglePosition);
-
-        log(new GsonBuilder().setPrettyPrinting().create().toJson(rectangle));
-
+        position.set(new Vector2(rectangle.getX() + rectangle.getWidth() * 0.5f,
+                                 rectangle.getY() + rectangle.getHeight() * 0.5f));
         return rectangleShape;
     }
 
     public PolygonShape createPolygonShape(PolygonMapObject polygonMapObject, Vector2 position)
     {
         Polygon polygon = polygonMapObject.getPolygon();
-
-        PolygonShape polygonShape = new PolygonShape();
-
-        Vector2 maxPos = new Vector2(Float.MIN_VALUE, Float.MIN_VALUE);
-        Vector2 minPos = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
         float[] vertices = polygon.getVertices();
         for (int i = 0; i < vertices.length; i++)
         {
-            vertices[i] *= worldPpmMul;
-            if (i % 2 == 0)
-            {
-                maxPos.x = Math.max(maxPos.x, vertices[i]);
-                minPos.x = Math.min(minPos.x, vertices[i]);
-            } else
-            {
-                maxPos.y = Math.max(maxPos.y, vertices[i]);
-                minPos.y = Math.min(minPos.y, vertices[i]);
-            }
+            vertices[i] = PhysicsEngine.toUnits(vertices[i]);
         }
+
+        PolygonShape polygonShape = new PolygonShape();
         polygonShape.set(vertices);
 
-//        Vector2 polygonPosition = new Vector2(minPos.x + Math.abs(maxPos.x - minPos.x) * 0.5f,
-//                                              minPos.y + Math.abs(maxPos.y - minPos.y) * 0.5f);
-        Vector2 polygonPosition = new Vector2(maxPos.sub(polygonShape.getRadius(), polygonShape.getRadius()));
-
-        position.set(polygonPosition);
-
-        log(new GsonBuilder().setPrettyPrinting().create().toJson(polygon));
-
+        position.set(polygon.getX(), polygon.getY());
         return polygonShape;
     }
 
     public CircleShape createCircleShape(CircleMapObject circleMapObject, Vector2 position)
     {
         Circle circle = circleMapObject.getCircle();
-        circle.x *= worldPpmMul;
-        circle.y *= worldPpmMul;
-        circle.radius *= worldPpmMul;
-
-        Vector2 circlePosition = new Vector2(circle.x, circle.y);
+        Vector2 circlePosition = PhysicsEngine.toUnits(new Vector2(circle.x, circle.y));
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(circle.radius);
-
+        circleShape.setRadius(PhysicsEngine.toUnits(circle.radius));
         position.set(circlePosition);
-
-        log(new GsonBuilder().setPrettyPrinting().create().toJson(circle));
-
         return circleShape;
     }
 

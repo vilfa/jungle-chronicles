@@ -1,13 +1,11 @@
 package si.vilfa.junglechronicles.Gameplay;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Utils.BodyFactory;
 import si.vilfa.junglechronicles.Utils.GameObjectFactory;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
 
@@ -35,25 +33,12 @@ public class GameState extends GameComponent implements StateChange
         physics = new PhysicsEngine();
 
         // TODO Move this so this class can only interact with the level factory.
-        gameObjectFactory
-                = GameObjectFactory.getInstance(BodyFactory.getInstance(this));
-        levelFactory = LevelFactory.getInstance(gameObjectFactory);
-
-        player = gameObjectFactory.createDynamicWithPolygonFixture(new Vector2(2f, 2f),
-                                                                   new Vector2(0f, 0f),
-                                                                   0f,
-                                                                   65f,
-                                                                   0f,
-                                                                   0.1f,
-                                                                   new Vector2(.4f, .7f),
-                                                                   HumanPlayer.class,
-                                                                   Body.class);
-        player.setGameState(this);
-
-//        currentLevel = levelFactory.createDefaultLevel(this);
+        gameObjectFactory = GameObjectFactory.getInstance();
+        levelFactory = LevelFactory.getInstance();
 
         currentLevel = levelFactory.createLevelFromTmx(this, "levels/Level1.tmx");
-        currentLevel.addItem(player);
+
+        player = (HumanPlayer) levelFactory.createPlayer(this, HumanPlayer.class, new Vector2(1f, 1f));
 
         currentLevelDuration = 0f;
         playerHealth = 100;

@@ -1,0 +1,41 @@
+
+Background.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Background1
+  rotate: false
+  xy: 0, 0
+  size: 576, 324
+  orig: 576, 324
+  offset: 0, 0
+  index: -1
+Background2
+  rotate: false
+  xy: 576, 0
+  size: 576, 324
+  orig: 576, 324
+  offset: 0, 0
+  index: -1
+Background3
+  rotate: false
+  xy: 1152, 0
+  size: 576, 324
+  orig: 576, 324
+  offset: 0, 0
+  index: -1
+Background4
+  rotate: false
+  xy: 0, 324
+  size: 576, 324
+  orig: 576, 324
+  offset: 0, 0
+  index: -1
+Background5
+  rotate: false
+  xy: 576, 324
+  size: 576, 324
+  orig: 576, 324
+  offset: 0, 0
+  index: -1

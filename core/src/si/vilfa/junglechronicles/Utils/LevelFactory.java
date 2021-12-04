@@ -15,11 +15,10 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Physics.PhysicsEngine;
+import si.vilfa.junglechronicles.Player.Player;
 import si.vilfa.junglechronicles.Scene.Levels.Level;
-import si.vilfa.junglechronicles.Scene.Objects.CollectibleBlock;
 import si.vilfa.junglechronicles.Scene.Objects.TerrainBlock;
-import si.vilfa.junglechronicles.Scene.Objects.TrapBlock;
-import si.vilfa.junglechronicles.Scene.Objects.TrapBlockType;
 
 /**
  * @author luka
@@ -29,21 +28,35 @@ import si.vilfa.junglechronicles.Scene.Objects.TrapBlockType;
 public class LevelFactory implements Loggable
 {
     private static LevelFactory INSTANCE;
-    private final GameObjectFactory gameObjectFactory;
 
-    private LevelFactory(GameObjectFactory gameObjectFactory)
-    {
-        this.gameObjectFactory = gameObjectFactory;
-    }
+    private LevelFactory() { }
 
-    public static LevelFactory getInstance(GameObjectFactory gameObjectFactory)
+    public static LevelFactory getInstance()
     {
         if (INSTANCE == null)
         {
-            INSTANCE = new LevelFactory(gameObjectFactory);
+            INSTANCE = new LevelFactory();
         }
 
         return INSTANCE;
+    }
+
+    public <T extends Player> Player createPlayer(GameState gameState,
+                                                  Class<T> playerType,
+                                                  Vector2 position)
+    {
+        ShapeFactory shapeFactory = ShapeFactory.getInstance();
+        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
+
+        PolygonShape shape = shapeFactory.createPlayerShape(new Vector2(0.75f, 1f));
+        Body body = bodyFactory.createWithShape(shape, BodyDef.BodyType.DynamicBody, position);
+
+        T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
+        player.setGameState(gameState);
+        gameState.getCurrentLevel().addItem(player);
+
+        return player;
     }
 
     public Level createLevelFromTmx(GameState gameState, String fileName)
@@ -51,9 +64,9 @@ public class LevelFactory implements Loggable
         TiledMap map = new TmxMapLoader().load(fileName);
         Level level = new Level(map);
 
-        ShapeFactory shapeFactory = ShapeFactory.getInstance(gameState);
+        ShapeFactory shapeFactory = ShapeFactory.getInstance();
         BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
-        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance(bodyFactory);
+        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         for (MapLayer layer : map.getLayers())
         {
@@ -72,6 +85,7 @@ public class LevelFactory implements Loggable
                     TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
                                                                                TerrainBlock.class,
                                                                                Body.class);
+                    gameObject.setPosition(PhysicsEngine.toUnits(position));
                     body.getFixtureList().get(0).setUserData(gameObject);
                     level.addItem(gameObject);
                 } else if (object instanceof PolygonMapObject)
@@ -87,6 +101,7 @@ public class LevelFactory implements Loggable
                     TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
                                                                                TerrainBlock.class,
                                                                                Body.class);
+                    gameObject.setPosition(PhysicsEngine.toUnits(position));
                     body.getFixtureList().get(0).setUserData(gameObject);
                     level.addItem(gameObject);
                 } else if (object instanceof CircleMapObject)
@@ -101,84 +116,12 @@ public class LevelFactory implements Loggable
                     TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
                                                                                TerrainBlock.class,
                                                                                Body.class);
+                    gameObject.setPosition(PhysicsEngine.toUnits(position));
                     body.getFixtureList().get(0).setUserData(gameObject);
                     level.addItem(gameObject);
                 }
             }
         }
-        return level;
-    }
-
-    public Level createDefaultLevel(GameState gameState)
-    {
-        Level level = new Level();
-        for (int i = 0; i < 200; i++)
-        {
-            TerrainBlock groundBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(
-                                                                                                i,
-                                                                                                .5f),
-                                                                                        0,
-                                                                                        Float.POSITIVE_INFINITY,
-                                                                                        0f,
-                                                                                        .1f,
-                                                                                        new Vector2(
-                                                                                                .5f,
-                                                                                                .5f),
-                                                                                        TerrainBlock.class,
-                                                                                        Body.class);
-            groundBlock.setGameState(gameState);
-            level.addItem(groundBlock);
-        }
-
-        for (int i = 1; i < 3; i++)
-        {
-            TerrainBlock worldBlock
-                    = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(i, 5),
-                                                                       0,
-                                                                       Float.POSITIVE_INFINITY,
-                                                                       0f,
-                                                                       .1f,
-                                                                       new Vector2(.5f, .5f),
-                                                                       TerrainBlock.class,
-                                                                       Body.class);
-            worldBlock.setGameState(gameState);
-            level.addItem(worldBlock);
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
-            CollectibleBlock collectibleBlock
-                    = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(5 + i, 1.5f),
-                                                                       0f,
-                                                                       1f,
-                                                                       0f,
-                                                                       0f,
-                                                                       new Vector2(.25f, .25f),
-                                                                       CollectibleBlock.class,
-                                                                       Body.class);
-            collectibleBlock.setGameState(gameState);
-            level.addItem(collectibleBlock);
-        }
-
-        int i = 0;
-        for (TrapBlockType type : TrapBlockType.values())
-        {
-            TrapBlock trapBlock = gameObjectFactory.createStaticWithPolygonFixture(new Vector2(
-                                                                                           11 + 2 * i, 1.5f),
-                                                                                   0f,
-                                                                                   1f,
-                                                                                   0f,
-                                                                                   0f,
-                                                                                   new Vector2(.5f,
-                                                                                               .5f),
-                                                                                   TrapBlock.class,
-                                                                                   Body.class);
-            trapBlock.setGameState(gameState);
-            trapBlock.setBlockType(type);
-            level.addItem(trapBlock);
-            i++;
-        }
-
         return level;
     }
 

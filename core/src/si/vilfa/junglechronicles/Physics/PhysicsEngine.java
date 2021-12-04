@@ -22,9 +22,9 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     private final float timeStep;
     private final int velocityIterations;
     private final int positionIterations;
-    private final float WORLD_WIDTH;
-    private final float WORLD_HEIGHT;
-    private final float WORLD_PPM;
+    public static float WORLD_WIDTH = 200f;
+    public static float WORLD_HEIGHT = 50f;
+    public static float WORLD_PPU = 32f;
 
     private final HashMap<Body, Boolean> bodiesWithStateChange;
 
@@ -36,9 +36,6 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     public PhysicsEngine(float timeStep)
     {
         super(0, true);
-        this.WORLD_WIDTH = 200f;
-        this.WORLD_HEIGHT = 50f;
-        this.WORLD_PPM = 32;
         this.world = new World(new Vector2(0f, -9.81f), true);
         this.timeStep = timeStep;
         this.velocityIterations = 6;
@@ -140,23 +137,23 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
         return WORLD_HEIGHT;
     }
 
-    public Vector2 toWorldUnits(Vector2 vector)
+    public static float toUnits(float pixels)
     {
-        return new Vector2(vector.x / WORLD_PPM, vector.y / WORLD_PPM);
+        return pixels / WORLD_PPU;
     }
 
-    public Vector2 toWorldUnits(float x, float y)
+    public static Vector2 toUnits(Vector2 pixels)
     {
-        return new Vector2(x / WORLD_PPM, y / WORLD_PPM);
+        return pixels.scl(1f / WORLD_PPU);
     }
 
-    public float getWorldPpm()
+    public static float toPixels(float units)
     {
-        return WORLD_PPM;
+        return units * WORLD_PPU;
     }
 
-    public float getWorldPpmMul()
+    public static Vector2 toPixels(Vector2 units)
     {
-        return 1f / WORLD_PPM;
+        return units.scl(WORLD_PPU);
     }
 }
