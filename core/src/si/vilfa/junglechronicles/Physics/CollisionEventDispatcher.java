@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
  * @date 25/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface CollisionEventProvider extends ContactListener
+public interface CollisionEventDispatcher extends ContactListener
 {
     @Override
     void beginContact(Contact contact);

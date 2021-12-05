@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
  * @date 28/11/2021
  * @package si.vilfa.junglechronicles.Level.Objects
  **/
-public enum PlayerBlockType implements BlockType
+public enum PlayerBlockType
 {
     // TODO Do this differently / Get rid of this.
 

@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Physics;
  * @date 25/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public interface CollisionEventSubscriber
+public interface CollisionEventListener
 {
     void handleBeginContact(Object contact);
 

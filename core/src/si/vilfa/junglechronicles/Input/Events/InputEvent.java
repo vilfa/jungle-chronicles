@@ -5,7 +5,7 @@ package si.vilfa.junglechronicles.Input.Events;
  * @date 09/11/2021
  * @package si.vilfa.junglechronicles.Input.Events
  **/
-public abstract class InputEvent implements InputEventProvider
+public abstract class InputEvent implements InputEventDispatcher
 {
     protected int keycode;
     protected char character;

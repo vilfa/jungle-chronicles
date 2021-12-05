@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
-import si.vilfa.junglechronicles.Level.Objects.CollectibleBlock;
-import si.vilfa.junglechronicles.Level.Objects.TrapBlock;
+import si.vilfa.junglechronicles.Level.GameStateEvent;
+import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Player.Player;
 
 /**
@@ -79,17 +79,16 @@ public class HumanPlayer extends Player
     @Override
     public void handleBeginContact(Object contact)
     {
-        if (contact instanceof CollectibleBlock)
+        if (contact instanceof GameBlock)
         {
-            log("Begin collision:" + contact);
-            //            int points = ((CollectibleBlock) contact).getBlockType().getPoints();
-            //            gameState.setPlayerScore(gameState.getPlayerScore() + points);
-            gameState.notifyStateChange(contact, false);
-        } else if (contact instanceof TrapBlock)
-        {
-            log("Begin collision:" + contact);
-            //            int healthPoints = ((TrapBlock) contact).getBlockType().getHealthPoints();
-            //            gameState.setPlayerHealth(gameState.getPlayerHealth() - healthPoints);
+            GameBlock gameBlock = (GameBlock) contact;
+            if (gameBlock.isCollectible())
+            {
+                dispatchEvent(GameStateEvent.COLLECTIBLE_CONTACT, contact);
+            } else if (gameBlock.isTrap())
+            {
+                dispatchEvent(GameStateEvent.TRAP_CONTACT, contact);
+            }
         }
     }
 }

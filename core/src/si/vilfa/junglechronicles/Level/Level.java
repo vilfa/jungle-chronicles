@@ -42,5 +42,43 @@ public class Level extends GameLevel
     public void dispose()
     {
         scene.dispose();
+        map.dispose();
+    }
+
+    public enum LevelMapLayer
+    {
+        OBJECT_LAYER("Objects"), TERRAIN_LAYER("Terrain"), BACKGROUND_LAYER("Background");
+
+        final String layerName;
+
+        LevelMapLayer(String layerName)
+        {
+            this.layerName = layerName;
+        }
+
+        public String getLayerName()
+        {
+            return layerName;
+        }
+    }
+
+    public enum LevelObjectProperty
+    {
+        COLLECTIBLE("isCollectible"),
+        COLLECTIBLE_POINTS("collectiblePoints"),
+        TRAP("isTrap"),
+        TRAP_HEALTH_POINTS("trapHealthPoints");
+
+        final String propertyName;
+
+        LevelObjectProperty(String propertyName)
+        {
+            this.propertyName = propertyName;
+        }
+
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
     }
 }

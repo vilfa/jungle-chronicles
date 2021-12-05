@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Input.Events.*;
-import si.vilfa.junglechronicles.Physics.CollisionEventSubscriber;
+import si.vilfa.junglechronicles.Physics.CollisionEventListener;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
 
 /**
@@ -16,7 +16,7 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
  * @package si.vilfa.junglechronicles.Player
  **/
 public abstract class Player extends GameComponent
-        implements PhysicsActor, InputEventSubscriber, CollisionEventSubscriber
+        implements PhysicsActor, InputEventListener, CollisionEventListener
 {
     private final Body body;
     protected GameState gameState;

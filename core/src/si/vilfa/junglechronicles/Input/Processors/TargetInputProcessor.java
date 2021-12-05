@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import si.vilfa.junglechronicles.Input.Devices.DeviceInput;
-import si.vilfa.junglechronicles.Input.Events.InputEventSubscriber;
+import si.vilfa.junglechronicles.Input.Events.InputEventListener;
 
 /**
  * @author luka
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Input.Processors
  **/
-public abstract class TargetInputProcessor<T extends InputEventSubscriber>
+public abstract class TargetInputProcessor<T extends InputEventListener>
         implements DeviceInput, InputTarget<T>, InputProcessor
 {
     protected final Input input = Gdx.input;

@@ -17,7 +17,7 @@ import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
  * @package si.vilfa.junglechronicles.Gameplay
  **/
 public class Gameplay extends DrawableGameComponent
-        implements Disposable, WindowAdapter, InputEventSubscriber
+        implements Disposable, WindowAdapter, InputEventListener
 {
     private final GameState gameState;
     private final Renderer renderer;

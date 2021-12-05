@@ -1,13 +1,11 @@
 package si.vilfa.junglechronicles.Physics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Gameplay.StateChange;
-import si.vilfa.junglechronicles.Level.Objects.GameObject;
+import si.vilfa.junglechronicles.Events.Event;
+import si.vilfa.junglechronicles.Events.EventListener;
+import si.vilfa.junglechronicles.Level.GameStateEvent;
 
 import java.util.HashMap;
 
@@ -16,7 +14,7 @@ import java.util.HashMap;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Physics
  **/
-public class PhysicsEngine extends GameComponent implements CollisionEventProvider, StateChange
+public class PhysicsEngine extends GameComponent implements CollisionEventDispatcher, EventListener
 {
     public static float WORLD_WIDTH = 200f;
     public static float WORLD_HEIGHT = 50f;
@@ -40,10 +38,6 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
         this.velocityIterations = 6;
         this.positionIterations = 6;
         this.bodiesWithStateChange = new HashMap<>();
-
-        Graphics.DisplayMode displayMode
-                = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());
-
         world.setContactListener(this);
     }
 
@@ -68,35 +62,30 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     }
 
     @Override
+    public void handleEvent(Event event)
+    {
+        log(event.toString());
+        if (event.getType() == GameStateEvent.COLLECTIBLE_CONTACT)
+        {
+            //            bodiesWithStateChange.put(((GameObject) object).getBody(), isActive);
+        }
+    }
+
+    @Override
     public void update()
     {
         if (!isUpdatable) return;
         world.step(timeStep, velocityIterations, positionIterations);
-        handleNotifiedStateChange();
+        processEvents();
     }
 
     @Override
     public void dispose()
     {
-        Array<Body> bodies = new Array<>();
-        world.getBodies(bodies);
-        for (Body body : bodies)
-        {
-            world.destroyBody(body);
-        }
         world.dispose();
     }
 
-    @Override
-    public void notifyStateChange(Object object, boolean isActive)
-    {
-        if (object instanceof GameObject)
-        {
-            bodiesWithStateChange.put(((GameObject) object).getBody(), isActive);
-        }
-    }
-
-    private void handleNotifiedStateChange()
+    private void processEvents()
     {
         // TODO Implement an actual event based system instead of this.
 
@@ -110,14 +99,14 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     @Override
     public void beginContact(Contact contact)
     {
-        if (contact.getFixtureA().getUserData() instanceof CollisionEventSubscriber)
+        if (contact.getFixtureA().getUserData() instanceof CollisionEventListener)
         {
-            ((CollisionEventSubscriber) contact.getFixtureA().getUserData()).handleBeginContact(
+            ((CollisionEventListener) contact.getFixtureA().getUserData()).handleBeginContact(
                     contact.getFixtureB().getUserData());
         }
-        if (contact.getFixtureB().getUserData() instanceof CollisionEventSubscriber)
+        if (contact.getFixtureB().getUserData() instanceof CollisionEventListener)
         {
-            ((CollisionEventSubscriber) contact.getFixtureB().getUserData()).handleBeginContact(
+            ((CollisionEventListener) contact.getFixtureB().getUserData()).handleBeginContact(
                     contact.getFixtureA().getUserData());
         }
     }
@@ -125,15 +114,17 @@ public class PhysicsEngine extends GameComponent implements CollisionEventProvid
     @Override
     public void endContact(Contact contact)
     {
-        if (contact.getFixtureA().getUserData() instanceof CollisionEventSubscriber)
+        if (contact.getFixtureA().getUserData() instanceof CollisionEventListener)
         {
-            ((CollisionEventSubscriber) contact.getFixtureA().getUserData()).handleEndContact(
-                    contact.getFixtureB().getUserData());
+            ((CollisionEventListener) contact.getFixtureA()
+                                             .getUserData()).handleEndContact(contact.getFixtureB()
+                                                                                     .getUserData());
         }
-        if (contact.getFixtureB().getUserData() instanceof CollisionEventSubscriber)
+        if (contact.getFixtureB().getUserData() instanceof CollisionEventListener)
         {
-            ((CollisionEventSubscriber) contact.getFixtureB().getUserData()).handleEndContact(
-                    contact.getFixtureA().getUserData());
+            ((CollisionEventListener) contact.getFixtureB()
+                                             .getUserData()).handleEndContact(contact.getFixtureA()
+                                                                                     .getUserData());
         }
     }
 

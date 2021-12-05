@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.Level;
-import si.vilfa.junglechronicles.Level.LevelMap;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 
@@ -71,7 +70,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         screenHeight = displayMode.height;
         screenHeightMax = displayMode.height;
         screenRefreshRate = displayMode.refreshRate;
-        screenAspectRatio = (float) screenWidth / (float) screenHeight;
+        screenAspectRatio = (float) screenWidthMax / (float) screenHeightMax;
 
         level = gameState.getCurrentLevel();
         spriteBatch = new SpriteBatch();
@@ -143,6 +142,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     public void draw()
     {
         if (!isDrawable) return;
+
         // TODO Make draw calls use draw order.
         deltaTime = gameTime.getDeltaTime();
         ScreenUtils.clear(1, 1, 1, 1);
@@ -151,7 +151,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
         MapLayer terrainLayer = level.getMap()
                                      .getLayers()
-                                     .get(LevelMap.LevelMapLayer.TERRAIN_LAYER.getLayerName());
+                                     .get(Level.LevelMapLayer.TERRAIN_LAYER.getLayerName());
         if (terrainLayer instanceof TiledMapTileLayer && terrainLayer.isVisible())
         {
             TiledMapTileLayer layer = ((TiledMapTileLayer) terrainLayer);
@@ -169,6 +169,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                                                          j
                                                                          * layer.getTileHeight()));
 
+
                     Sprite sprite = new Sprite(textureRegion);
                     sprite.setSize(PhysicsEngine.toUnits(textureRegion.getRegionWidth()),
                                    PhysicsEngine.toUnits(textureRegion.getRegionHeight()));
@@ -180,7 +181,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
         MapLayer backgroundLayer = level.getMap()
                                         .getLayers()
-                                        .get(LevelMap.LevelMapLayer.BACKGROUND_LAYER.getLayerName());
+                                        .get(Level.LevelMapLayer.BACKGROUND_LAYER.getLayerName());
         if (backgroundLayer instanceof TiledMapImageLayer && backgroundLayer.isVisible())
         {
             // TODO Implement background rendering.
@@ -226,40 +227,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                     //                    sprite.setCenter(position.x, position.y);
                     //                    sprite.draw(spriteBatch);
                 }
-            }/* else if (item instanceof TerrainBlock)*/
-            //            {
-            //                TerrainBlock b = ((TerrainBlock) item);
-            //                if (b.isActive())
-            //                {
-            //                    position = b.getPosition();
-            //                    sprite = atlas.createSprite(b.getBlockType().name());
-            //                    sprite.setSize(1f, 1f);
-            //                    sprite.setCenter(position.x, position.y);
-            //                    sprite.draw(spriteBatch);
-            //                }
-            //            } else if (item instanceof CollectibleBlock)
-            //            {
-            //                CollectibleBlock b = ((CollectibleBlock) item);
-            //                if (b.isActive())
-            //                {
-            //                    position = b.getPosition();
-            //                    sprite = atlas.createSprite(b.getBlockType().name());
-            //                    sprite.setSize(1f, 1f);
-            //                    sprite.setCenter(position.x, position.y);
-            //                    sprite.draw(spriteBatch);
-            //                }
-            //            } else if (item instanceof TrapBlock)
-            //            {
-            //                TrapBlock b = ((TrapBlock) item);
-            //                if (b.isActive())
-            //                {
-            //                    position = b.getPosition();
-            //                    sprite = atlas.createSprite(b.getBlockType().name());
-            //                    sprite.setSize(1f, 1f);
-            //                    sprite.setCenter(position.x, position.y);
-            //                    sprite.draw(spriteBatch);
-            //                }
-            //            }
+            }
         }
         // !TODO
         spriteBatch.end();

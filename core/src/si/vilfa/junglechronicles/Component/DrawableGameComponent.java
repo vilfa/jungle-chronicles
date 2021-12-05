@@ -1,13 +1,14 @@
 package si.vilfa.junglechronicles.Component;
 
 import com.badlogic.gdx.Gdx;
+import si.vilfa.junglechronicles.Events.EventDispatcher;
 
 /**
  * @author luka
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Component
  **/
-public abstract class DrawableGameComponent implements DrawableComponent
+public abstract class DrawableGameComponent extends EventDispatcher implements DrawableComponent
 {
     protected boolean isDrawable;
     protected boolean isUpdatable;
@@ -19,6 +20,7 @@ public abstract class DrawableGameComponent implements DrawableComponent
                                  int drawOrder,
                                  boolean isDrawable)
     {
+        super();
         this.updateOrder = updateOrder;
         this.isUpdatable = isUpdatable;
         this.drawOrder = drawOrder;

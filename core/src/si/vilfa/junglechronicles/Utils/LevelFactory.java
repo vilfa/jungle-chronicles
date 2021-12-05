@@ -11,14 +11,18 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
+import com.google.gson.Gson;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
-import si.vilfa.junglechronicles.Level.Objects.TerrainBlock;
+import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Player;
+
+import java.util.HashMap;
 
 /**
  * @author luka
@@ -59,7 +63,14 @@ public class LevelFactory implements Loggable
         body.setFixedRotation(true);
 
         T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
+        body.getFixtureList().get(0).setUserData(player);
+
         player.setGameState(gameState);
+        player.registerEventListener(GameStateEvent.COLLECTIBLE_CONTACT, gameState);
+        player.registerEventListener(GameStateEvent.COLLECTIBLE_CONTACT, gameState.getPhysics());
+        player.registerEventListener(GameStateEvent.TRAP_CONTACT, gameState);
+        player.registerEventListener(GameStateEvent.TRAP_CONTACT, gameState.getPhysics());
+
         gameState.getCurrentLevel().addItem(player);
 
         return player;
@@ -67,7 +78,6 @@ public class LevelFactory implements Loggable
 
     public Level createLevelFromTmx(GameState gameState, String fileName)
     {
-        //        ExternalFileHandleResolver fileHandleResolver = new ExternalFileHandleResolver();
         TiledMap map = new TmxMapLoader().load(fileName);
         Level level = new Level(map);
 
@@ -79,57 +89,66 @@ public class LevelFactory implements Loggable
         {
             for (MapObject object : layer.getObjects())
             {
+                Shape shape = null;
+                Vector2 position = new Vector2();
                 if (object instanceof RectangleMapObject)
                 {
-                    Vector2 position = new Vector2();
-                    PolygonShape rectangleShape
-                            = shapeFactory.createRectangleShape(((RectangleMapObject) object),
-                                                                position);
+                    log(new Gson().toJson(getObjectProperties(object)));
 
-                    Body body = bodyFactory.createWithShape(rectangleShape,
-                                                            BodyDef.BodyType.StaticBody,
-                                                            position);
-                    TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
-                                                                               TerrainBlock.class,
-                                                                               Body.class);
-                    gameObject.setPosition(PhysicsEngine.toUnits(position));
-                    body.getFixtureList().get(0).setUserData(gameObject);
-                    level.addItem(gameObject);
+                    shape = shapeFactory.createRectangleShape(((RectangleMapObject) object),
+                                                              position);
                 } else if (object instanceof PolygonMapObject)
                 {
-                    Vector2 position = new Vector2();
-                    PolygonShape polygonShape
-                            = shapeFactory.createPolygonShape(((PolygonMapObject) object),
-                                                              position);
-
-                    Body body = bodyFactory.createWithShape(polygonShape,
-                                                            BodyDef.BodyType.StaticBody,
-                                                            position);
-                    TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
-                                                                               TerrainBlock.class,
-                                                                               Body.class);
-                    gameObject.setPosition(PhysicsEngine.toUnits(position));
-                    body.getFixtureList().get(0).setUserData(gameObject);
-                    level.addItem(gameObject);
+                    shape = shapeFactory.createPolygonShape(((PolygonMapObject) object), position);
                 } else if (object instanceof CircleMapObject)
                 {
-                    Vector2 position = new Vector2();
-                    CircleShape circleShape
-                            = shapeFactory.createCircleShape(((CircleMapObject) object), position);
+                    shape = shapeFactory.createCircleShape(((CircleMapObject) object), position);
+                }
 
-                    Body body = bodyFactory.createWithShape(circleShape,
+                if (shape != null)
+                {
+                    Body body = bodyFactory.createWithShape(shape,
                                                             BodyDef.BodyType.StaticBody,
                                                             position);
-                    TerrainBlock gameObject = gameObjectFactory.createWithBody(body,
-                                                                               TerrainBlock.class,
-                                                                               Body.class);
+                    GameBlock gameObject = gameObjectFactory.createWithBody(body,
+                                                                            GameBlock.class,
+                                                                            Body.class);
                     gameObject.setPosition(PhysicsEngine.toUnits(position));
                     body.getFixtureList().get(0).setUserData(gameObject);
+
+                    gameObject.setProperties(getObjectProperties(object));
+                    gameObject.setGameState(gameState);
+
+                    //                    gameObject.registerEventListener(GameStateEvent
+                    //                    .COLLECTIBLE_CONTACT, gameState);
+                    //                    gameObject.registerEventListener(GameStateEvent
+                    //                    .COLLECTIBLE_CONTACT,
+                    //                                                     gameState.getPhysics());
+                    //                    gameObject.registerEventListener(GameStateEvent
+                    //                    .TRAP_CONTACT, gameState);
+                    //                    gameObject.registerEventListener(GameStateEvent
+                    //                    .TRAP_CONTACT,
+                    //                                                     gameState.getPhysics());
+
                     level.addItem(gameObject);
                 }
             }
         }
         return level;
+    }
+
+    private <T extends MapObject> HashMap<Level.LevelObjectProperty, Object> getObjectProperties(T object)
+    {
+        HashMap<Level.LevelObjectProperty, Object> objectProperties = new HashMap<>();
+        for (Level.LevelObjectProperty property : Level.LevelObjectProperty.values())
+        {
+            if (object.getProperties().get(property.getPropertyName()) != null)
+            {
+                objectProperties.put(property,
+                                     object.getProperties().get(property.getPropertyName()));
+            }
+        }
+        return objectProperties;
     }
 
     @Override
