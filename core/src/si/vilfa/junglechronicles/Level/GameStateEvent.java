@@ -9,5 +9,5 @@ import si.vilfa.junglechronicles.Events.EventType;
  **/
 public enum GameStateEvent implements EventType
 {
-    COLLECTIBLE_CONTACT, TRAP_CONTACT,
+    PLAYER_COLLECTIBLE_CONTACT, PLAYER_TRAP_CONTACT,
 }

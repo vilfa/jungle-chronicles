@@ -84,10 +84,11 @@ public class HumanPlayer extends Player
             GameBlock gameBlock = (GameBlock) contact;
             if (gameBlock.isCollectible())
             {
-                dispatchEvent(GameStateEvent.COLLECTIBLE_CONTACT, contact);
+                ((GameBlock) contact).setActive(false);
+                dispatchEvent(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, contact);
             } else if (gameBlock.isTrap())
             {
-                dispatchEvent(GameStateEvent.TRAP_CONTACT, contact);
+                dispatchEvent(GameStateEvent.PLAYER_TRAP_CONTACT, contact);
             }
         }
     }

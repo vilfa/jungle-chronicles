@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.google.gson.Gson;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
@@ -66,10 +65,11 @@ public class LevelFactory implements Loggable
         body.getFixtureList().get(0).setUserData(player);
 
         player.setGameState(gameState);
-        player.registerEventListener(GameStateEvent.COLLECTIBLE_CONTACT, gameState);
-        player.registerEventListener(GameStateEvent.COLLECTIBLE_CONTACT, gameState.getPhysics());
-        player.registerEventListener(GameStateEvent.TRAP_CONTACT, gameState);
-        player.registerEventListener(GameStateEvent.TRAP_CONTACT, gameState.getPhysics());
+        player.registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, gameState);
+        player.registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
+                                     gameState.getPhysics());
+        player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState);
+        player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getPhysics());
 
         gameState.getCurrentLevel().addItem(player);
 
@@ -93,8 +93,6 @@ public class LevelFactory implements Loggable
                 Vector2 position = new Vector2();
                 if (object instanceof RectangleMapObject)
                 {
-                    log(new Gson().toJson(getObjectProperties(object)));
-
                     shape = shapeFactory.createRectangleShape(((RectangleMapObject) object),
                                                               position);
                 } else if (object instanceof PolygonMapObject)
@@ -118,17 +116,6 @@ public class LevelFactory implements Loggable
 
                     gameObject.setProperties(getObjectProperties(object));
                     gameObject.setGameState(gameState);
-
-                    //                    gameObject.registerEventListener(GameStateEvent
-                    //                    .COLLECTIBLE_CONTACT, gameState);
-                    //                    gameObject.registerEventListener(GameStateEvent
-                    //                    .COLLECTIBLE_CONTACT,
-                    //                                                     gameState.getPhysics());
-                    //                    gameObject.registerEventListener(GameStateEvent
-                    //                    .TRAP_CONTACT, gameState);
-                    //                    gameObject.registerEventListener(GameStateEvent
-                    //                    .TRAP_CONTACT,
-                    //                                                     gameState.getPhysics());
 
                     level.addItem(gameObject);
                 }

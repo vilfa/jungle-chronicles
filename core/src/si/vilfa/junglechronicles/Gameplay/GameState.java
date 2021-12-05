@@ -7,6 +7,7 @@ import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
+import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
@@ -49,12 +50,22 @@ public class GameState extends GameComponent implements EventListener
     {
         log(event.toString());
 
-        if (event.getType() == GameStateEvent.COLLECTIBLE_CONTACT)
+        if (event.getType() == GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
         {
-
-        } else if (event.getType() == GameStateEvent.TRAP_CONTACT)
+            if (event.getEventData().size > 0)
+            {
+                GameBlock object = (GameBlock) event.getEventData().get(0);
+                playerScore += object.getCollectiblePoints();
+                log("Score:" + playerScore);
+            }
+        } else if (event.getType() == GameStateEvent.PLAYER_TRAP_CONTACT)
         {
-
+            if (event.getEventData().size > 0)
+            {
+                GameBlock object = (GameBlock) event.getEventData().get(0);
+                playerHealth -= object.getTrapPoints();
+                log("Health:" + playerHealth);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
+import si.vilfa.junglechronicles.Level.Objects.GameObject;
 
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     private final float timeStep;
     private final int velocityIterations;
     private final int positionIterations;
-    private final HashMap<Body, Boolean> bodiesWithStateChange;
+    private final HashMap<Body, Boolean> bodiesStateChanged;
 
     public PhysicsEngine()
     {
@@ -37,7 +38,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
         this.timeStep = timeStep;
         this.velocityIterations = 6;
         this.positionIterations = 6;
-        this.bodiesWithStateChange = new HashMap<>();
+        this.bodiesStateChanged = new HashMap<>();
         world.setContactListener(this);
     }
 
@@ -65,9 +66,13 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     public void handleEvent(Event event)
     {
         log(event.toString());
-        if (event.getType() == GameStateEvent.COLLECTIBLE_CONTACT)
+        if (event.getType() == GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
         {
-            //            bodiesWithStateChange.put(((GameObject) object).getBody(), isActive);
+            if (event.getEventData().size > 0)
+            {
+                GameObject object = ((GameObject) event.getEventData().get(0));
+                bodiesStateChanged.put(object.getBody(), object.isActive());
+            }
         }
     }
 
@@ -87,13 +92,11 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
 
     private void processEvents()
     {
-        // TODO Implement an actual event based system instead of this.
-
-        for (Body body : bodiesWithStateChange.keySet())
+        for (Body body : bodiesStateChanged.keySet())
         {
             world.destroyBody(body);
         }
-        bodiesWithStateChange.clear();
+        bodiesStateChanged.clear();
     }
 
     @Override
