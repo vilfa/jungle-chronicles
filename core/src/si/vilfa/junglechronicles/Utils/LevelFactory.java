@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,6 +20,7 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Player;
 
@@ -80,48 +83,95 @@ public class LevelFactory implements Loggable
     {
         TiledMap map = new TmxMapLoader().load(fileName);
         Level level = new Level(map);
-
-        ShapeFactory shapeFactory = ShapeFactory.getInstance();
-        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
-        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
+        gameState.setCurrentLevel(level);
 
         for (MapLayer layer : map.getLayers())
         {
-            for (MapObject object : layer.getObjects())
+            if (layer.getName().equals(Level.LevelMapLayer.TERRAIN_LAYER.getLayerName()))
             {
-                Shape shape = null;
-                Vector2 position = new Vector2();
-                if (object instanceof RectangleMapObject)
+                if (layer instanceof TiledMapTileLayer)
                 {
-                    shape = shapeFactory.createRectangleShape(((RectangleMapObject) object),
-                                                              position);
-                } else if (object instanceof PolygonMapObject)
+                    createTerrainLayer(gameState, (TiledMapTileLayer) layer);
+                } else
                 {
-                    shape = shapeFactory.createPolygonShape(((PolygonMapObject) object), position);
-                } else if (object instanceof CircleMapObject)
-                {
-                    shape = shapeFactory.createCircleShape(((CircleMapObject) object), position);
+                    log("Error: expected a tile layer as a terrain layer");
                 }
-
-                if (shape != null)
+            } else if (layer.getName().equals(Level.LevelMapLayer.OBJECT_LAYER.getLayerName()))
+            {
+                createObjectLayer(gameState, layer);
+            } else if (layer.getName().equals(Level.LevelMapLayer.BACKGROUND_LAYER.getLayerName()))
+            {
+                if (layer instanceof TiledMapImageLayer)
                 {
-                    Body body = bodyFactory.createWithShape(shape,
-                                                            BodyDef.BodyType.StaticBody,
-                                                            position);
-                    GameBlock gameObject = gameObjectFactory.createWithBody(body,
-                                                                            GameBlock.class,
-                                                                            Body.class);
-                    gameObject.setPosition(PhysicsEngine.toUnits(position));
-                    body.getFixtureList().get(0).setUserData(gameObject);
-
-                    gameObject.setProperties(getObjectProperties(object));
-                    gameObject.setGameState(gameState);
-
-                    level.addItem(gameObject);
+                    createBackgroundLayer(gameState, (TiledMapImageLayer) layer);
+                } else
+                {
+                    log("Error: expected an image layer as a background layer");
                 }
             }
         }
         return level;
+    }
+
+    private void createTerrainLayer(GameState gameState, TiledMapTileLayer layer)
+    {
+        for (int i = 0; i < layer.getHeight(); i++)
+        {
+            for (int j = 0; j < layer.getWidth(); j++)
+            {
+                TiledMapTileLayer.Cell cell = layer.getCell(i, j);
+                if (cell == null) continue;
+
+                SceneTile sceneTile = new SceneTile(i, j, layer, cell.getTile());
+                sceneTile.setGameState(gameState);
+                gameState.getCurrentLevel().addItem(sceneTile);
+            }
+        }
+    }
+
+    private void createObjectLayer(GameState gameState, MapLayer layer)
+    {
+        ShapeFactory shapeFactory = ShapeFactory.getInstance();
+        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
+
+        for (MapObject object : layer.getObjects())
+        {
+            Shape shape = null;
+            Vector2 position = new Vector2();
+            if (object instanceof RectangleMapObject)
+            {
+                shape = shapeFactory.createRectangleShape(((RectangleMapObject) object), position);
+            } else if (object instanceof PolygonMapObject)
+            {
+                shape = shapeFactory.createPolygonShape(((PolygonMapObject) object), position);
+            } else if (object instanceof CircleMapObject)
+            {
+                shape = shapeFactory.createCircleShape(((CircleMapObject) object), position);
+            }
+
+            if (shape != null)
+            {
+                Body body = bodyFactory.createWithShape(shape,
+                                                        BodyDef.BodyType.StaticBody,
+                                                        position);
+                GameBlock gameObject = gameObjectFactory.createWithBody(body,
+                                                                        GameBlock.class,
+                                                                        Body.class);
+                gameObject.setPosition(PhysicsEngine.toUnits(position));
+                body.getFixtureList().get(0).setUserData(gameObject);
+
+                gameObject.setProperties(getObjectProperties(object));
+                gameObject.setGameState(gameState);
+
+                gameState.getCurrentLevel().addItem(gameObject);
+            }
+        }
+    }
+
+    private void createBackgroundLayer(GameState gameState, TiledMapImageLayer layer)
+    {
+
     }
 
     private <T extends MapObject> HashMap<Level.LevelObjectProperty, Object> getObjectProperties(T object)

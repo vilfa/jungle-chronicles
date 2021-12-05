@@ -8,6 +8,7 @@ import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
@@ -57,6 +58,15 @@ public class GameState extends GameComponent implements EventListener
                 GameBlock object = (GameBlock) event.getEventData().get(0);
                 playerScore += object.getCollectiblePoints();
                 log("Score:" + playerScore);
+
+                // TODO Use a HashMap or something for position lookup.
+                for (SceneTile tile : currentLevel.getTiles())
+                {
+                    if (object.getBody().getFixtureList().get(0).testPoint(tile.getCenter()))
+                    {
+                        currentLevel.removeItem(tile);
+                    }
+                }
             }
         } else if (event.getType() == GameStateEvent.PLAYER_TRAP_CONTACT)
         {

@@ -1,8 +1,9 @@
 package si.vilfa.junglechronicles.Level.Scene;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
+import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Player.Player;
 
 /**
  * @author luka
@@ -11,14 +12,16 @@ import si.vilfa.junglechronicles.Component.GameComponent;
  **/
 public class SimpleScene extends GameComponent implements Scene
 {
-    protected final Array<Object> items;
-    protected final Array<Actor> actors;
+    protected final Array<GameBlock> objects;
+    protected final Array<SceneTile> tiles;
+    protected final Array<Player> players;
 
     public SimpleScene()
     {
         super(0, true);
-        items = new Array<>();
-        actors = new Array<>();
+        objects = new Array<>();
+        tiles = new Array<>();
+        players = new Array<>();
     }
 
     @Override
@@ -26,57 +29,95 @@ public class SimpleScene extends GameComponent implements Scene
     {
         if (!isUpdatable) return;
 
-        for (Object item : items)
+        for (GameBlock object : objects)
         {
-            if (item instanceof GameComponent)
-            {
-                ((GameComponent) item).update();
-            }
+            object.update();
         }
-        for (Actor actor : actors)
+        for (SceneTile tile : tiles)
         {
+            tile.update();
+        }
+        for (Player player : players)
+        {
+            player.update();
         }
     }
 
     @Override
     public void dispose()
     {
-        for (Object item : items)
+        for (GameBlock object : objects)
         {
-            if (item instanceof GameComponent)
-            {
-                ((GameComponent) item).dispose();
-            }
+            object.dispose();
+        }
+        for (SceneTile tile : tiles)
+        {
+            tile.dispose();
+        }
+        for (Player player : players)
+        {
+            player.dispose();
         }
     }
 
     @Override
     public void addItem(Object item)
     {
-        items.add(item);
-    }
-
-    @Override
-    public void addItems(Array<Object> items)
-    {
-        items.addAll(items);
+        if (item instanceof GameBlock)
+        {
+            objects.add((GameBlock) item);
+        } else if (item instanceof SceneTile)
+        {
+            tiles.add((SceneTile) item);
+        } else if (item instanceof Player)
+        {
+            players.add((Player) item);
+        } else
+        {
+            log("Trying to add unknown item:" + item);
+        }
     }
 
     @Override
     public void removeItem(Object item)
     {
-        items.removeValue(item, false);
+        if (item instanceof GameBlock)
+        {
+            objects.removeValue((GameBlock) item, false);
+        } else if (item instanceof SceneTile)
+        {
+            tiles.removeValue((SceneTile) item, false);
+        } else if (item instanceof Player)
+        {
+            players.removeValue((Player) item, false);
+        } else
+        {
+            log("Trying to remove unknown item:" + item);
+        }
     }
 
     @Override
-    public Array<Object> getItems()
+    public Array<GameBlock> getObjects()
     {
-        return items;
+        return objects;
+    }
+
+    @Override
+    public Array<SceneTile> getTiles()
+    {
+        return tiles;
+    }
+
+    @Override
+    public Array<Player> getPlayers()
+    {
+        return players;
     }
 
     @Override
     public void clear()
     {
-        items.clear();
+        objects.clear();
+        tiles.clear();
     }
 }

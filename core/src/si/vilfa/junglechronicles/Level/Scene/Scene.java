@@ -2,6 +2,8 @@ package si.vilfa.junglechronicles.Level.Scene;
 
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.Updatable;
+import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Player.Player;
 
 /**
  * @author luka
@@ -12,11 +14,13 @@ public interface Scene extends Updatable
 {
     void addItem(Object item);
 
-    void addItems(Array<Object> items);
-
     void removeItem(Object item);
 
-    Array<Object> getItems();
+    Array<GameBlock> getObjects();
+
+    Array<SceneTile> getTiles();
+
+    Array<Player> getPlayers();
 
     void clear();
 }

@@ -3,13 +3,10 @@ package si.vilfa.junglechronicles.Graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -19,8 +16,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.Level;
-import si.vilfa.junglechronicles.Physics.PhysicsEngine;
+import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
+import si.vilfa.junglechronicles.Player.Player;
 
 /**
  * @author luka
@@ -127,10 +125,10 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         return screenRefreshRate;
     }
 
-    private void followPlayer()
+    private void followPlayer(Player player)
     {
-        Vector2 newCameraPos = new Vector2(playerLastPosition);
-        if (playerLastPosition.y < visibleWorldHeight / 2f)
+        Vector2 newCameraPos = new Vector2(player.getPosition());
+        if (newCameraPos.y < visibleWorldHeight / 2f)
         {
             newCameraPos.y = visibleWorldHeight / 2f;
         }
@@ -149,34 +147,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
 
-        MapLayer terrainLayer = level.getMap()
-                                     .getLayers()
-                                     .get(Level.LevelMapLayer.TERRAIN_LAYER.getLayerName());
-        if (terrainLayer instanceof TiledMapTileLayer && terrainLayer.isVisible())
+        for (SceneTile tile : level.getTiles())
         {
-            TiledMapTileLayer layer = ((TiledMapTileLayer) terrainLayer);
-            for (int i = 0; i < layer.getHeight(); i++)
-            {
-                for (int j = 0; j < layer.getWidth(); j++)
-                {
-                    TiledMapTileLayer.Cell cell = layer.getCell(i, j);
-
-                    if (cell == null) continue;
-
-                    TiledMapTile tile = cell.getTile();
-                    TextureRegion textureRegion = tile.getTextureRegion();
-                    Vector2 position = PhysicsEngine.toUnits(new Vector2(i * layer.getTileWidth(),
-                                                                         j
-                                                                         * layer.getTileHeight()));
-
-
-                    Sprite sprite = new Sprite(textureRegion);
-                    sprite.setSize(PhysicsEngine.toUnits(textureRegion.getRegionWidth()),
-                                   PhysicsEngine.toUnits(textureRegion.getRegionHeight()));
-                    sprite.setPosition(position.x, position.y);
-                    sprite.draw(spriteBatch);
-                }
-            }
+            tile.getSprite().draw(spriteBatch);
         }
 
         MapLayer backgroundLayer = level.getMap()
@@ -189,20 +162,15 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         }
 
         // TODO Clean this up.
-        for (Object item : level.getItems())
+        for (Object item : level.getObjects())
         {
-            Vector2 position;
             Vector2 velocity;
-            //            Sprite sprite;
             if (item instanceof HumanPlayer)
             {
                 HumanPlayer p = ((HumanPlayer) item);
                 if (p.isActive())
                 {
-                    position = p.getPosition();
                     velocity = p.getVelocity();
-                    playerLastPosition = position;
-                    //                    TextureRegion region;
                     if (velocity.x > 0f)
                     {
                         playerLastVelocityX = velocity.x;
@@ -222,14 +190,10 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                     {
                         //                        region = playerLeftKeyframes.first();
                     }
-                    //                    sprite = new Sprite(region);
-                    //                    sprite.setSize(1.75f, 1.75f);
-                    //                    sprite.setCenter(position.x, position.y);
-                    //                    sprite.draw(spriteBatch);
                 }
             }
         }
-        // !TODO
+
         spriteBatch.end();
     }
 
@@ -252,6 +216,13 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             fpsTimer = 0;
         }
 
-        followPlayer();
+        for (Player player : level.getPlayers())
+        {
+            if (player instanceof HumanPlayer)
+            {
+                followPlayer(player);
+            }
+        }
+
     }
 }
