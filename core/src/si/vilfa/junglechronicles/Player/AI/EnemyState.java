@@ -17,7 +17,7 @@ public enum EnemyState implements State<Enemy>, Loggable
                 @Override
                 public void update(Enemy entity)
                 {
-                    if (entity.seesPlayer() && entity.canAttackPlayer())
+                    if (entity.seesPlayer())
                     {
                         entity.getStateMachine().changeState(EnemyState.ATTACK);
                     } else if (!entity.withinLeftBound())
@@ -32,7 +32,7 @@ public enum EnemyState implements State<Enemy>, Loggable
                 @Override
                 public void update(Enemy entity)
                 {
-                    if (entity.seesPlayer() && entity.canAttackPlayer())
+                    if (entity.seesPlayer())
                     {
                         entity.getStateMachine().changeState(EnemyState.ATTACK);
                     } else if (!entity.withinRightBound())

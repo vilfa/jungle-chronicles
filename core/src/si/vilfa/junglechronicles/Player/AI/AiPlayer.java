@@ -22,7 +22,7 @@ public abstract class AiPlayer extends Player
         isTagged = false;
         boundingRadius = 1f;
         zeroLinearSpeedThreshold = 0.1f;
-        maxLinearSpeed = 1f;
+        maxLinearSpeed = 3f;
         maxLinearAcceleration = 1f;
         maxAngularSpeed = 1f;
         maxAngularAcceleration = 1f;

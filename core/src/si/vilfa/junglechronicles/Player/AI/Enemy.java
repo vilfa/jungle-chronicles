@@ -3,7 +3,9 @@ package si.vilfa.junglechronicles.Player.AI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import si.vilfa.junglechronicles.Physics.RayCallback;
 import si.vilfa.junglechronicles.Player.AI.Agents.StateAgent;
+import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 
 /**
  * @author luka
@@ -41,6 +43,13 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
         } else if (stateMachine.getCurrentState() == EnemyState.MOVE_RIGHT)
         {
             setVelocity(new Vector2(0.5f, 0f));
+        } else if (stateMachine.getCurrentState() == EnemyState.ATTACK)
+        {
+            Vector2 playerPos = gameState.getPlayer().getPosition();
+            Vector2 myPos = getPosition();
+            Vector2 attackVec = playerPos.sub(myPos).nor();
+
+            setVelocity(new Vector2(attackVec.x, 0f));
         }
     }
 
@@ -66,22 +75,21 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
 
     public boolean seesPlayer()
     {
-        //        Vector2 myPos = getPosition();
-        //        Vector2 playerPos = gameState.getPlayer().getPosition();
-        //
-        //        RayCallback callback = new RayCallback();
-        //        gameState.getPhysics().getWorld().rayCast(callback, myPos, playerPos);
-        //
-        //        return callback.getRayContactCount() == 1 && callback.getRayFixtures()
-        //                                                             .get(0)
-        //                                                             .getUserData() instanceof
-        //                                                             HumanPlayer;
-        return false;
+        Vector2 myPos = getPosition();
+        Vector2 playerPos = gameState.getPlayer().getPosition();
+
+        RayCallback callback = new RayCallback();
+        gameState.getPhysics().getWorld().rayCast(callback, myPos, playerPos);
+
+        return callback.getRayContactCount() == 1 && callback.getRayFixtures()
+                                                             .get(0)
+                                                             .getUserData() instanceof HumanPlayer;
     }
 
     public boolean canAttackPlayer()
     {
         Vector2 playerPos = gameState.getPlayer().getPosition();
+        Vector2 myPos = getPosition();
         return playerPos.x > leftBoundHorizontal && playerPos.x < rightBoundHorizontal
                && playerPos.y > bottomBoundVertical && playerPos.y < topBoundVertical;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="250" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="74">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="250" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="86">
  <tileset firstgid="1" source="Terrain.tsx"/>
  <tileset firstgid="65" source="Objects.tsx"/>
  <layer id="1" name="Terrain" width="250" height="50">
@@ -185,11 +185,11 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="Ai">
-  <object id="71" x="135.182" y="1510.55" width="17.6364" height="18.9091">
+  <object id="71" x="161.182" y="1451.88" width="17.6364" height="18.9091">
    <properties>
-    <property name="arriveDecelerationRadius" type="float" value="15"/>
-    <property name="arriveTimeToTarget" type="float" value="0.01"/>
-    <property name="arriveTolerance" type="float" value="2.5"/>
+    <property name="arriveDecelerationRadius" type="float" value="20"/>
+    <property name="arriveTimeToTarget" type="float" value="0.5"/>
+    <property name="arriveTolerance" type="float" value="3"/>
     <property name="isArrive" type="bool" value="true"/>
     <property name="isFriend" type="bool" value="true"/>
    </properties>
@@ -197,8 +197,52 @@
   </object>
   <object id="73" x="417.333" y="1564.67">
    <properties>
+    <property name="enemyBottomBound" type="float" value="0.5"/>
     <property name="enemyLeftBound" type="float" value="1"/>
     <property name="enemyRightBound" type="float" value="3"/>
+    <property name="enemyTopBound" type="float" value="0.5"/>
+    <property name="isEnemy" type="bool" value="true"/>
+   </properties>
+   <polygon points="0,0 14.6667,-27.3333 30.6667,2"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Copy of Ai" visible="0">
+  <object id="82" x="135.182" y="1510.55" width="17.6364" height="18.9091">
+   <properties>
+    <property name="arriveDecelerationRadius" type="float" value="20"/>
+    <property name="arriveTimeToTarget" type="float" value="0.5"/>
+    <property name="arriveTolerance" type="float" value="3"/>
+    <property name="isArrive" type="bool" value="true"/>
+    <property name="isFriend" type="bool" value="true"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="83" x="417.333" y="1564.67">
+   <properties>
+    <property name="enemyBottomBound" type="float" value="0"/>
+    <property name="enemyLeftBound" type="float" value="1"/>
+    <property name="enemyRightBound" type="float" value="3"/>
+    <property name="enemyTopBound" type="float" value="0.5"/>
+    <property name="isEnemy" type="bool" value="true"/>
+   </properties>
+   <polygon points="0,0 14.6667,-27.3333 30.6667,2"/>
+  </object>
+  <object id="84" x="641.333" y="1341.33">
+   <properties>
+    <property name="enemyBottomBound" type="float" value="0"/>
+    <property name="enemyLeftBound" type="float" value="0.75"/>
+    <property name="enemyRightBound" type="float" value="0.75"/>
+    <property name="enemyTopBound" type="float" value="0.75"/>
+    <property name="isEnemy" type="bool" value="true"/>
+   </properties>
+   <polygon points="0,0 14.6667,-27.3333 30.6667,2"/>
+  </object>
+  <object id="85" x="928.667" y="1245.33">
+   <properties>
+    <property name="enemyBottomBound" type="float" value="0"/>
+    <property name="enemyLeftBound" type="float" value="0.75"/>
+    <property name="enemyRightBound" type="float" value="0.75"/>
+    <property name="enemyTopBound" type="float" value="0.75"/>
     <property name="isEnemy" type="bool" value="true"/>
    </properties>
    <polygon points="0,0 14.6667,-27.3333 30.6667,2"/>
