@@ -45,13 +45,22 @@ public class Level extends GameLevel
         map.dispose();
     }
 
-    public enum LevelMapLayer
+    public interface Property
     {
-        OBJECT_LAYER("Objects"), TERRAIN_LAYER("Terrain"), BACKGROUND_LAYER("Background");
+        String getPropertyName();
+    }
+
+    public enum MapLayer
+    {
+        OBJECT_LAYER("Objects"),
+        TERRAIN_LAYER("Terrain"),
+        BACKGROUND_LAYER("Background"),
+        PLAYER_LAYER("Player"),
+        AI_LAYER("Ai");
 
         final String layerName;
 
-        LevelMapLayer(String layerName)
+        MapLayer(String layerName)
         {
             this.layerName = layerName;
         }
@@ -62,7 +71,7 @@ public class Level extends GameLevel
         }
     }
 
-    public enum LevelObjectProperty
+    public enum ObjectProperty implements Property
     {
         COLLECTIBLE("isCollectible"),
         COLLECTIBLE_POINTS("collectiblePoints"),
@@ -71,11 +80,72 @@ public class Level extends GameLevel
 
         final String propertyName;
 
-        LevelObjectProperty(String propertyName)
+        ObjectProperty(String propertyName)
         {
             this.propertyName = propertyName;
         }
 
+        @Override
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
+    }
+
+    public enum HumanPlayerProperty implements Property
+    {
+        HEALTH_POINTS("healthPoints");
+
+        final String propertyName;
+
+        HumanPlayerProperty(String propertyName)
+        {
+            this.propertyName = propertyName;
+        }
+
+        @Override
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
+    }
+
+    public enum AiPlayerType implements Property
+    {
+        FRIEND("isFriend"), ENEMY("isEnemy");
+
+        final String propertyName;
+
+        AiPlayerType(String propertyName)
+        {
+            this.propertyName = propertyName;
+        }
+
+        @Override
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
+    }
+
+    public enum AiPlayerProperty implements Property
+    {
+        EVADE("isEvade"),
+        PURSUE("isPursue"),
+        WANDER("isWander"),
+        FACE("isFace"),
+        ARRIVE("isArrive"),
+        ARRIVE_DECELERATION_RADIUS("arriveDecelerationRadius"),
+        ARRIVE_TOLERANCE("arriveTolerance");
+
+        final String propertyName;
+
+        AiPlayerProperty(String propertyName)
+        {
+            this.propertyName = propertyName;
+        }
+
+        @Override
         public String getPropertyName()
         {
             return propertyName;

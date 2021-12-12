@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="250" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="69">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="250" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="73">
  <tileset firstgid="1" source="Terrain.tsx"/>
  <tileset firstgid="65" source="Objects.tsx"/>
  <layer id="1" name="Terrain" width="250" height="50">
@@ -175,6 +175,24 @@
     <property name="collectiblePoints" type="int" value="5"/>
     <property name="isCollectible" type="bool" value="true"/>
    </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Player">
+  <object id="70" x="32" y="1504" width="32" height="32">
+   <properties>
+    <property name="healthPoints" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Ai">
+  <object id="71" x="135.182" y="1510.55" width="17.6364" height="18.9091">
+   <properties>
+    <property name="arriveDecelerationRadius" type="float" value="10"/>
+    <property name="arriveTolerance" type="float" value="2.5"/>
+    <property name="isArrive" type="bool" value="true"/>
+    <property name="isFriend" type="bool" value="true"/>
+   </properties>
+   <ellipse/>
   </object>
  </objectgroup>
 </map>

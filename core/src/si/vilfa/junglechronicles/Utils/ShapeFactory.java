@@ -2,12 +2,10 @@ package si.vilfa.junglechronicles.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import si.vilfa.junglechronicles.Component.Loggable;
@@ -72,10 +70,20 @@ public class ShapeFactory implements Loggable
     public CircleShape createCircleShape(CircleMapObject circleMapObject, Vector2 position)
     {
         Circle circle = circleMapObject.getCircle();
-        Vector2 circlePosition = PhysicsEngine.toUnits(new Vector2(circle.x, circle.y));
+        Vector2 circlePosition = new Vector2(circle.x, circle.y);
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(PhysicsEngine.toUnits(circle.radius));
         position.set(circlePosition);
+        return circleShape;
+    }
+
+    public CircleShape createEllipseShape(EllipseMapObject ellipseMapObject, Vector2 position)
+    {
+        Ellipse ellipse = ellipseMapObject.getEllipse();
+        Vector2 ellipsePosition = new Vector2(ellipse.x, ellipse.y);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(PhysicsEngine.toUnits(ellipse.width / 2));
+        position.set(ellipsePosition);
         return circleShape;
     }
 

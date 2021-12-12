@@ -68,8 +68,7 @@ project(":core") {
     apply plugin: "java-library"
 
     dependencies {
-        implementation "org.apache.commons:commons-lang3:3.12.0"
-        implementation 'com.google.code.gson:gson:2.8.9'
+        implementation "com.google.code.gson:gson:2.8.9"
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

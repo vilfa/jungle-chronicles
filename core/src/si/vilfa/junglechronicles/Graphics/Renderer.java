@@ -2,10 +2,11 @@ package si.vilfa.junglechronicles.Graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -49,6 +50,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private Vector2 playerLastPosition;
     private Animation<TextureRegion> playerLeftAnimation;
     private Animation<TextureRegion> playerRightAnimation;
+
+    // TODO Remove this
+    private Sprite playerSprite = new Sprite(new Texture("player.png"));
 
     private float deltaTime;
     private float fpsTimer;
@@ -152,9 +156,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             tile.getSprite().draw(spriteBatch);
         }
 
-        MapLayer backgroundLayer = level.getMap()
-                                        .getLayers()
-                                        .get(Level.LevelMapLayer.BACKGROUND_LAYER.getLayerName());
+        com.badlogic.gdx.maps.MapLayer backgroundLayer = level.getMap()
+                                                              .getLayers()
+                                                              .get(Level.MapLayer.BACKGROUND_LAYER.getLayerName());
         if (backgroundLayer instanceof TiledMapImageLayer && backgroundLayer.isVisible())
         {
             // TODO Implement background rendering.
@@ -162,7 +166,7 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         }
 
         // TODO Clean this up.
-        for (Object item : level.getObjects())
+        for (Object item : level.getPlayers())
         {
             Vector2 velocity;
             if (item instanceof HumanPlayer)
@@ -190,6 +194,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                     {
                         //                        region = playerLeftKeyframes.first();
                     }
+                    playerSprite.setCenter(p.getPosition().x, p.getPosition().y);
+                    playerSprite.setSize(1.4f, 1.4f);
+                    playerSprite.draw(spriteBatch);
                 }
             }
         }

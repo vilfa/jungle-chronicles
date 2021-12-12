@@ -1,5 +1,8 @@
 package si.vilfa.junglechronicles.Player;
 
+import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -16,11 +19,20 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
  * @package si.vilfa.junglechronicles.Player
  **/
 public abstract class Player extends GameComponent
-        implements PhysicsActor, InputEventListener, CollisionEventListener
+        implements PhysicsActor, InputEventListener, CollisionEventListener, Steerable<Vector2>
 {
-    private final Body body;
+    protected final Body body;
     protected GameState gameState;
     protected boolean isActive;
+
+    protected SteeringBehavior<Vector2> steeringBehavior;
+    protected boolean isTagged;
+    protected float boundingRadius;
+    protected float zeroLinearSpeedThreshold;
+    protected float maxLinearSpeed;
+    protected float maxLinearAcceleration;
+    protected float maxAngularSpeed;
+    protected float maxAngularAcceleration;
 
     public Player(Body body)
     {
@@ -143,5 +155,121 @@ public abstract class Player extends GameComponent
     public void setRotation(float rotation)
     {
         body.setTransform(getPosition(), rotation);
+    }
+
+    @Override
+    public float getOrientation()
+    {
+        return getRotation();
+    }
+
+    @Override
+    public void setOrientation(float orientation)
+    {
+        setRotation(orientation);
+    }
+
+    @Override
+    public float vectorToAngle(Vector2 vector)
+    {
+        return (float) Math.atan2(-vector.x, vector.y);
+    }
+
+    @Override
+    public Vector2 angleToVector(Vector2 outVector, float angle)
+    {
+        outVector.x = -(float) Math.sin(angle);
+        outVector.y = (float) Math.cos(angle);
+        return outVector;
+    }
+
+    @Override
+    public Location<Vector2> newLocation()
+    {
+        return null;
+    }
+
+    @Override
+    public Vector2 getLinearVelocity()
+    {
+        return getVelocity();
+    }
+
+    @Override
+    public float getBoundingRadius()
+    {
+        return boundingRadius;
+    }
+
+    @Override
+    public boolean isTagged()
+    {
+        return isTagged;
+    }
+
+    @Override
+    public void setTagged(boolean tagged)
+    {
+        isTagged = tagged;
+    }
+
+    @Override
+    public float getZeroLinearSpeedThreshold()
+    {
+        return zeroLinearSpeedThreshold;
+    }
+
+    @Override
+    public void setZeroLinearSpeedThreshold(float value)
+    {
+        zeroLinearSpeedThreshold = value;
+    }
+
+    @Override
+    public float getMaxLinearSpeed()
+    {
+        return maxLinearSpeed;
+    }
+
+    @Override
+    public void setMaxLinearSpeed(float maxLinearSpeed)
+    {
+        this.maxLinearSpeed = maxLinearSpeed;
+    }
+
+    @Override
+    public float getMaxLinearAcceleration()
+    {
+        return maxLinearAcceleration;
+    }
+
+    @Override
+    public void setMaxLinearAcceleration(float maxLinearAcceleration)
+    {
+        this.maxLinearAcceleration = maxLinearAcceleration;
+    }
+
+    @Override
+    public float getMaxAngularSpeed()
+    {
+        return maxAngularSpeed;
+    }
+
+    @Override
+    public void setMaxAngularSpeed(float maxAngularSpeed)
+    {
+        this.maxAngularSpeed = maxAngularSpeed;
+    }
+
+    @Override
+    public float getMaxAngularAcceleration()
+    {
+        return maxAngularAcceleration;
+    }
+
+    @Override
+    public void setMaxAngularAcceleration(float maxAngularAcceleration)
+    {
+        this.maxAngularAcceleration = maxAngularAcceleration;
     }
 }
