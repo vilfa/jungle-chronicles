@@ -8,7 +8,7 @@ import si.vilfa.junglechronicles.Player.AI.AiPlayer;
  * @date 11/12/2021
  * @package si.vilfa.junglechronicles.Player.AI.Agents
  **/
-public class WorldAgent extends AiPlayer
+public abstract class WorldAgent extends AiPlayer
 {
     public WorldAgent(Body body)
     {

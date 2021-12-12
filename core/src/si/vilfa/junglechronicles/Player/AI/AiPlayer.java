@@ -20,10 +20,10 @@ public abstract class AiPlayer extends Player
     {
         super(body);
         isTagged = false;
-        boundingRadius = 0.5f;
-        zeroLinearSpeedThreshold = 0.5f;
-        maxLinearSpeed = 3f;
-        maxLinearAcceleration = 3f;
+        boundingRadius = 1f;
+        zeroLinearSpeedThreshold = 0.1f;
+        maxLinearSpeed = 1f;
+        maxLinearAcceleration = 1f;
         maxAngularSpeed = 1f;
         maxAngularAcceleration = 1f;
     }
@@ -38,6 +38,7 @@ public abstract class AiPlayer extends Player
     public void setBehaviour(SteeringBehavior<Vector2> steeringBehavior)
     {
         this.steeringBehavior = steeringBehavior;
+        this.steeringBehavior.setLimiter(this);
     }
 
     @Override

@@ -25,7 +25,6 @@ public class GameState extends GameComponent implements EventListener
     private float currentLevelDuration;
     private int playerHealth;
     private int playerScore;
-    private boolean isPaused;
 
     public GameState()
     {
@@ -35,16 +34,10 @@ public class GameState extends GameComponent implements EventListener
 
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
-        //        player = (HumanPlayer) levelFactory.createPlayer(this,
-        //                                                         HumanPlayer.class,
-        //                                                         new Vector2(1f, 1f));
-
-        //        player = (HumanPlayer) currentLevel.getPlayers().get(0);
 
         currentLevelDuration = 0f;
         playerHealth = 100;
         playerScore = 0;
-        isPaused = false;
     }
 
     @Override
@@ -77,6 +70,15 @@ public class GameState extends GameComponent implements EventListener
                 playerHealth -= object.getTrapPoints();
                 log("Health:" + playerHealth);
             }
+        } else if (event.getType() == GameStateEvent.PLAYER_ENEMY_CONTACT)
+        {
+            playerHealth -= 100;
+            log("Health:" + playerHealth);
+        }
+
+        if (playerHealth <= 0)
+        {
+            log("YOU ARE DEAD!");
         }
     }
 
@@ -130,22 +132,11 @@ public class GameState extends GameComponent implements EventListener
         this.playerScore = playerScore;
     }
 
-    public boolean isPaused()
-    {
-        return isPaused;
-    }
-
-    public void setPaused(boolean paused)
-    {
-        isPaused = paused;
-    }
-
     public void reset()
     {
         currentLevelDuration = 0f;
         playerHealth = 100;
         playerScore = 0;
-        isPaused = false;
         log("Reset");
     }
 

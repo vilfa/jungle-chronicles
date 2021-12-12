@@ -186,7 +186,7 @@ public abstract class Player extends GameComponent
     @Override
     public Location<Vector2> newLocation()
     {
-        return null;
+        return new PlayerLocation();
     }
 
     @Override

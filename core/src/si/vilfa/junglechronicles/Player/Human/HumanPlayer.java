@@ -7,6 +7,7 @@ import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Player.AI.Enemy;
 import si.vilfa.junglechronicles.Player.Player;
 
 /**
@@ -90,6 +91,9 @@ public class HumanPlayer extends Player
             {
                 dispatchEvent(GameStateEvent.PLAYER_TRAP_CONTACT, contact);
             }
+        } else if (contact instanceof Enemy)
+        {
+            dispatchEvent(GameStateEvent.PLAYER_ENEMY_CONTACT, contact);
         }
     }
 }

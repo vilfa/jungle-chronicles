@@ -13,7 +13,7 @@ public class Friend extends SimpleAgent
     public Friend(Body body)
     {
         super(body);
-        body.setGravityScale(0.15f);
+        body.setGravityScale(0f);
     }
 
     @Override

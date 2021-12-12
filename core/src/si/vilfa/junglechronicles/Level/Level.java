@@ -45,11 +45,6 @@ public class Level extends GameLevel
         map.dispose();
     }
 
-    public interface Property
-    {
-        String getPropertyName();
-    }
-
     public enum MapLayer
     {
         OBJECT_LAYER("Objects"),
@@ -136,7 +131,12 @@ public class Level extends GameLevel
         FACE("isFace"),
         ARRIVE("isArrive"),
         ARRIVE_DECELERATION_RADIUS("arriveDecelerationRadius"),
-        ARRIVE_TOLERANCE("arriveTolerance");
+        ARRIVE_TOLERANCE("arriveTolerance"),
+        ARRIVE_TTT("arriveTimeToTarget"),
+        ENEMY_LEFT_BOUND("enemyLeftBound"),
+        ENEMY_RIGHT_BOUND("enemyRightBound"),
+        ENEMY_TOP_BOUND("enemyTopBound"),
+        ENEMY_BOTTOM_BOUND("enemyBottomBound");
 
         final String propertyName;
 
@@ -150,5 +150,10 @@ public class Level extends GameLevel
         {
             return propertyName;
         }
+    }
+
+    public interface Property
+    {
+        String getPropertyName();
     }
 }

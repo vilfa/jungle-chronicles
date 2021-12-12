@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.google.gson.Gson;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
@@ -145,6 +146,8 @@ public class LevelFactory implements Loggable
                                      gameState.getPhysics());
         player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState);
         player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getPhysics());
+        player.registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState);
+        player.registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState.getPhysics());
 
         gameState.getCurrentLevel().addItem(player);
 
@@ -196,6 +199,7 @@ public class LevelFactory implements Loggable
             MapLayer layer = layers.get(Level.MapLayer.AI_LAYER.getLayerName());
             processAiLayer(gameState, layer);
         }
+
         return level;
     }
 
@@ -227,6 +231,7 @@ public class LevelFactory implements Loggable
             }
             if (shape != null)
             {
+                // TODO Move player creation to a PlayerFactory.
                 HumanPlayer player = (HumanPlayer) createPlayerWithShapeWithExtra(gameState,
                                                                                   HumanPlayer.class,
                                                                                   PhysicsEngine.toUnits(
@@ -269,42 +274,44 @@ public class LevelFactory implements Loggable
             {
                 shape = shapeFactory.createEllipseShape((EllipseMapObject) object, position);
             }
-            if (shape != null)
+            if (shape == null) continue;
+
+            // TODO Move player creation to a PlayerFactory.
+            AiPlayer aiPlayer = null;
+            HashMap<Level.Property, Object> aiPlayerType = getObjectProperties(object,
+                                                                               Level.AiPlayerType.values());
+
+            for (Level.Property key : aiPlayerType.keySet())
             {
-                AiPlayer aiPlayer = null;
-                HashMap<Level.Property, Object> aiPlayerType = getObjectProperties(object,
-                                                                                   Level.AiPlayerType.values());
-
-                for (Level.Property key : aiPlayerType.keySet())
+                if (key == Level.AiPlayerType.ENEMY && (Boolean) aiPlayerType.get(key))
                 {
-                    if (key == Level.AiPlayerType.ENEMY && (Boolean) aiPlayerType.get(key))
-                    {
-                        aiPlayer = (Enemy) createPlayerWithShapeWithExtra(gameState,
-                                                                          Enemy.class,
-                                                                          PhysicsEngine.toUnits(
-                                                                                  position),
-                                                                          shape,
-                                                                          15f,
-                                                                          0.05f,
-                                                                          0f);
-                    } else if (key == Level.AiPlayerType.FRIEND && (Boolean) aiPlayerType.get(key))
-                    {
-                        aiPlayer = (Friend) createPlayerWithShapeWithExtra(gameState,
-                                                                           Friend.class,
-                                                                           PhysicsEngine.toUnits(
-                                                                                   position),
-                                                                           shape,
-                                                                           15f,
-                                                                           0.05f,
-                                                                           0f);
-                    }
+                    aiPlayer = (Enemy) createPlayerWithShapeWithExtra(gameState,
+                                                                      Enemy.class,
+                                                                      PhysicsEngine.toUnits(position),
+                                                                      shape,
+                                                                      5f,
+                                                                      0.05f,
+                                                                      0f);
+                } else if (key == Level.AiPlayerType.FRIEND && (Boolean) aiPlayerType.get(key))
+                {
+                    aiPlayer = (Friend) createPlayerWithShapeWithExtra(gameState,
+                                                                       Friend.class,
+                                                                       PhysicsEngine.toUnits(
+                                                                               position),
+                                                                       shape,
+                                                                       5f,
+                                                                       0.05f,
+                                                                       0f);
                 }
+            }
 
-                if (aiPlayer == null) continue;
+            if (aiPlayer == null) continue;
 
-                HashMap<Level.Property, Object> aiPlayerProperties = getObjectProperties(object,
-                                                                                         Level.AiPlayerProperty.values());
-                for (Level.Property key : aiPlayerProperties.keySet())
+            HashMap<Level.Property, Object> aiPlayerProperties = getObjectProperties(object,
+                                                                                     Level.AiPlayerProperty.values());
+            for (Level.Property key : aiPlayerProperties.keySet())
+            {
+                if (aiPlayer instanceof Friend)
                 {
                     if (key == Level.AiPlayerProperty.ARRIVE
                         && (Boolean) aiPlayerProperties.get(key))
@@ -332,22 +339,63 @@ public class LevelFactory implements Loggable
                         aiPlayer.setBehaviour(new Wander<>(aiPlayer));
                         aiPlayer.getBehaviour().setLimiter(aiPlayer);
                     }
+                }
+            }
 
-                    if (aiPlayer.getBehaviour() instanceof Arrive)
+            for (Level.Property key : aiPlayerProperties.keySet())
+            {
+                if (aiPlayer.getBehaviour() instanceof Arrive)
+                {
+                    if (key == Level.AiPlayerProperty.ARRIVE_DECELERATION_RADIUS
+                        && aiPlayerProperties.get(key) != null)
                     {
-                        if (key == Level.AiPlayerProperty.ARRIVE_DECELERATION_RADIUS
-                            && aiPlayerProperties.get(key) != null)
-                        {
-                            Arrive<Vector2> agentBehaviour = (Arrive<Vector2>) aiPlayer.getBehaviour();
-                            agentBehaviour.setDecelerationRadius((Float) aiPlayerProperties.get(key));
-                        }
-                        if (key == Level.AiPlayerProperty.ARRIVE_TOLERANCE
-                            && aiPlayerProperties.get(key) != null)
-                        {
-                            Arrive<Vector2> agentBehaviour = (Arrive<Vector2>) aiPlayer.getBehaviour();
-                            agentBehaviour.setArrivalTolerance((Float) aiPlayerProperties.get(key));
-                        }
+                        ((Arrive<Vector2>) aiPlayer.getBehaviour()).setDecelerationRadius((Float) aiPlayerProperties.get(
+                                key));
                     }
+                    if (key == Level.AiPlayerProperty.ARRIVE_TOLERANCE
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Arrive<Vector2>) aiPlayer.getBehaviour()).setArrivalTolerance((Float) aiPlayerProperties.get(
+                                key));
+                    }
+                    if (key == Level.AiPlayerProperty.ARRIVE_TTT
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Arrive<Vector2>) aiPlayer.getBehaviour()).setTimeToTarget((Float) aiPlayerProperties.get(
+                                key));
+                    }
+                }
+            }
+
+            for (Level.Property key : aiPlayerProperties.keySet())
+            {
+                if (aiPlayer instanceof Enemy)
+                {
+                    if (key == Level.AiPlayerProperty.ENEMY_LEFT_BOUND
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Enemy) aiPlayer).setLeftBound(position,
+                                                        (Float) aiPlayerProperties.get(key));
+                    }
+                    if (key == Level.AiPlayerProperty.ENEMY_RIGHT_BOUND
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Enemy) aiPlayer).setRightBound(position,
+                                                         (Float) aiPlayerProperties.get(key));
+                    }
+                    if (key == Level.AiPlayerProperty.ENEMY_TOP_BOUND
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Enemy) aiPlayer).setTopBound(position,
+                                                       (Float) aiPlayerProperties.get(key));
+                    }
+                    if (key == Level.AiPlayerProperty.ENEMY_BOTTOM_BOUND
+                        && aiPlayerProperties.get(key) != null)
+                    {
+                        ((Enemy) aiPlayer).setBottomBound(position,
+                                                          (Float) aiPlayerProperties.get(key));
+                    }
+                    log(new Gson().toJson(aiPlayer.getBehaviour()));
                 }
             }
         }
@@ -401,7 +449,6 @@ public class LevelFactory implements Loggable
                 GameBlock gameObject = gameObjectFactory.createWithBody(body,
                                                                         GameBlock.class,
                                                                         Body.class);
-                //                gameObject.setPosition(PhysicsEngine.toUnits(position));
                 body.getFixtureList().get(0).setUserData(gameObject);
 
                 gameObject.setProperties(getObjectProperties(object,
