@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Player.AI;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import si.vilfa.junglechronicles.Component.Loggable;
@@ -94,11 +93,5 @@ public enum EnemyState implements State<Enemy>, Loggable
     public String getId()
     {
         return getDeclaringClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

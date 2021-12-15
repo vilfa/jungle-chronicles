@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -281,17 +280,5 @@ public class LevelFactory implements Loggable
             }
         }
         return objectProperties;
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

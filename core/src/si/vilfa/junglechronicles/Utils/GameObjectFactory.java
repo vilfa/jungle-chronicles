@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Component.Loggable;
@@ -42,17 +41,5 @@ public class GameObjectFactory implements Loggable
         }
 
         return gameObject;
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

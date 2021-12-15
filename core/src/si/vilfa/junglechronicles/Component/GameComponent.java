@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Component;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Events.EventDispatcher;
 
@@ -20,18 +19,6 @@ public abstract class GameComponent extends EventDispatcher
         super();
         this.updateOrder = updateOrder;
         this.isUpdatable = isUpdatable;
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 
     @Override

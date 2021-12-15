@@ -29,9 +29,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     }
 
     @Override
-    public void update()
-    {
-    }
+    public void update() { }
 
     @Override
     public void dispose()
@@ -63,8 +61,16 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
             switch ((GameStateEvent) event.getType())
             {
                 case GAMEPLAY_START:
+                    for (Music music : music.get(GameStateEvent.GAMEPLAY_START))
+                    {
+                        music.play();
+                    }
                     break;
                 case GAMEPLAY_STOP:
+                    for (Music music : music.get(GameStateEvent.GAMEPLAY_STOP))
+                    {
+                        music.pause();
+                    }
                     break;
                 case PLAYER_ENEMY_CONTACT:
                     break;
@@ -76,28 +82,34 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
         }
     }
 
-    public void newSound(GameStateEvent onEvent, String internalFilePath)
+    public void newSound(String internalFilePath, GameStateEvent... onEvents)
     {
         Sound sound = Gdx.audio.newSound(Gdx.files.internal(internalFilePath));
-        if (sounds.containsKey(onEvent))
+        for (GameStateEvent event : onEvents)
         {
-            sounds.get(onEvent).add(sound);
-        } else
-        {
-            sounds.put(onEvent, new Array<>(new Sound[]{ sound }));
+            if (sounds.containsKey(event))
+            {
+                sounds.get(event).add(sound);
+            } else
+            {
+                sounds.put(event, new Array<>(new Sound[]{ sound }));
+            }
         }
     }
 
-    public void newMusic(GameStateEvent onEvent, String internalFilePath)
+    public void newMusic(String internalFilePath, GameStateEvent... onEvents)
     {
         Music audioStream = Gdx.audio.newMusic(Gdx.files.internal(internalFilePath));
         audioStream.setLooping(true);
-        if (music.containsKey(onEvent))
+        for (GameStateEvent event : onEvents)
         {
-            music.get(onEvent).add(audioStream);
-        } else
-        {
-            music.put(onEvent, new Array<>(new Music[]{ audioStream }));
+            if (music.containsKey(event))
+            {
+                music.get(event).add(audioStream);
+            } else
+            {
+                music.put(event, new Array<>(new Music[]{ audioStream }));
+            }
         }
     }
 

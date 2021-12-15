@@ -1,5 +1,7 @@
 package si.vilfa.junglechronicles.Level.Scene;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 
@@ -10,13 +12,19 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
  **/
 public abstract class SceneObject extends GameComponent
 {
-    protected boolean isActive;
     protected GameState gameState;
+    protected Vector2 position;
+    protected Vector2 center;
+    protected float width;
+    protected float height;
 
     public SceneObject()
     {
         super(0, true);
-        this.isActive = true;
+        width = 0f;
+        height = 0f;
+        position = new Vector2();
+        center = new Vector2();
     }
 
     public GameState getGameState()
@@ -29,19 +37,33 @@ public abstract class SceneObject extends GameComponent
         this.gameState = gameState;
     }
 
-    public boolean isActive()
-    {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive)
-    {
-        this.isActive = isActive;
-    }
+    @Override
+    public abstract void update();
 
     @Override
-    public void update() { }
+    public abstract void dispose();
 
-    @Override
-    public void dispose() { }
+    public abstract void draw(SpriteBatch spriteBatch);
+
+    public Vector2 getPosition()
+    {
+        return position;
+    }
+
+    public Vector2 getCenter()
+    {
+        return center;
+    }
+
+    public void setPosition(Vector2 position)
+    {
+        this.position.set(position);
+        this.center.set(position.x + 0.5f * width, position.y + 0.5f * height);
+    }
+
+    public void setCenter(Vector2 center)
+    {
+        this.center.set(center);
+        this.position.set(center.x - 0.5f * width, position.y - 0.5f * height);
+    }
 }

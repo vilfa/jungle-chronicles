@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.behaviors.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -41,7 +40,7 @@ public class PlayerFactory implements Loggable
     }
 
     public <T extends Player> Player createPlayer(GameState gameState,
-                                                  Class<T> playerType,
+                                                  Class<T> clazz,
                                                   Vector2 position)
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
@@ -57,7 +56,7 @@ public class PlayerFactory implements Loggable
                                                           0f);
         body.setFixedRotation(true);
 
-        T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
+        T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().get(0).setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
@@ -84,7 +83,7 @@ public class PlayerFactory implements Loggable
     }
 
     public <T extends Player> Player createPlayerWithShape(GameState gameState,
-                                                           Class<T> playerType,
+                                                           Class<T> clazz,
                                                            Vector2 position,
                                                            Shape shape)
     {
@@ -99,7 +98,7 @@ public class PlayerFactory implements Loggable
                                                           0f);
         body.setFixedRotation(true);
 
-        T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
+        T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().get(0).setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
@@ -127,7 +126,7 @@ public class PlayerFactory implements Loggable
     }
 
     public <T extends Player> Player createPlayerWithShapeWithExtra(GameState gameState,
-                                                                    Class<T> playerType,
+                                                                    Class<T> clazz,
                                                                     Vector2 position,
                                                                     Shape shape,
                                                                     float density,
@@ -145,7 +144,7 @@ public class PlayerFactory implements Loggable
                                                           restitution);
         body.setFixedRotation(true);
 
-        T player = gameObjectFactory.createWithBody(body, playerType, Body.class);
+        T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().get(0).setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
@@ -270,17 +269,4 @@ public class PlayerFactory implements Loggable
             log("Error: unknown AI player type:" + player);
         }
     }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
-    }
-
 }

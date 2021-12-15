@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Events;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.Loggable;
 
@@ -60,17 +59,5 @@ public abstract class EventDispatcher implements Loggable
     protected Event createEvent(EventType eventType, Object... eventData)
     {
         return new Event(eventType, this, eventData);
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

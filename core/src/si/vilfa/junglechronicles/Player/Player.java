@@ -87,16 +87,6 @@ public abstract class Player extends GameComponent
         this.gameState = gameState;
     }
 
-    public boolean isActive()
-    {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive)
-    {
-        this.isActive = isActive;
-    }
-
     @Override
     public Body getBody()
     {

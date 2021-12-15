@@ -10,6 +10,7 @@ import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
 import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
+import si.vilfa.junglechronicles.Level.GameStateEvent;
 
 /**
  * @author luka
@@ -17,7 +18,7 @@ import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
  * @package si.vilfa.junglechronicles.Gameplay
  **/
 public class Gameplay extends DrawableGameComponent
-        implements Disposable, WindowAdapter, InputEventListener
+        implements Disposable, WindowAdapter, InputEventListener, GameplayAdapter
 {
     private final GameState gameState;
     private final Renderer renderer;
@@ -34,6 +35,9 @@ public class Gameplay extends DrawableGameComponent
         inputMultiplexer.addProcessor(new PlayerInputProcessor(gameState.getPlayer()));
         inputMultiplexer.addProcessor(new GameplayInputProcessor(this));
         Gdx.input.setInputProcessor(this.inputMultiplexer);
+
+        registerEventListener(GameStateEvent.GAMEPLAY_START, gameState.getAudio());
+        registerEventListener(GameStateEvent.GAMEPLAY_STOP, gameState.getAudio());
     }
 
     @Override
@@ -58,6 +62,27 @@ public class Gameplay extends DrawableGameComponent
         if (!isUpdatable) return;
         gameState.update();
         renderer.update();
+    }
+
+    @Override
+    public void create()
+    {
+        log("Create");
+        dispatchEvent(GameStateEvent.GAMEPLAY_START);
+    }
+
+    @Override
+    public void pause()
+    {
+        log("Pause");
+        dispatchEvent(GameStateEvent.GAMEPLAY_STOP);
+    }
+
+    @Override
+    public void resume()
+    {
+        log("Resume");
+        dispatchEvent(GameStateEvent.GAMEPLAY_START);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import si.vilfa.junglechronicles.Component.Loggable;
@@ -73,17 +72,5 @@ public class BodyFactory implements Loggable
         body.createFixture(fixtureDef);
 
         return body;
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

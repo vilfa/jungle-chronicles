@@ -1,6 +1,6 @@
 name=Objects
 filename=
-output=../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases
+output=../../../../../Dropbox/Dropbox/Projects/jungle-chronicles/core/assets/Atlases
 
 alias=true
 alphaThreshold=0
@@ -40,7 +40,7 @@ keepInputFileExtensions=false
 
 name=Terrain
 filename=
-output=../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases
+output=../../../../../Dropbox/Dropbox/Projects/jungle-chronicles/core/assets/Atlases
 
 alias=true
 alphaThreshold=0
@@ -80,7 +80,7 @@ keepInputFileExtensions=false
 
 name=Background
 filename=
-output=../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases
+output=../../../../../Dropbox/Dropbox/Projects/jungle-chronicles/core/assets/Atlases
 
 alias=true
 alphaThreshold=0
@@ -113,6 +113,46 @@ useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
 inputFiles=[{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Background/Background1.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Background/Background2.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Background/Background3.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Background/Background4.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Background/Background5.png,type:Input,regionName:null}]
+keepInputFileExtensions=false
+
+
+---
+
+name=Player
+filename=
+output=.
+
+alias=true
+alphaThreshold=0
+debug=false
+duplicatePadding=false
+edgePadding=false
+fast=false
+filterMag=Nearest
+filterMin=Nearest
+ignoreBlankImages=true
+maxHeight=2048
+maxWidth=2048
+minHeight=16
+minWidth=16
+paddingX=0
+paddingY=0
+pot=true
+mof=false
+rotation=false
+stripWhitespaceX=false
+stripWhitespaceY=false
+wrapX=ClampToEdge
+wrapY=ClampToEdge
+premultiplyAlpha=false
+grid=true
+square=true
+bleed=false
+limitMemory=true
+useIndexes=true
+
+scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
+inputFiles=[{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL1.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL2.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL3.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL4.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL5.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL6.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL7.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerL8.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR1.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR2.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR3.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR4.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR5.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR6.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR7.png,type:Input,regionName:null},{path:../../../../../Dropbox/Projects/jungle-chronicles/core/assets/Atlases/Player/PlayerR8.png,type:Input,regionName:null}]
 keepInputFileExtensions=false
 
 

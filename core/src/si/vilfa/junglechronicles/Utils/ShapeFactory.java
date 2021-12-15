@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -85,17 +84,5 @@ public class ShapeFactory implements Loggable
         circleShape.setRadius(PhysicsEngine.toUnits(ellipse.width / 2));
         position.set(ellipsePosition);
         return circleShape;
-    }
-
-    @Override
-    public String getId()
-    {
-        return getClass().getSimpleName() + "#" + hashCode();
-    }
-
-    @Override
-    public void log(String message)
-    {
-        Gdx.app.debug(getId(), message);
     }
 }

@@ -38,6 +38,10 @@ public class GameState extends GameComponent implements EventListener
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
+        audio.newMusic("Audio/track.mp3",
+                       GameStateEvent.GAMEPLAY_START,
+                       GameStateEvent.GAMEPLAY_STOP);
+
         currentLevelDuration = 0f;
         playerHealth = 100;
         playerScore = 0;
@@ -170,5 +174,6 @@ public class GameState extends GameComponent implements EventListener
         currentLevel.dispose();
         player.dispose();
         physics.dispose();
+        audio.dispose();
     }
 }

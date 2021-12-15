@@ -1,7 +1,7 @@
 package si.vilfa.junglechronicles.Level.Scene;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
@@ -14,23 +14,20 @@ import si.vilfa.junglechronicles.Physics.PhysicsEngine;
  **/
 public class SceneTile extends SceneObject
 {
-    protected final Vector2 position;
-    protected final Vector2 center;
-    protected final float width;
-    protected final float height;
-    protected final TextureRegion textureRegion;
-    protected final Sprite sprite;
+    private final Sprite sprite;
 
     public SceneTile(int x, int y, TiledMapTileLayer layer, TiledMapTile tile)
     {
-        this.textureRegion = tile.getTextureRegion();
-        this.width = PhysicsEngine.toUnits(layer.getTileWidth());
-        this.height = PhysicsEngine.toUnits(layer.getTileHeight());
-        this.position = new Vector2(x * width, y * height);
-        this.center = new Vector2(position.x + width * 0.5f, position.y + height * 0.5f);
-        this.sprite = new Sprite(tile.getTextureRegion());
-        sprite.setSize(PhysicsEngine.toUnits(textureRegion.getRegionWidth()),
-                       PhysicsEngine.toUnits(textureRegion.getRegionHeight()));
+        super();
+
+        width = PhysicsEngine.toUnits(layer.getTileWidth());
+        height = PhysicsEngine.toUnits(layer.getTileHeight());
+        position = new Vector2(x * width, y * height);
+        center = new Vector2(position.x + width * 0.5f, position.y + height * 0.5f);
+
+        sprite = new Sprite(tile.getTextureRegion());
+        sprite.setSize(PhysicsEngine.toUnits(tile.getTextureRegion().getRegionWidth()),
+                       PhysicsEngine.toUnits(tile.getTextureRegion().getRegionHeight()));
         sprite.setPosition(position.x, position.y);
     }
 
@@ -39,13 +36,19 @@ public class SceneTile extends SceneObject
         return sprite;
     }
 
-    public Vector2 getPosition()
-    {
-        return position;
+
+
+    @Override
+    public void update() { }
+
+    @Override
+    public void dispose() {
+        sprite.getTexture().dispose();
     }
 
-    public Vector2 getCenter()
+    @Override
+    public void draw(SpriteBatch spriteBatch)
     {
-        return center;
+        sprite.draw(spriteBatch);
     }
 }

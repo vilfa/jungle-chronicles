@@ -19,6 +19,7 @@ public class JungleChronicles extends ApplicationAdapter
     {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         gameplay = new Gameplay();
+        gameplay.create();
     }
 
     @Override
@@ -32,6 +33,18 @@ public class JungleChronicles extends ApplicationAdapter
     {
         gameplay.update();
         gameplay.draw();
+    }
+
+    @Override
+    public void pause()
+    {
+        gameplay.pause();
+    }
+
+    @Override
+    public void resume()
+    {
+        gameplay.resume();
     }
 
     @Override

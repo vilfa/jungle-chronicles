@@ -1,6 +1,5 @@
 package si.vilfa.junglechronicles.Level;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -17,24 +16,11 @@ import si.vilfa.junglechronicles.Player.Player;
 public abstract class GameLevel extends GameComponent implements Scene
 {
     protected final SimpleScene scene;
-    protected final Vector2 playerSpawn;
 
-    // TODO Use or get rid of playerSpawn parameter.
-    public GameLevel(SimpleScene scene, Vector2 playerSpawn)
+    public GameLevel(SimpleScene scene)
     {
         super(0, true);
         this.scene = scene;
-        this.playerSpawn = playerSpawn;
-    }
-
-    public Vector2 getPlayerSpawn()
-    {
-        return playerSpawn;
-    }
-
-    public void setPlayerSpawn(Vector2 playerSpawn)
-    {
-        this.playerSpawn.set(playerSpawn);
     }
 
     @Override
