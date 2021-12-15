@@ -1,5 +1,6 @@
 package si.vilfa.junglechronicles.Gameplay;
 
+import si.vilfa.junglechronicles.Audio.AudioEngine;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
@@ -20,6 +21,7 @@ import si.vilfa.junglechronicles.Utils.LevelFactory;
 public class GameState extends GameComponent implements EventListener
 {
     private final PhysicsEngine physics;
+    private final AudioEngine audio;
     private HumanPlayer player;
     private Level currentLevel;
     private float currentLevelDuration;
@@ -31,6 +33,7 @@ public class GameState extends GameComponent implements EventListener
         super(0, true);
 
         physics = new PhysicsEngine();
+        audio = new AudioEngine();
 
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
@@ -85,6 +88,11 @@ public class GameState extends GameComponent implements EventListener
     public PhysicsEngine getPhysics()
     {
         return physics;
+    }
+
+    public AudioEngine getAudio()
+    {
+        return audio;
     }
 
     public HumanPlayer getPlayer()

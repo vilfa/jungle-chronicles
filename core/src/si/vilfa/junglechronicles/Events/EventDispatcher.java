@@ -20,7 +20,7 @@ public abstract class EventDispatcher implements Loggable
         this.listeners = new HashMap<>();
     }
 
-    public void registerEventListener(EventType eventType, EventListener eventListener)
+    public EventDispatcher registerEventListener(EventType eventType, EventListener eventListener)
     {
         if (listeners.containsKey(eventType))
         {
@@ -29,6 +29,7 @@ public abstract class EventDispatcher implements Loggable
         {
             listeners.put(eventType, new Array<>(new EventListener[]{ eventListener }));
         }
+        return this;
     }
 
     public void unregisterEventListener(EventListener eventListener)

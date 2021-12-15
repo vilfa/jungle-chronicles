@@ -47,9 +47,15 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
         {
             Vector2 playerPos = gameState.getPlayer().getPosition();
             Vector2 myPos = getPosition();
-            Vector2 attackVec = playerPos.sub(myPos).nor();
+            Vector2 attackVec = playerPos.sub(myPos).nor().scl(2f);
 
-            setVelocity(new Vector2(attackVec.x, 0f));
+            if (withinLeftBound() && withinRightBound())
+            {
+                setVelocity(new Vector2(attackVec.x, 0f));
+            } else
+            {
+                setVelocity(new Vector2());
+            }
         }
     }
 
@@ -89,7 +95,6 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
     public boolean canAttackPlayer()
     {
         Vector2 playerPos = gameState.getPlayer().getPosition();
-        Vector2 myPos = getPosition();
         return playerPos.x > leftBoundHorizontal && playerPos.x < rightBoundHorizontal
                && playerPos.y > bottomBoundVertical && playerPos.y < topBoundVertical;
     }

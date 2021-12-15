@@ -18,7 +18,7 @@ import si.vilfa.junglechronicles.Physics.PhysicsEngine;
  **/
 public class ShapeFactory implements Loggable
 {
-    public static ShapeFactory INSTANCE;
+    private static ShapeFactory INSTANCE;
 
     private ShapeFactory() { }
 
