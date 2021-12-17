@@ -19,6 +19,7 @@ import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.AI.AiPlayer;
@@ -60,8 +61,13 @@ public class LevelFactory implements Loggable
 
         if (layers.get(Level.MapLayer.TERRAIN_LAYER.getLayerName()) != null)
         {
-            MapLayer layer = layers.get(Level.MapLayer.TERRAIN_LAYER.getLayerName());
-            createTerrainLayer(gameState, layer);
+            for (MapLayer layer : layers)
+            {
+                if (layer.getName().contains(Level.MapLayer.TERRAIN_LAYER.getLayerName()))
+                {
+                    createTerrainLayer(gameState, layer);
+                }
+            }
         }
         if (layers.get(Level.MapLayer.OBJECT_LAYER.getLayerName()) != null)
         {
@@ -264,7 +270,13 @@ public class LevelFactory implements Loggable
 
     private void createBackgroundLayer(GameState gameState, TiledMapImageLayer layer)
     {
-
+        if (layer.getTextureRegion() != null)
+        {
+            gameState.getCurrentLevel().addItem(new BackgroundSceneTile(layer));
+        } else
+        {
+            log("Error: empty background layer");
+        }
     }
 
     private <T extends MapObject> HashMap<Level.Property, Object> getObjectProperties(T object,

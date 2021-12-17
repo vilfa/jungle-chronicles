@@ -19,7 +19,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
 {
     public static float WORLD_WIDTH = 200f;
     public static float WORLD_HEIGHT = 50f;
-    public static float WORLD_PPU = 32f;
+    public static float WORLD_PPU = 64f;
     private final World world;
     private final float timeStep;
     private final int velocityIterations;

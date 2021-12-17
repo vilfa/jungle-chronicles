@@ -15,6 +15,7 @@ public class SimpleScene extends GameComponent implements Scene
     protected final Array<GameBlock> objects;
     protected final Array<SceneTile> tiles;
     protected final Array<Player> players;
+    protected final Array<BackgroundSceneTile> backgrounds;
 
     public SimpleScene()
     {
@@ -22,6 +23,7 @@ public class SimpleScene extends GameComponent implements Scene
         objects = new Array<>();
         tiles = new Array<>();
         players = new Array<>();
+        backgrounds = new Array<>();
     }
 
     @Override
@@ -41,23 +43,19 @@ public class SimpleScene extends GameComponent implements Scene
         {
             player.update();
         }
+        for (BackgroundSceneTile background : backgrounds)
+        {
+            background.update();
+        }
     }
 
     @Override
     public void dispose()
     {
-        for (GameBlock object : objects)
-        {
-            object.dispose();
-        }
-        for (SceneTile tile : tiles)
-        {
-            tile.dispose();
-        }
-        for (Player player : players)
-        {
-            player.dispose();
-        }
+        objects.forEach(GameBlock::dispose);
+        tiles.forEach(SceneTile::dispose);
+        players.forEach(Player::dispose);
+        backgrounds.forEach(BackgroundSceneTile::dispose);
     }
 
     @Override
@@ -66,6 +64,9 @@ public class SimpleScene extends GameComponent implements Scene
         if (item instanceof GameBlock)
         {
             objects.add((GameBlock) item);
+        } else if (item instanceof BackgroundSceneTile)
+        {
+            backgrounds.add((BackgroundSceneTile) item);
         } else if (item instanceof SceneTile)
         {
             tiles.add((SceneTile) item);
@@ -84,7 +85,10 @@ public class SimpleScene extends GameComponent implements Scene
         if (item instanceof GameBlock)
         {
             objects.removeValue((GameBlock) item, false);
-        } else if (item instanceof SceneTile)
+        } else if (item instanceof BackgroundSceneTile)
+        {
+            backgrounds.removeValue((BackgroundSceneTile) item, false);
+        }else if (item instanceof SceneTile)
         {
             tiles.removeValue((SceneTile) item, false);
         } else if (item instanceof Player)
@@ -112,6 +116,12 @@ public class SimpleScene extends GameComponent implements Scene
     public Array<Player> getPlayers()
     {
         return players;
+    }
+
+    @Override
+    public Array<BackgroundSceneTile> getBackgrounds()
+    {
+        return backgrounds;
     }
 
     @Override

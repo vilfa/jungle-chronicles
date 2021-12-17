@@ -3,6 +3,7 @@ package si.vilfa.junglechronicles.Level;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.Scene;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
@@ -57,6 +58,12 @@ public abstract class GameLevel extends GameComponent implements Scene
     public Array<Player> getPlayers()
     {
         return scene.getPlayers();
+    }
+
+    @Override
+    public Array<BackgroundSceneTile> getBackgrounds()
+    {
+        return scene.getBackgrounds();
     }
 
     @Override

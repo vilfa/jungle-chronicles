@@ -22,5 +22,7 @@ public interface Scene extends Updatable
 
     Array<Player> getPlayers();
 
+    Array<BackgroundSceneTile> getBackgrounds();
+
     void clear();
 }

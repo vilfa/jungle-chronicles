@@ -34,21 +34,8 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     @Override
     public void dispose()
     {
-        for (Array<Sound> arr : sounds.values())
-        {
-            for (Sound s : arr)
-            {
-                s.dispose();
-            }
-        }
-
-        for (Array<Music> arr : music.values())
-        {
-            for (Music m : arr)
-            {
-                m.dispose();
-            }
-        }
+        sounds.values().forEach(soundCollection -> soundCollection.forEach(Sound::dispose));
+        music.values().forEach(musicCollection -> musicCollection.forEach(Music::dispose));
     }
 
     @Override
@@ -61,16 +48,10 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
             switch ((GameStateEvent) event.getType())
             {
                 case GAMEPLAY_START:
-                    for (Music music : music.get(GameStateEvent.GAMEPLAY_START))
-                    {
-                        music.play();
-                    }
+                    music.get(GameStateEvent.GAMEPLAY_START).forEach(Music::play);
                     break;
                 case GAMEPLAY_STOP:
-                    for (Music music : music.get(GameStateEvent.GAMEPLAY_STOP))
-                    {
-                        music.pause();
-                    }
+                    music.get(GameStateEvent.GAMEPLAY_STOP).forEach(Music::pause);
                     break;
                 case PLAYER_ENEMY_CONTACT:
                     break;
@@ -126,6 +107,5 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     @Override
     public void onCompletion(Music music)
     {
-        log("Looping audio stream:" + music);
     }
 }

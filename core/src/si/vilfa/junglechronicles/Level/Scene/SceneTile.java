@@ -14,7 +14,7 @@ import si.vilfa.junglechronicles.Physics.PhysicsEngine;
  **/
 public class SceneTile extends SceneObject
 {
-    private final Sprite sprite;
+    protected final Sprite sprite;
 
     public SceneTile(int x, int y, TiledMapTileLayer layer, TiledMapTile tile)
     {
@@ -35,8 +35,6 @@ public class SceneTile extends SceneObject
     {
         return sprite;
     }
-
-
 
     @Override
     public void update() { }

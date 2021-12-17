@@ -47,7 +47,7 @@ public class PlayerFactory implements Loggable
         BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
-        PolygonShape shape = shapeFactory.createPlayerShape(new Vector2(0.75f, 1f));
+        PolygonShape shape = shapeFactory.createPlayerShape(new Vector2(0.75f, 1.75f));
         Body body = bodyFactory.createWithShapeWithParams(shape,
                                                           BodyDef.BodyType.DynamicBody,
                                                           position,
