@@ -40,7 +40,8 @@ public class SceneTile extends SceneObject
     public void update() { }
 
     @Override
-    public void dispose() {
+    public void dispose()
+    {
         sprite.getTexture().dispose();
     }
 

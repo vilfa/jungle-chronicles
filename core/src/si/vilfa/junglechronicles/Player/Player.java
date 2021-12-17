@@ -25,6 +25,8 @@ public abstract class Player extends GameComponent
     protected GameState gameState;
     protected boolean isActive;
 
+    protected Vector2 box;
+
     protected SteeringBehavior<Vector2> steeringBehavior;
     protected boolean isTagged;
     protected float boundingRadius;
@@ -39,6 +41,7 @@ public abstract class Player extends GameComponent
         super(0, true);
         this.isActive = true;
         this.body = body;
+        this.box = new Vector2();
     }
 
     @Override
@@ -85,6 +88,16 @@ public abstract class Player extends GameComponent
     public void setGameState(GameState gameState)
     {
         this.gameState = gameState;
+    }
+
+    public Vector2 getBox()
+    {
+        return box;
+    }
+
+    public void setBox(Vector2 box)
+    {
+        this.box = box;
     }
 
     @Override

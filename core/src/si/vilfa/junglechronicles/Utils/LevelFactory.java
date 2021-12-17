@@ -98,7 +98,6 @@ public class LevelFactory implements Loggable
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
         PlayerFactory playerFactory = PlayerFactory.getInstance();
 
-
         if (layer.getObjects().getCount() > 1)
         {
             log("Error: Expected a single human player.");
@@ -131,10 +130,11 @@ public class LevelFactory implements Loggable
                     PhysicsEngine.toUnits(position),
                     shape,
                     65f,
-                    0.05f,
+                    0f,
                     0.01f);
 
             playerFactory.setupPlayer(player,
+                                      object,
                                       gameState,
                                       getObjectProperties(object,
                                                           Level.HumanPlayerProperty.values()));
@@ -200,7 +200,7 @@ public class LevelFactory implements Loggable
 
             HashMap<Level.Property, Object> props = getObjectProperties(object,
                                                                         Level.AiPlayerProperty.values());
-            playerFactory.setupPlayer(aiPlayer, gameState, props);
+            playerFactory.setupPlayer(aiPlayer, object, gameState, props);
         }
     }
 

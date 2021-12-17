@@ -50,15 +50,15 @@ public abstract class SceneObject extends GameComponent
         return position;
     }
 
-    public Vector2 getCenter()
-    {
-        return center;
-    }
-
     public void setPosition(Vector2 position)
     {
         this.position.set(position);
         this.center.set(position.x + 0.5f * width, position.y + 0.5f * height);
+    }
+
+    public Vector2 getCenter()
+    {
+        return center;
     }
 
     public void setCenter(Vector2 center)

@@ -19,15 +19,13 @@ import java.util.TreeMap;
  **/
 public class AnimatedSceneTile extends SceneObject
 {
-    private float frameDuration;
-    private float animationState;
     private final Animation<Sprite> animation;
-
     private final float worldWidth;
     private final float worldHeight;
-
     private final boolean flipX;
     private final boolean flipY;
+    private float frameDuration;
+    private float animationState;
 
     public AnimatedSceneTile(Texture texture,
                              TreeMap<Integer, AnimationRegion> spec,

@@ -88,7 +88,7 @@ public class SimpleScene extends GameComponent implements Scene
         } else if (item instanceof BackgroundSceneTile)
         {
             backgrounds.removeValue((BackgroundSceneTile) item, false);
-        }else if (item instanceof SceneTile)
+        } else if (item instanceof SceneTile)
         {
             tiles.removeValue((SceneTile) item, false);
         } else if (item instanceof Player)

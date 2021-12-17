@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Graphics.Renderer;
-import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 
 import java.util.TreeMap;
 
@@ -17,18 +17,18 @@ import java.util.TreeMap;
  **/
 public class PlayerSceneTile extends SceneObject
 {
-    private float animationState;
     private final Animation<Sprite> animation;
+    private final Vector2 scale;
+    private float animationState;
 
     public PlayerSceneTile(TreeMap<Integer, TextureAtlas.AtlasRegion> spec,
                            Animation.PlayMode playMode,
                            float frameDuration,
                            boolean flipX,
-                           boolean flipY)
+                           boolean flipY,
+                           Vector2 scale)
     {
-        width = PhysicsEngine.toUnits(spec.firstEntry().getValue().getRegionWidth());
-        height = PhysicsEngine.toUnits(spec.firstEntry().getValue().getRegionHeight());
-
+        this.scale = scale;
         this.animationState = 0f;
 
         Array<Sprite> keyframes = new Array<>(spec.size());
@@ -62,7 +62,7 @@ public class PlayerSceneTile extends SceneObject
     public void draw(SpriteBatch spriteBatch)
     {
         Sprite sprite = animation.getKeyFrame(animationState);
-        sprite.setSize(width, height);
+        sprite.setScale(scale.x, scale.y);
         sprite.setCenter(center.x, center.y);
         sprite.draw(spriteBatch);
     }

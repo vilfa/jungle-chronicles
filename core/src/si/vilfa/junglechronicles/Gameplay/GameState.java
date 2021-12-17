@@ -38,7 +38,7 @@ public class GameState extends GameComponent implements EventListener
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
-        audio.newMusic("Audio/track.mp3",
+        audio.newMusic("Audio/theme.mp3",
                        GameStateEvent.GAMEPLAY_START,
                        GameStateEvent.GAMEPLAY_STOP);
 
@@ -60,7 +60,7 @@ public class GameState extends GameComponent implements EventListener
                 playerScore += object.getCollectiblePoints();
                 log("Score:" + playerScore);
 
-                // TODO Use a HashMap or something for position lookup.
+                // TODO: 01/12/2021 Use a HashMap or something for position lookup.
                 for (SceneTile tile : currentLevel.getTiles())
                 {
                     if (object.getBody().getFixtureList().get(0).testPoint(tile.getCenter()))

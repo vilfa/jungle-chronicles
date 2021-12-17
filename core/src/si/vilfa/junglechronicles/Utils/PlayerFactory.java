@@ -1,6 +1,9 @@
 package si.vilfa.junglechronicles.Utils;
 
 import com.badlogic.gdx.ai.steer.behaviors.*;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -10,6 +13,7 @@ import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
+import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.AI.AiPlayer;
 import si.vilfa.junglechronicles.Player.AI.Enemy;
 import si.vilfa.junglechronicles.Player.AI.Friend;
@@ -172,18 +176,34 @@ public class PlayerFactory implements Loggable
     }
 
     public void setupPlayer(Player player,
+                            MapObject object,
                             GameState gameState,
                             HashMap<Level.Property, Object> props)
     {
         if (player instanceof HumanPlayer)
         {
             setupHumanPlayer((HumanPlayer) player, gameState, props);
+            setupPlayerBox(player, object);
         } else if (player instanceof AiPlayer)
         {
             setupAiPlayer((AiPlayer) player, gameState, props);
+            setupPlayerBox(player, object);
         } else
         {
             log("Error: unknown player type:" + player);
+        }
+    }
+
+    private void setupPlayerBox(Player player, MapObject object)
+    {
+        if (object instanceof RectangleMapObject)
+        {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            player.setBox(new Vector2(PhysicsEngine.toUnits(rectangle.getWidth()),
+                                      PhysicsEngine.toUnits(rectangle.getHeight())));
+        } else
+        {
+            log("Error: wrong player object shape");
         }
     }
 

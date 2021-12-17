@@ -72,16 +72,10 @@ public enum EnemyState implements State<Enemy>, Loggable
             };
 
     @Override
-    public void enter(Enemy entity)
-    {
-        log("Entered state:" + entity.getStateMachine().getCurrentState());
-    }
+    public void enter(Enemy entity) { }
 
     @Override
-    public void exit(Enemy entity)
-    {
-        log("Exited state:" + entity.getStateMachine().getCurrentState());
-    }
+    public void exit(Enemy entity) { }
 
     @Override
     public boolean onMessage(Enemy entity, Telegram telegram)

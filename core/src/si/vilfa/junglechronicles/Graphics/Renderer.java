@@ -5,6 +5,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -40,13 +41,11 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private final int screenWidthMax;
     private final int screenHeightMax;
     private final int screenRefreshRate;
+    private final HashMap<HumanPlayer.State, TextureAtlas> playerStateTextures = new HashMap<>();
+    private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private int screenWidth;
     private int screenHeight;
     private float screenAspectRatio;
-
-    private final HashMap<HumanPlayer.State, TextureAtlas> playerStateTextures = new HashMap<>();
-    private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
-
     private float deltaTime;
     private float fpsTimer;
 
@@ -82,8 +81,12 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
         spriteBatch = new SpriteBatch();
 
-        playerStateTextures.put(HumanPlayer.State.IDLE, new TextureAtlas("Player/Idle.atlas"));
-        playerStateTextures.put(HumanPlayer.State.JUMP, new TextureAtlas("Player/Jump.atlas"));
+        playerStateTextures.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Player/Jump.atlas"));
+        playerStateTextures.put(HumanPlayer.State.JUMP_RIGHT,
+                                playerStateTextures.get(HumanPlayer.State.JUMP_LEFT));
+        playerStateTextures.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Player/Idle.atlas"));
+        playerStateTextures.put(HumanPlayer.State.IDLE_RIGHT,
+                                playerStateTextures.get(HumanPlayer.State.IDLE_LEFT));
         playerStateTextures.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Player/Run.atlas"));
         playerStateTextures.put(HumanPlayer.State.RUN_RIGHT,
                                 playerStateTextures.get(HumanPlayer.State.RUN_LEFT));
@@ -91,6 +94,13 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                 new TextureAtlas("Player/Slide.atlas"));
         playerStateTextures.put(HumanPlayer.State.SLIDE_RIGHT,
                                 playerStateTextures.get(HumanPlayer.State.SLIDE_LEFT));
+
+        Vector2 playerBox = gameState.getPlayer().getBox();
+        TextureRegion playerRegion = playerStateTextures.get(HumanPlayer.State.IDLE_LEFT)
+                                                        .getRegions()
+                                                        .get(0);
+        Vector2 playerScale = new Vector2(playerBox.x / playerRegion.getRegionWidth(),
+                                          playerBox.y / playerRegion.getRegionHeight());
 
         for (Map.Entry<HumanPlayer.State, TextureAtlas> entry : playerStateTextures.entrySet())
         {
@@ -104,12 +114,15 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             playerAnimations.put(entry.getKey(),
                                  new PlayerSceneTile(animationSpec,
                                                      Animation.PlayMode.LOOP,
-                                                     1 / 13f,
-                                                     entry.getKey() == HumanPlayer.State.RUN_LEFT
-                                                     || entry.getKey()
-                                                        == HumanPlayer.State.SLIDE_LEFT,
-                                                     false));
+                                                     1 / 14f,
+                                                     HumanPlayer.State.getLeft()
+                                                                      .contains(entry.getKey(),
+                                                                                false),
+                                                     false,
+                                                     playerScale));
         }
+
+        gameState.getCurrentLevel().getBackgrounds().get(0).setViewport(viewport);
     }
 
     public Matrix4 getCombined()
@@ -147,9 +160,13 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private void followPlayer(Player player)
     {
         Vector2 newCameraPos = new Vector2(player.getPosition());
-        if (newCameraPos.y < visibleWorldHeight / 2f)
+        if (newCameraPos.x < viewport.getWorldWidth() / 2f)
         {
-            newCameraPos.y = visibleWorldHeight / 2f;
+            newCameraPos.x = viewport.getWorldWidth() / 2f;
+        }
+        if (newCameraPos.y < viewport.getWorldHeight() / 2f)
+        {
+            newCameraPos.y = viewport.getWorldHeight() / 2f;
         }
         viewport.getCamera().position.set(newCameraPos, 0f);
         viewport.getCamera().update();
@@ -160,21 +177,21 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     {
         if (!isDrawable) return;
 
-        // TODO Make draw calls use draw order.
+        // TODO: 20/11/2021 Make draw calls use draw order.
         deltaTime = gameTime.getDeltaTime();
         ScreenUtils.clear(1, 1, 1, 1);
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
 
         HumanPlayer player = gameState.getPlayer();
+        PlayerSceneTile playerAnimation = playerAnimations.get(player.getState());
 
         for (BackgroundSceneTile tile : gameState.getCurrentLevel().getBackgrounds())
         {
-            Vector2 bgParallax = player.getLinearVelocity();
-            bgParallax.scl(-Renderer.gameTime.getDeltaTime());
-            bgParallax.x *= .15f;
-            bgParallax.y *= .15f;
-            tile.translate(bgParallax);
+            // TODO: 17/12/2021 Implement parallax background scrolling
+
+            //            Vector2 parallax = player.getLinearVelocity();
+            //            parallax.scl(-.15f * Renderer.gameTime.getDeltaTime());
             tile.draw(spriteBatch);
         }
 
@@ -183,11 +200,9 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             tile.draw(spriteBatch);
         }
 
-        log(player.getState().toString());
-
-        playerAnimations.get(player.getState()).update();
-        playerAnimations.get(player.getState()).setCenter(player.getPosition());
-        playerAnimations.get(player.getState()).draw(spriteBatch);
+        playerAnimation.update();
+        playerAnimation.setCenter(player.getPosition());
+        playerAnimation.draw(spriteBatch);
 
         spriteBatch.end();
     }
