@@ -44,15 +44,10 @@ public abstract class EventDispatcher implements Loggable
 
     protected void dispatchEvent(EventType eventType, Object... eventData)
     {
+        log("Dispatch event:" + eventType);
         for (EventListener listener : listeners.get(eventType))
         {
-            try
-            {
-                listener.handleEvent(createEvent(eventType, eventData));
-            } catch (Exception e)
-            {
-                log("Error dispatching event:" + e.getMessage());
-            }
+            listener.handleEvent(createEvent(eventType, eventData));
         }
     }
 

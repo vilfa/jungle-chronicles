@@ -1,11 +1,13 @@
 package si.vilfa.junglechronicles.Gameplay;
 
 import si.vilfa.junglechronicles.Audio.AudioEngine;
+import si.vilfa.junglechronicles.Audio.SoundSequence;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
+import si.vilfa.junglechronicles.Events.GameStateEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
-import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
@@ -38,9 +40,18 @@ public class GameState extends GameComponent implements EventListener
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
-        audio.newMusic("Audio/theme.mp3",
-                       GameStateEvent.GAMEPLAY_START,
-                       GameStateEvent.GAMEPLAY_STOP);
+        //        audio.newMusic("Audio/Tracks/theme.mp3",
+        //                       GameStateEvent.GAMEPLAY_START,
+        //                       GameStateEvent.GAMEPLAY_STOP);
+
+        audio.newSoundSequence(new SoundSequence(new String[]{
+                                       "Audio/Sounds/Footsteps/footstep_grass_000.ogg",
+                                       "Audio/Sounds/Footsteps/footstep_grass_001.ogg",
+                                       "Audio/Sounds/Footsteps/footstep_grass_002.ogg",
+                                       "Audio/Sounds/Footsteps/footstep_grass_003.ogg",
+                                       "Audio/Sounds/Footsteps/footstep_grass_004.ogg" }, 0.65f),
+                               PlayerEvent.PLAYER_RUN,
+                               PlayerEvent.PLAYER_IDLE);
 
         currentLevelDuration = 0f;
         playerHealth = 100;
@@ -164,6 +175,7 @@ public class GameState extends GameComponent implements EventListener
         if (!isUpdatable) return;
         currentLevelDuration += Renderer.gameTime.getDeltaTime();
         physics.update();
+        audio.update();
         player.update();
         currentLevel.update();
     }
@@ -171,9 +183,9 @@ public class GameState extends GameComponent implements EventListener
     @Override
     public void dispose()
     {
-        currentLevel.dispose();
-        player.dispose();
         physics.dispose();
         audio.dispose();
+        player.dispose();
+        currentLevel.dispose();
     }
 }

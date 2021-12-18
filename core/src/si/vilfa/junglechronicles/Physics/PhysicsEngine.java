@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
-import si.vilfa.junglechronicles.Level.GameStateEvent;
+import si.vilfa.junglechronicles.Events.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameObject;
 
 import java.util.HashMap;

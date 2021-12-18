@@ -65,29 +65,29 @@ public class LevelFactory implements Loggable
             {
                 if (layer.getName().contains(Level.MapLayer.TERRAIN_LAYER.getLayerName()))
                 {
-                    createTerrainLayer(gameState, layer);
+                    if (layer.isVisible()) createTerrainLayer(gameState, layer);
                 }
             }
         }
         if (layers.get(Level.MapLayer.OBJECT_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.OBJECT_LAYER.getLayerName());
-            createObjectLayer(gameState, layer);
+            if (layer.isVisible()) createObjectLayer(gameState, layer);
         }
         if (layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName());
-            createBackgroundLayer(gameState, (TiledMapImageLayer) layer);
+            if (layer.isVisible()) createBackgroundLayer(gameState, (TiledMapImageLayer) layer);
         }
         if (layers.get(Level.MapLayer.PLAYER_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.PLAYER_LAYER.getLayerName());
-            processPlayerLayer(gameState, layer);
+            if (layer.isVisible()) processPlayerLayer(gameState, layer);
         }
         if (layers.get(Level.MapLayer.AI_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.AI_LAYER.getLayerName());
-            processAiLayer(gameState, layer);
+            if (layer.isVisible()) processAiLayer(gameState, layer);
         }
 
         return level;

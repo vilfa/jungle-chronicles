@@ -10,8 +10,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import si.vilfa.junglechronicles.Component.Loggable;
+import si.vilfa.junglechronicles.Events.GameStateEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
-import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.AI.AiPlayer;
@@ -79,7 +80,9 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio());
+                                         gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
         }
 
 
@@ -121,8 +124,9 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio());
-
+                                         gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
         }
 
 
@@ -169,7 +173,9 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio());
+                                         gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
         }
 
         return player;

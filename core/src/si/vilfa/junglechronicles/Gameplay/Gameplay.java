@@ -5,12 +5,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Events.GameStateEvent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
 import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
-import si.vilfa.junglechronicles.Level.GameStateEvent;
 
 /**
  * @author luka

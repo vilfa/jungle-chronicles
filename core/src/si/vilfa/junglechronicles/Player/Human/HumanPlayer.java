@@ -4,9 +4,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import si.vilfa.junglechronicles.Events.GameStateEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
-import si.vilfa.junglechronicles.Level.GameStateEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Player.AI.Enemy;
 import si.vilfa.junglechronicles.Player.Player;
@@ -47,7 +48,15 @@ public class HumanPlayer extends Player
             case Input.Keys.LEFT:
             case Input.Keys.A:
                 setVelocity(new Vector2(-5f, 0f));
-                state = (isPressedDown) ? State.SLIDE_LEFT : State.RUN_LEFT;
+
+                if (isPressedDown)
+                {
+                    setState(State.SLIDE_LEFT);
+                } else
+                {
+                    setState(State.RUN_LEFT);
+                }
+
                 if (state == State.SLIDE_LEFT)
                 {
                     setRotation((float) Math.toRadians(90f));
@@ -57,7 +66,15 @@ public class HumanPlayer extends Player
             case Input.Keys.RIGHT:
             case Input.Keys.D:
                 setVelocity(new Vector2(5f, 0f));
-                state = (isPressedDown) ? State.SLIDE_RIGHT : State.RUN_RIGHT;
+
+                if (isPressedDown)
+                {
+                    setState(State.SLIDE_RIGHT);
+                } else
+                {
+                    setState(State.RUN_RIGHT);
+                }
+
                 if (state == State.SLIDE_RIGHT)
                 {
                     setRotation((float) Math.toRadians(-90f));
@@ -67,15 +84,28 @@ public class HumanPlayer extends Player
             case Input.Keys.UP:
             case Input.Keys.W:
                 setVelocity(new Vector2(0f, 6.5f));
-                state = (State.getRight().contains(state, false)) ? State.JUMP_RIGHT :
-                        State.JUMP_LEFT;
+
+                if (State.getRight().contains(state, false))
+                {
+                    setState(State.JUMP_RIGHT);
+                } else
+                {
+                    setState(State.JUMP_LEFT);
+                }
                 break;
             case Input.Keys.DOWN:
             case Input.Keys.S:
                 setVelocity(new Vector2(0f, -6.5f));
                 isPressedDown = true;
-                state = (State.getRight().contains(state, false)) ? State.SLIDE_RIGHT :
-                        State.SLIDE_LEFT;
+
+                if (State.getRight().contains(state, false))
+                {
+                    setState(State.SLIDE_RIGHT);
+                } else
+                {
+                    setState(State.SLIDE_LEFT);
+                }
+
                 if (state == State.SLIDE_LEFT)
                 {
                     setRotation((float) Math.toRadians(90f));
@@ -102,15 +132,25 @@ public class HumanPlayer extends Player
             case Input.Keys.W:
             case Input.Keys.RIGHT:
             case Input.Keys.D:
-                state = (State.getRight().contains(state, false)) ? State.IDLE_RIGHT :
-                        State.IDLE_LEFT;
+                if (State.getRight().contains(state, false))
+                {
+                    setState(State.IDLE_RIGHT);
+                } else
+                {
+                    setState(State.IDLE_LEFT);
+                }
                 setVelocity(new Vector2());
                 setRotation(0f);
                 break;
             case Input.Keys.DOWN:
             case Input.Keys.S:
-                state = (State.getRight().contains(state, false)) ? State.IDLE_RIGHT :
-                        State.IDLE_LEFT;
+                if (State.getRight().contains(state, false))
+                {
+                    setState(State.IDLE_RIGHT);
+                } else
+                {
+                    setState(State.IDLE_LEFT);
+                }
                 setVelocity(new Vector2());
                 setRotation(0f);
                 isPressedDown = false;
@@ -141,6 +181,22 @@ public class HumanPlayer extends Player
     public State getState()
     {
         return state;
+    }
+
+    private void setState(State state)
+    {
+        this.state = state;
+        switch (this.state)
+        {
+            case RUN_LEFT:
+            case RUN_RIGHT:
+                dispatchEvent(PlayerEvent.PLAYER_RUN);
+                break;
+            case IDLE_LEFT:
+            case IDLE_RIGHT:
+                dispatchEvent(PlayerEvent.PLAYER_IDLE);
+                break;
+        }
     }
 
     public enum State

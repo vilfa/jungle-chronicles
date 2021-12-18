@@ -1,11 +1,9 @@
-package si.vilfa.junglechronicles.Level;
-
-import si.vilfa.junglechronicles.Events.EventType;
+package si.vilfa.junglechronicles.Events;
 
 /**
  * @author luka
  * @date 05/12/2021
- * @package si.vilfa.junglechronicles.Level
+ * @package si.vilfa.junglechronicles.Events
  **/
 public enum GameStateEvent implements EventType
 {
