@@ -31,7 +31,7 @@ public abstract class EventDispatcher implements Loggable
         return this;
     }
 
-    public void unregisterEventListener(EventListener eventListener)
+    public EventDispatcher unregisterEventListener(EventListener eventListener)
     {
         for (EventType key : listeners.keySet())
         {
@@ -40,6 +40,7 @@ public abstract class EventDispatcher implements Loggable
                 listeners.get(key).removeValue(eventListener, false);
             }
         }
+        return this;
     }
 
     protected void dispatchEvent(EventType eventType, Object... eventData)

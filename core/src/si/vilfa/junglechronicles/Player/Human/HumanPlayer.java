@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Events.PlayerStateEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -190,11 +190,11 @@ public class HumanPlayer extends Player
         {
             case RUN_LEFT:
             case RUN_RIGHT:
-                dispatchEvent(PlayerEvent.PLAYER_RUN);
+                dispatchEvent(PlayerStateEvent.PLAYER_RUN);
                 break;
             case IDLE_LEFT:
             case IDLE_RIGHT:
-                dispatchEvent(PlayerEvent.PLAYER_IDLE);
+                dispatchEvent(PlayerStateEvent.PLAYER_IDLE);
                 break;
         }
     }

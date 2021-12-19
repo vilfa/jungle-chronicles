@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Level.Level;
 
 /**
  * @author luka
@@ -12,6 +13,7 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
  **/
 public abstract class SceneObject extends GameComponent
 {
+    protected Level.MapLayer sourceLayer;
     protected GameState gameState;
     protected Vector2 position;
     protected Vector2 center;
@@ -65,5 +67,15 @@ public abstract class SceneObject extends GameComponent
     {
         this.center.set(center);
         this.position.set(center.x - 0.5f * width, position.y - 0.5f * height);
+    }
+
+    public void setSourceLayer(Level.MapLayer sourceLayer)
+    {
+        this.sourceLayer = sourceLayer;
+    }
+
+    public Level.MapLayer getSourceLayer()
+    {
+        return sourceLayer;
     }
 }

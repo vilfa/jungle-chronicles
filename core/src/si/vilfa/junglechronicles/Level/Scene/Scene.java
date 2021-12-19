@@ -3,6 +3,8 @@ package si.vilfa.junglechronicles.Level.Scene;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.Updatable;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Player.AI.Enemy;
+import si.vilfa.junglechronicles.Player.AI.Friend;
 import si.vilfa.junglechronicles.Player.Player;
 
 /**
@@ -23,6 +25,10 @@ public interface Scene extends Updatable
     Array<Player> getPlayers();
 
     Array<BackgroundSceneTile> getBackgrounds();
+
+    Array<Enemy> getEnemies();
+
+    Array<Friend> getFriends();
 
     void clear();
 }

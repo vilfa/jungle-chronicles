@@ -63,9 +63,18 @@ public class LevelFactory implements Loggable
         {
             for (MapLayer layer : layers)
             {
-                if (layer.getName().contains(Level.MapLayer.TERRAIN_LAYER.getLayerName()))
+                if (layer.getName().contains(Level.MapLayer.COLLECTIBLE_LAYER.getLayerName()))
                 {
-                    if (layer.isVisible()) createTerrainLayer(gameState, layer);
+                    if (layer.isVisible())
+                    {
+                        createTerrainLayer(gameState, layer, Level.MapLayer.COLLECTIBLE_LAYER);
+                    }
+                } else if (layer.getName().contains(Level.MapLayer.TERRAIN_LAYER.getLayerName()))
+                {
+                    if (layer.isVisible())
+                    {
+                        createTerrainLayer(gameState, layer, Level.MapLayer.TERRAIN_LAYER);
+                    }
                 }
             }
         }
@@ -77,7 +86,12 @@ public class LevelFactory implements Loggable
         if (layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName());
-            if (layer.isVisible()) createBackgroundLayer(gameState, (TiledMapImageLayer) layer);
+            if (layer.isVisible())
+            {
+                createBackgroundLayer(gameState,
+                                      (TiledMapImageLayer) layer,
+                                      Level.MapLayer.BACKGROUND_LAYER);
+            }
         }
         if (layers.get(Level.MapLayer.PLAYER_LAYER.getLayerName()) != null)
         {
@@ -204,7 +218,7 @@ public class LevelFactory implements Loggable
         }
     }
 
-    private void createTerrainLayer(GameState gameState, MapLayer layer)
+    private void createTerrainLayer(GameState gameState, MapLayer layer, Level.MapLayer sourceLayer)
     {
         if (!(layer instanceof TiledMapTileLayer))
         {
@@ -222,6 +236,7 @@ public class LevelFactory implements Loggable
 
                 SceneTile sceneTile = new SceneTile(i, j, l, cell.getTile());
                 sceneTile.setGameState(gameState);
+                sceneTile.setSourceLayer(sourceLayer);
                 gameState.getCurrentLevel().addItem(sceneTile);
             }
         }
@@ -259,7 +274,7 @@ public class LevelFactory implements Loggable
                 GameBlock gameObject = gameObjectFactory.createWithBody(body,
                                                                         GameBlock.class,
                                                                         Body.class);
-                body.getFixtureList().get(0).setUserData(gameObject);
+                body.getFixtureList().first().setUserData(gameObject);
                 gameObject.setProperties(getObjectProperties(object,
                                                              Level.ObjectProperty.values()));
                 gameObject.setGameState(gameState);
@@ -268,11 +283,15 @@ public class LevelFactory implements Loggable
         }
     }
 
-    private void createBackgroundLayer(GameState gameState, TiledMapImageLayer layer)
+    private void createBackgroundLayer(GameState gameState,
+                                       TiledMapImageLayer layer,
+                                       Level.MapLayer sourceLayer)
     {
         if (layer.getTextureRegion() != null)
         {
-            gameState.getCurrentLevel().addItem(new BackgroundSceneTile(layer));
+            BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer);
+            backgroundTile.setSourceLayer(sourceLayer);
+            gameState.getCurrentLevel().addItem(backgroundTile);
         } else
         {
             log("Error: empty background layer");

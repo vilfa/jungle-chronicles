@@ -3,6 +3,8 @@ package si.vilfa.junglechronicles.Level.Scene;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
+import si.vilfa.junglechronicles.Player.AI.Enemy;
+import si.vilfa.junglechronicles.Player.AI.Friend;
 import si.vilfa.junglechronicles.Player.Player;
 
 /**
@@ -116,6 +118,28 @@ public class SimpleScene extends GameComponent implements Scene
     public Array<Player> getPlayers()
     {
         return players;
+    }
+
+    @Override
+    public Array<Enemy> getEnemies()
+    {
+        Array<Enemy> enemies = new Array<>();
+        for (Player player : players)
+        {
+            if (player instanceof Enemy) enemies.add((Enemy) player);
+        }
+        return enemies;
+    }
+
+    @Override
+    public Array<Friend> getFriends()
+    {
+        Array<Friend> friends = new Array<>();
+        for (Player player : players)
+        {
+            if (player instanceof Friend) friends.add((Friend) player);
+        }
+        return friends;
     }
 
     @Override

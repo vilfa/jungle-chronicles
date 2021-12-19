@@ -7,6 +7,8 @@ import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.Scene;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
+import si.vilfa.junglechronicles.Player.AI.Enemy;
+import si.vilfa.junglechronicles.Player.AI.Friend;
 import si.vilfa.junglechronicles.Player.Player;
 
 /**
@@ -58,6 +60,18 @@ public abstract class GameLevel extends GameComponent implements Scene
     public Array<Player> getPlayers()
     {
         return scene.getPlayers();
+    }
+
+    @Override
+    public Array<Enemy> getEnemies()
+    {
+        return scene.getEnemies();
+    }
+
+    @Override
+    public Array<Friend> getFriends()
+    {
+        return scene.getFriends();
     }
 
     @Override

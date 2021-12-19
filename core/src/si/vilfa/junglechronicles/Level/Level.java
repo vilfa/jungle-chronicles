@@ -18,11 +18,6 @@ public class Level extends GameLevel
         this.map = map;
     }
 
-    public TiledMap getMap()
-    {
-        return map;
-    }
-
     @Override
     public void update()
     {
@@ -42,6 +37,7 @@ public class Level extends GameLevel
     {
         OBJECT_LAYER("Objects"),
         TERRAIN_LAYER("Terrain"),
+        COLLECTIBLE_LAYER("TerrainCollectible"),
         BACKGROUND_LAYER("Background"),
         PLAYER_LAYER("Player"),
         AI_LAYER("Ai");
@@ -129,7 +125,8 @@ public class Level extends GameLevel
         ENEMY_LEFT_BOUND("enemyLeftBound"),
         ENEMY_RIGHT_BOUND("enemyRightBound"),
         ENEMY_TOP_BOUND("enemyTopBound"),
-        ENEMY_BOTTOM_BOUND("enemyBottomBound");
+        ENEMY_BOTTOM_BOUND("enemyBottomBound"),
+        ENEMY_SPRITE_TYPE("enemySpriteType");
 
         final String propertyName;
 

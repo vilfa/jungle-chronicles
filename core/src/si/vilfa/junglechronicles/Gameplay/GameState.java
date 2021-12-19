@@ -6,7 +6,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Events.PlayerStateEvent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -40,9 +40,9 @@ public class GameState extends GameComponent implements EventListener
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
-        //        audio.newMusic("Audio/Tracks/theme.mp3",
-        //                       GameStateEvent.GAMEPLAY_START,
-        //                       GameStateEvent.GAMEPLAY_STOP);
+        audio.newMusic("Audio/Tracks/theme.mp3",
+                       GameStateEvent.GAMEPLAY_START,
+                       GameStateEvent.GAMEPLAY_STOP);
 
         audio.newSoundSequence(new SoundSequence(new String[]{
                                        "Audio/Sounds/Footsteps/footstep_grass_000.ogg",
@@ -50,8 +50,18 @@ public class GameState extends GameComponent implements EventListener
                                        "Audio/Sounds/Footsteps/footstep_grass_002.ogg",
                                        "Audio/Sounds/Footsteps/footstep_grass_003.ogg",
                                        "Audio/Sounds/Footsteps/footstep_grass_004.ogg" }, 0.65f),
-                               PlayerEvent.PLAYER_RUN,
-                               PlayerEvent.PLAYER_IDLE);
+                               PlayerStateEvent.PLAYER_RUN,
+                               PlayerStateEvent.PLAYER_IDLE);
+
+        audio.newSound("Audio/Sounds/Coin/handleCoins.ogg",
+                       GameStateEvent.PLAYER_COLLECTIBLE_CONTACT);
+
+        audio.newSound("Audio/Sounds/Coin/handleCoins2.ogg",
+                       GameStateEvent.PLAYER_COLLECTIBLE_CONTACT);
+
+        audio.newSound("Audio/Sounds/Dead/jingles_NES00.ogg",
+                       GameStateEvent.PLAYER_ENEMY_CONTACT,
+                       GameStateEvent.PLAYER_TRAP_CONTACT);
 
         currentLevelDuration = 0f;
         playerHealth = 100;
@@ -63,32 +73,28 @@ public class GameState extends GameComponent implements EventListener
     {
         log(event.toString());
 
-        if (event.getType() == GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
+        if (event.getType().equals(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
+            && event.getEventData().size > 0)
         {
-            if (event.getEventData().size > 0)
-            {
-                GameBlock object = (GameBlock) event.getEventData().get(0);
-                playerScore += object.getCollectiblePoints();
-                log("Score:" + playerScore);
+            GameBlock object = (GameBlock) event.getEventData().first();
+            playerScore += object.getCollectiblePoints();
+            log("Score:" + playerScore);
 
-                // TODO: 01/12/2021 Use a HashMap or something for position lookup.
-                for (SceneTile tile : currentLevel.getTiles())
+            for (SceneTile tile : currentLevel.getTiles())
+            {
+                if (object.getFixtures().first().testPoint(tile.getCenter())
+                    && tile.getSourceLayer().equals(Level.MapLayer.COLLECTIBLE_LAYER))
                 {
-                    if (object.getBody().getFixtureList().get(0).testPoint(tile.getCenter()))
-                    {
-                        currentLevel.removeItem(tile);
-                    }
+                    currentLevel.removeItem(tile);
                 }
             }
-        } else if (event.getType() == GameStateEvent.PLAYER_TRAP_CONTACT)
+        } else if (event.getType().equals(GameStateEvent.PLAYER_TRAP_CONTACT)
+                   && event.getEventData().size > 0)
         {
-            if (event.getEventData().size > 0)
-            {
-                GameBlock object = (GameBlock) event.getEventData().get(0);
-                playerHealth -= object.getTrapPoints();
-                log("Health:" + playerHealth);
-            }
-        } else if (event.getType() == GameStateEvent.PLAYER_ENEMY_CONTACT)
+            GameBlock object = (GameBlock) event.getEventData().first();
+            playerHealth -= object.getTrapPoints();
+            log("Health:" + playerHealth);
+        } else if (event.getType().equals(GameStateEvent.PLAYER_ENEMY_CONTACT))
         {
             playerHealth -= 100;
             log("Health:" + playerHealth);

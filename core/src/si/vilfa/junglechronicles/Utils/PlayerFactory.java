@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import si.vilfa.junglechronicles.Component.Loggable;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Events.PlayerStateEvent;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
@@ -62,7 +62,7 @@ public class PlayerFactory implements Loggable
         body.setFixedRotation(true);
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
-        body.getFixtureList().get(0).setUserData(player);
+        body.getFixtureList().first().setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
         player.setGameState(gameState);
@@ -81,8 +81,8 @@ public class PlayerFactory implements Loggable
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
+                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
         }
 
 
@@ -106,7 +106,7 @@ public class PlayerFactory implements Loggable
         body.setFixedRotation(true);
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
-        body.getFixtureList().get(0).setUserData(player);
+        body.getFixtureList().first().setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
         player.setGameState(gameState);
@@ -125,8 +125,8 @@ public class PlayerFactory implements Loggable
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
+                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
         }
 
 
@@ -153,7 +153,7 @@ public class PlayerFactory implements Loggable
         body.setFixedRotation(true);
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
-        body.getFixtureList().get(0).setUserData(player);
+        body.getFixtureList().first().setUserData(player);
         gameState.getCurrentLevel().addItem(player);
 
         player.setGameState(gameState);
@@ -174,8 +174,8 @@ public class PlayerFactory implements Loggable
                                          gameState.getPhysics())
                   .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
                                          gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerEvent.PLAYER_RUN, gameState.getAudio());
+                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
+                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
         }
 
         return player;
@@ -288,6 +288,10 @@ public class PlayerFactory implements Loggable
                 if (Level.AiPlayerProperty.ENEMY_BOTTOM_BOUND.equals(entry.getKey()))
                 {
                     ((Enemy) player).setBottomBound(player.getPosition(), (Float) entry.getValue());
+                }
+                if (Level.AiPlayerProperty.ENEMY_SPRITE_TYPE.equals(entry.getKey()))
+                {
+                    ((Enemy) player).setEnemySprite((Integer) entry.getValue());
                 }
             }
         } else

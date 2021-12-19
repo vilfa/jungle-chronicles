@@ -16,6 +16,7 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.PlayerSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
+import si.vilfa.junglechronicles.Player.AI.Enemy;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Player.Player;
 
@@ -41,8 +42,8 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     private final int screenWidthMax;
     private final int screenHeightMax;
     private final int screenRefreshRate;
-    private final HashMap<HumanPlayer.State, TextureAtlas> playerStateTextures = new HashMap<>();
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
+    private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
     private int screenWidth;
     private int screenHeight;
     private float screenAspectRatio;
@@ -81,28 +82,45 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
 
         spriteBatch = new SpriteBatch();
 
-        playerStateTextures.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Player/Jump.atlas"));
-        playerStateTextures.put(HumanPlayer.State.JUMP_RIGHT,
-                                playerStateTextures.get(HumanPlayer.State.JUMP_LEFT));
-        playerStateTextures.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Player/Idle.atlas"));
-        playerStateTextures.put(HumanPlayer.State.IDLE_RIGHT,
-                                playerStateTextures.get(HumanPlayer.State.IDLE_LEFT));
-        playerStateTextures.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Player/Run.atlas"));
-        playerStateTextures.put(HumanPlayer.State.RUN_RIGHT,
-                                playerStateTextures.get(HumanPlayer.State.RUN_LEFT));
-        playerStateTextures.put(HumanPlayer.State.SLIDE_LEFT,
-                                new TextureAtlas("Player/Slide.atlas"));
-        playerStateTextures.put(HumanPlayer.State.SLIDE_RIGHT,
-                                playerStateTextures.get(HumanPlayer.State.SLIDE_LEFT));
+        initializePlayerAnimations();
+        initializeEnemyAnimations();
 
-        Vector2 playerBox = gameState.getPlayer().getBox();
-        TextureRegion playerRegion = playerStateTextures.get(HumanPlayer.State.IDLE_LEFT)
+        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
+    }
+
+    public Matrix4 getCombined()
+    {
+        return viewport.getCamera().combined;
+    }
+
+    private void initializePlayerAnimations()
+    {
+        HashMap<HumanPlayer.State, TextureAtlas> texturesByState = new HashMap<>();
+        texturesByState.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Player/Jump.atlas"));
+        texturesByState.put(HumanPlayer.State.JUMP_RIGHT,
+                            texturesByState.get(HumanPlayer.State.JUMP_LEFT));
+        texturesByState.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Player/Idle.atlas"));
+        texturesByState.put(HumanPlayer.State.IDLE_RIGHT,
+                            texturesByState.get(HumanPlayer.State.IDLE_LEFT));
+        texturesByState.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Player/Run.atlas"));
+        texturesByState.put(HumanPlayer.State.RUN_RIGHT,
+                            texturesByState.get(HumanPlayer.State.RUN_LEFT));
+        texturesByState.put(HumanPlayer.State.SLIDE_LEFT, new TextureAtlas("Player/Slide.atlas"));
+        texturesByState.put(HumanPlayer.State.SLIDE_RIGHT,
+                            texturesByState.get(HumanPlayer.State.SLIDE_LEFT));
+
+        Vector2 playerScale = new Vector2(1f, 1f);
+        if (gameState.getPlayer() != null)
+        {
+            Vector2 playerBox = gameState.getPlayer().getBox();
+            TextureRegion playerRegion = texturesByState.get(HumanPlayer.State.IDLE_LEFT)
                                                         .getRegions()
-                                                        .get(0);
-        Vector2 playerScale = new Vector2(playerBox.x / playerRegion.getRegionWidth(),
-                                          playerBox.y / playerRegion.getRegionHeight());
+                                                        .first();
+            playerScale.set(playerBox.x / playerRegion.getRegionWidth(),
+                            playerBox.y / playerRegion.getRegionHeight());
+        }
 
-        for (Map.Entry<HumanPlayer.State, TextureAtlas> entry : playerStateTextures.entrySet())
+        for (Map.Entry<HumanPlayer.State, TextureAtlas> entry : texturesByState.entrySet())
         {
             int i = 0;
             TreeMap<Integer, TextureAtlas.AtlasRegion> animationSpec = new TreeMap<>();
@@ -121,13 +139,44 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
                                                      false,
                                                      playerScale));
         }
-
-        gameState.getCurrentLevel().getBackgrounds().get(0).setViewport(viewport);
     }
 
-    public Matrix4 getCombined()
+    private void initializeEnemyAnimations()
     {
-        return viewport.getCamera().combined;
+        HashMap<Enemy.EnemySprite, TextureAtlas> texturesByEnemies = new HashMap<>();
+        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_ONE, new TextureAtlas("Enemy/Enemy1.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_TWO, new TextureAtlas("Enemy/Enemy2.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_THREE,
+                              new TextureAtlas("Enemy/Enemy3.atlas"));
+
+        Vector2 enemyScale = new Vector2(1f, 1f);
+        if (gameState.getCurrentLevel().getEnemies().size > 0)
+        {
+            Vector2 enemyBox = gameState.getCurrentLevel().getEnemies().first().getBox();
+            TextureRegion enemyRegion = texturesByEnemies.get(Enemy.EnemySprite.ENEMY_ONE)
+                                                         .getRegions()
+                                                         .first();
+            enemyScale.set(enemyBox.x / enemyRegion.getRegionWidth(),
+                           enemyBox.y / enemyRegion.getRegionHeight());
+        }
+
+        for (Map.Entry<Enemy.EnemySprite, TextureAtlas> entry : texturesByEnemies.entrySet())
+        {
+            int i = 0;
+            TreeMap<Integer, TextureAtlas.AtlasRegion> animationSpec = new TreeMap<>();
+            for (TextureAtlas.AtlasRegion region : entry.getValue().getRegions())
+            {
+                animationSpec.put(i++, region);
+            }
+
+            enemyAnimations.put(entry.getKey(),
+                                new PlayerSceneTile(animationSpec,
+                                                    Animation.PlayMode.LOOP,
+                                                    1 / 14f,
+                                                    false,
+                                                    false,
+                                                    enemyScale));
+        }
     }
 
     @Override
@@ -183,9 +232,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
 
-        HumanPlayer player = gameState.getPlayer();
-        PlayerSceneTile playerAnimation = playerAnimations.get(player.getState());
-
         for (BackgroundSceneTile tile : gameState.getCurrentLevel().getBackgrounds())
         {
             // TODO: 17/12/2021 Implement parallax background scrolling
@@ -200,6 +246,20 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
             tile.draw(spriteBatch);
         }
 
+        enemyAnimations.forEach((k, v) -> v.update());
+        for (Player player : gameState.getCurrentLevel().getPlayers())
+        {
+            if (player instanceof Enemy)
+            {
+                Enemy enemy = (Enemy) player;
+                PlayerSceneTile enemyAnimation = enemyAnimations.get(enemy.getEnemySprite());
+                enemyAnimation.setCenter(enemy.getPosition());
+                enemyAnimation.draw(spriteBatch);
+            }
+        }
+
+        HumanPlayer player = gameState.getPlayer();
+        PlayerSceneTile playerAnimation = playerAnimations.get(player.getState());
         playerAnimation.update();
         playerAnimation.setCenter(player.getPosition());
         playerAnimation.draw(spriteBatch);
@@ -211,10 +271,6 @@ public class Renderer extends DrawableGameComponent implements WindowAdapter
     public void dispose()
     {
         spriteBatch.dispose();
-        for (TextureAtlas atlas : playerStateTextures.values())
-        {
-            atlas.dispose();
-        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package si.vilfa.junglechronicles.Gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
@@ -54,6 +55,7 @@ public class Gameplay extends DrawableGameComponent
         inputMultiplexer.clear();
         gameState.dispose();
         renderer.dispose();
+        debugRenderer.dispose();
     }
 
     @Override
@@ -113,7 +115,21 @@ public class Gameplay extends DrawableGameComponent
     public void handleKeyDown(KeyDownInputEvent event) { }
 
     @Override
-    public void handleKeyUp(KeyUpInputEvent event) { }
+    public void handleKeyUp(KeyUpInputEvent event)
+    {
+        float volume;
+        switch (event.getKeyCode())
+        {
+            case Input.Keys.LEFT_BRACKET:
+                volume = gameState.getAudio().getMasterVolume();
+                gameState.getAudio().setMasterVolume(volume - 0.05f);
+                break;
+            case Input.Keys.RIGHT_BRACKET:
+                volume = gameState.getAudio().getMasterVolume();
+                gameState.getAudio().setMasterVolume(volume + 0.05f);
+                break;
+        }
+    }
 
     @Override
     public void handleKeyTyped(KeyTypedInputEvent event) { }

@@ -18,6 +18,7 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
     private float rightBoundHorizontal;
     private float topBoundVertical;
     private float bottomBoundVertical;
+    private EnemySprite enemySprite;
 
     public Enemy(Body body)
     {
@@ -88,7 +89,7 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
         gameState.getPhysics().getWorld().rayCast(callback, myPos, playerPos);
 
         return callback.getRayContactCount() == 1 && callback.getRayFixtures()
-                                                             .get(0)
+                                                             .first()
                                                              .getUserData() instanceof HumanPlayer;
     }
 
@@ -107,5 +108,30 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
     public boolean withinRightBound()
     {
         return getPosition().x < rightBoundHorizontal;
+    }
+
+    public void setEnemySprite(Integer enemySprite)
+    {
+        switch (enemySprite)
+        {
+            case 1:
+                this.enemySprite = EnemySprite.ENEMY_ONE;
+                break;
+            case 2:
+                this.enemySprite = EnemySprite.ENEMY_TWO;
+                break;
+            case 3:
+                this.enemySprite = EnemySprite.ENEMY_THREE;
+        }
+    }
+
+    public EnemySprite getEnemySprite()
+    {
+        return enemySprite;
+    }
+
+    public enum EnemySprite
+    {
+        ENEMY_ONE, ENEMY_TWO, ENEMY_THREE
     }
 }

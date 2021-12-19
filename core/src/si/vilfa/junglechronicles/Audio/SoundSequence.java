@@ -19,6 +19,7 @@ public class SoundSequence extends GameComponent
     private int currentState = 0;
     private boolean isPlaying = false;
     private float timer = 0f;
+    private float volume = 1f;
 
     public SoundSequence(TreeMap<Integer, Sound> sequence, float frameDuration)
     {
@@ -64,6 +65,16 @@ public class SoundSequence extends GameComponent
         isPlaying = false;
     }
 
+    public float getVolume()
+    {
+        return volume;
+    }
+
+    public void setVolume(float volume)
+    {
+        this.volume = volume;
+    }
+
     public int getCurrentState()
     {
         return currentState;
@@ -78,7 +89,7 @@ public class SoundSequence extends GameComponent
             if (timer > frameDuration)
             {
                 timer = 0f;
-                sequence.get(currentState).play();
+                sequence.get(currentState).play(volume);
                 currentState = (currentState + 1) % sequence.size();
             }
         }
