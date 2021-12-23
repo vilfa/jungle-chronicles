@@ -110,6 +110,11 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
         return getPosition().x < rightBoundHorizontal;
     }
 
+    public EnemySprite getEnemySprite()
+    {
+        return enemySprite;
+    }
+
     public void setEnemySprite(Integer enemySprite)
     {
         switch (enemySprite)
@@ -123,11 +128,6 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
             case 3:
                 this.enemySprite = EnemySprite.ENEMY_THREE;
         }
-    }
-
-    public EnemySprite getEnemySprite()
-    {
-        return enemySprite;
     }
 
     public enum EnemySprite

@@ -7,7 +7,7 @@ import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
 import si.vilfa.junglechronicles.Events.PlayerStateEvent;
-import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
@@ -179,7 +179,7 @@ public class GameState extends GameComponent implements EventListener
     public void update()
     {
         if (!isUpdatable) return;
-        currentLevelDuration += Renderer.gameTime.getDeltaTime();
+        currentLevelDuration += GameRenderer.gameTime.getDeltaTime();
         physics.update();
         audio.update();
         player.update();

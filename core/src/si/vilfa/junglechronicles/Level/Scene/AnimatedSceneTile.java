@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 
 import java.util.Map;
@@ -62,7 +62,7 @@ public class AnimatedSceneTile extends SceneObject
     @Override
     public void update()
     {
-        this.animationState += Renderer.gameTime.getDeltaTime();
+        this.animationState += GameRenderer.gameTime.getDeltaTime();
     }
 
     @Override

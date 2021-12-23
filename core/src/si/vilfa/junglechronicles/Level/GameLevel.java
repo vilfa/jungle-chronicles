@@ -63,6 +63,12 @@ public abstract class GameLevel extends GameComponent implements Scene
     }
 
     @Override
+    public Array<BackgroundSceneTile> getBackgrounds()
+    {
+        return scene.getBackgrounds();
+    }
+
+    @Override
     public Array<Enemy> getEnemies()
     {
         return scene.getEnemies();
@@ -72,12 +78,6 @@ public abstract class GameLevel extends GameComponent implements Scene
     public Array<Friend> getFriends()
     {
         return scene.getFriends();
-    }
-
-    @Override
-    public Array<BackgroundSceneTile> getBackgrounds()
-    {
-        return scene.getBackgrounds();
     }
 
     @Override

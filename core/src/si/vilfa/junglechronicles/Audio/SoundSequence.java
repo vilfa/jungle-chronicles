@@ -3,7 +3,7 @@ package si.vilfa.junglechronicles.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Graphics.GameRenderer;
 
 import java.util.TreeMap;
 
@@ -85,7 +85,7 @@ public class SoundSequence extends GameComponent
     {
         if (isPlaying)
         {
-            timer += Renderer.gameTime.getDeltaTime();
+            timer += GameRenderer.gameTime.getDeltaTime();
             if (timer > frameDuration)
             {
                 timer = 0f;

@@ -21,7 +21,6 @@ public class DesktopLauncher
         config.setWindowedMode(DesktopLauncher.getDesktopDefaultWindowSizeX(),
                                DesktopLauncher.getDesktopDefaultWindowSizeY());
         config.setInitialVisible(true);
-        config.useVsync(true);
         new Lwjgl3Application(new JungleChronicles(), config);
     }
 

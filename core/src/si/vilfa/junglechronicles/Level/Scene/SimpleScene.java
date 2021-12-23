@@ -121,6 +121,12 @@ public class SimpleScene extends GameComponent implements Scene
     }
 
     @Override
+    public Array<BackgroundSceneTile> getBackgrounds()
+    {
+        return backgrounds;
+    }
+
+    @Override
     public Array<Enemy> getEnemies()
     {
         Array<Enemy> enemies = new Array<>();
@@ -140,12 +146,6 @@ public class SimpleScene extends GameComponent implements Scene
             if (player instanceof Friend) friends.add((Friend) player);
         }
         return friends;
-    }
-
-    @Override
-    public Array<BackgroundSceneTile> getBackgrounds()
-    {
-        return backgrounds;
     }
 
     @Override

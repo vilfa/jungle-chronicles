@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Graphics.Renderer;
+import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
@@ -22,7 +22,7 @@ public class Gameplay extends DrawableGameComponent
         implements Disposable, WindowAdapter, InputEventListener, GameplayAdapter
 {
     private final GameState gameState;
-    private final Renderer renderer;
+    private final GameRenderer gameRenderer;
     private final Box2DDebugRenderer debugRenderer;
     private final InputMultiplexer inputMultiplexer;
 
@@ -30,7 +30,7 @@ public class Gameplay extends DrawableGameComponent
     {
         super(0, true, 0, true);
         gameState = new GameState();
-        renderer = new Renderer(gameState);
+        gameRenderer = new GameRenderer(gameState);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new PlayerInputProcessor(gameState.getPlayer()));
@@ -45,8 +45,8 @@ public class Gameplay extends DrawableGameComponent
     public void draw()
     {
         if (!isDrawable) return;
-        renderer.draw();
-        //        debugRenderer.render(gameState.getPhysics().getWorld(), renderer.getCombined());
+        gameRenderer.draw();
+        debugRenderer.render(gameState.getPhysics().getWorld(), gameRenderer.getCombined());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Gameplay extends DrawableGameComponent
     {
         inputMultiplexer.clear();
         gameState.dispose();
-        renderer.dispose();
+        gameRenderer.dispose();
         debugRenderer.dispose();
     }
 
@@ -63,7 +63,7 @@ public class Gameplay extends DrawableGameComponent
     {
         if (!isUpdatable) return;
         gameState.update();
-        renderer.update();
+        gameRenderer.update();
     }
 
     @Override
@@ -90,25 +90,25 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void resize(int width, int height)
     {
-        renderer.resize(width, height);
+        gameRenderer.resize(width, height);
     }
 
     @Override
     public float getScreenAspectRatio()
     {
-        return renderer.getScreenAspectRatio();
+        return gameRenderer.getScreenAspectRatio();
     }
 
     @Override
     public void setScreenAspectRatio(float aspectRatio)
     {
-        renderer.setScreenAspectRatio(aspectRatio);
+        gameRenderer.setScreenAspectRatio(aspectRatio);
     }
 
     @Override
     public int getScreenRefreshRate()
     {
-        return renderer.getScreenRefreshRate();
+        return gameRenderer.getScreenRefreshRate();
     }
 
     @Override

@@ -69,13 +69,13 @@ public abstract class SceneObject extends GameComponent
         this.position.set(center.x - 0.5f * width, position.y - 0.5f * height);
     }
 
-    public void setSourceLayer(Level.MapLayer sourceLayer)
-    {
-        this.sourceLayer = sourceLayer;
-    }
-
     public Level.MapLayer getSourceLayer()
     {
         return sourceLayer;
+    }
+
+    public void setSourceLayer(Level.MapLayer sourceLayer)
+    {
+        this.sourceLayer = sourceLayer;
     }
 }
