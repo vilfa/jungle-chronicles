@@ -3,7 +3,7 @@ package si.vilfa.junglechronicles.Level.Scene;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Level;
 
 /**
@@ -14,7 +14,7 @@ import si.vilfa.junglechronicles.Level.Level;
 public abstract class SceneObject extends GameComponent
 {
     protected Level.MapLayer sourceLayer;
-    protected GameState gameState;
+    protected Game game;
     protected Vector2 position;
     protected Vector2 center;
     protected float width;
@@ -29,14 +29,14 @@ public abstract class SceneObject extends GameComponent
         center = new Vector2();
     }
 
-    public GameState getGameState()
+    public Game getGame()
     {
-        return gameState;
+        return game;
     }
 
-    public void setGameState(GameState gameState)
+    public void setGame(Game game)
     {
-        this.gameState = gameState;
+        this.game = game;
     }
 
     @Override

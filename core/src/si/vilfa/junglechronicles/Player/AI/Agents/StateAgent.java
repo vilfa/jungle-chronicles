@@ -24,11 +24,6 @@ public abstract class StateAgent<E, S extends State<E>> extends AiPlayer
         return stateMachine;
     }
 
-    public void setStateMachine(StateMachine<E, S> stateMachine)
-    {
-        this.stateMachine = stateMachine;
-    }
-
     @Override
     public abstract void update();
 

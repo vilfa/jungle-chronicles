@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.PlayerSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
@@ -28,9 +28,9 @@ public class GameRenderer extends Renderer
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
 
-    public GameRenderer(GameState gameState)
+    public GameRenderer(Game game)
     {
-        super(gameState);
+        super(game);
 
         initializePlayerAnimations();
         initializeEnemyAnimations();
@@ -55,9 +55,9 @@ public class GameRenderer extends Renderer
                             texturesByState.get(HumanPlayer.State.SLIDE_LEFT));
 
         Vector2 playerScale = new Vector2(1f, 1f);
-        if (gameState.getPlayer() != null)
+        if (game.getPlayer() != null)
         {
-            Vector2 playerBox = gameState.getPlayer().getBox();
+            Vector2 playerBox = game.getPlayer().getBox();
             TextureRegion playerRegion = texturesByState.get(HumanPlayer.State.IDLE_LEFT)
                                                         .getRegions()
                                                         .first();
@@ -95,9 +95,9 @@ public class GameRenderer extends Renderer
                               new TextureAtlas("Graphics/Enemies/Monster3.atlas"));
 
         Vector2 enemyScale = new Vector2(1f, 1f);
-        if (gameState.getCurrentLevel().getEnemies().size > 0)
+        if (game.getCurrentLevel().getEnemies().size > 0)
         {
-            Vector2 enemyBox = gameState.getCurrentLevel().getEnemies().first().getBox();
+            Vector2 enemyBox = game.getCurrentLevel().getEnemies().first().getBox();
             TextureRegion enemyRegion = texturesByEnemies.get(Enemy.EnemySprite.ENEMY_ONE)
                                                          .getRegions()
                                                          .first();
@@ -143,7 +143,7 @@ public class GameRenderer extends Renderer
     public void resize(int width, int height)
     {
         super.resize(width, height);
-        followPlayer(gameState.getPlayer());
+        followPlayer(game.getPlayer());
     }
 
     @Override
@@ -153,10 +153,10 @@ public class GameRenderer extends Renderer
 
         // TODO: 20/11/2021 Make draw calls use draw order.
         ScreenUtils.clear(1, 1, 1, 1);
-        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.setProjectionMatrix(getCombined());
         spriteBatch.begin();
 
-        for (BackgroundSceneTile tile : gameState.getCurrentLevel().getBackgrounds())
+        for (BackgroundSceneTile tile : game.getCurrentLevel().getBackgrounds())
         {
             // TODO: 17/12/2021 Implement parallax background scrolling
 
@@ -165,12 +165,12 @@ public class GameRenderer extends Renderer
             tile.draw(spriteBatch);
         }
 
-        for (SceneTile tile : gameState.getCurrentLevel().getTiles())
+        for (SceneTile tile : game.getCurrentLevel().getTiles())
         {
             tile.draw(spriteBatch);
         }
 
-        for (Player player : gameState.getCurrentLevel().getPlayers())
+        for (Player player : game.getCurrentLevel().getPlayers())
         {
             if (player instanceof Enemy)
             {
@@ -181,7 +181,7 @@ public class GameRenderer extends Renderer
             }
         }
 
-        HumanPlayer player = gameState.getPlayer();
+        HumanPlayer player = game.getPlayer();
         PlayerSceneTile playerAnimation = playerAnimations.get(player.getState());
         playerAnimation.setCenter(player.getPosition());
         playerAnimation.draw(spriteBatch);
@@ -209,8 +209,8 @@ public class GameRenderer extends Renderer
         }
 
         enemyAnimations.forEach((k, v) -> v.update());
-        playerAnimations.get(gameState.getPlayer().getState()).update();
+        playerAnimations.get(game.getPlayer().getState()).update();
 
-        followPlayer(gameState.getPlayer());
+        followPlayer(game.getPlayer());
     }
 }

@@ -4,8 +4,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerStateEvent;
+import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -167,14 +167,14 @@ public class HumanPlayer extends Player
             if (gameBlock.isCollectible())
             {
                 ((GameBlock) contact).setActive(false);
-                dispatchEvent(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, contact);
+                dispatchEvent(GameEvent.PLAYER_COLLECTIBLE_CONTACT, contact);
             } else if (gameBlock.isTrap())
             {
-                dispatchEvent(GameStateEvent.PLAYER_TRAP_CONTACT, contact);
+                dispatchEvent(GameEvent.PLAYER_TRAP_CONTACT, contact);
             }
         } else if (contact instanceof Enemy)
         {
-            dispatchEvent(GameStateEvent.PLAYER_ENEMY_CONTACT, contact);
+            dispatchEvent(GameEvent.PLAYER_ENEMY_CONTACT, contact);
         }
     }
 
@@ -190,11 +190,11 @@ public class HumanPlayer extends Player
         {
             case RUN_LEFT:
             case RUN_RIGHT:
-                dispatchEvent(PlayerStateEvent.PLAYER_RUN);
+                dispatchEvent(PlayerEvent.PLAYER_RUN);
                 break;
             case IDLE_LEFT:
             case IDLE_RIGHT:
-                dispatchEvent(PlayerStateEvent.PLAYER_IDLE);
+                dispatchEvent(PlayerEvent.PLAYER_IDLE);
                 break;
         }
     }

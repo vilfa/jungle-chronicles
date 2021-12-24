@@ -10,9 +10,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import si.vilfa.junglechronicles.Component.Loggable;
-import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerStateEvent;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
 import si.vilfa.junglechronicles.Player.AI.AiPlayer;
@@ -44,12 +44,10 @@ public class PlayerFactory implements Loggable
         return INSTANCE;
     }
 
-    public <T extends Player> Player createPlayer(GameState gameState,
-                                                  Class<T> clazz,
-                                                  Vector2 position)
+    public <T extends Player> Player createPlayer(Game game, Class<T> clazz, Vector2 position)
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
-        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         PolygonShape shape = shapeFactory.createPlayerShape(new Vector2(0.75f, 1.75f));
@@ -63,38 +61,35 @@ public class PlayerFactory implements Loggable
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().first().setUserData(player);
-        gameState.getCurrentLevel().addItem(player);
+        game.getCurrentLevel().addItem(player);
 
-        player.setGameState(gameState);
+        player.setGame(game);
         if (player instanceof HumanPlayer)
         {
-            gameState.setPlayer((HumanPlayer) player);
-            player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getAudio())
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState.getAudio())
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
+            game.setPlayer((HumanPlayer) player);
+            player.registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }
 
 
         return player;
     }
 
-    public <T extends Player> Player createPlayerWithShape(GameState gameState,
+    public <T extends Player> Player createPlayerWithShape(Game game,
                                                            Class<T> clazz,
                                                            Vector2 position,
                                                            Shape shape)
     {
-        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         Body body = bodyFactory.createWithShapeWithParams(shape,
@@ -107,33 +102,30 @@ public class PlayerFactory implements Loggable
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().first().setUserData(player);
-        gameState.getCurrentLevel().addItem(player);
+        game.getCurrentLevel().addItem(player);
 
-        player.setGameState(gameState);
+        player.setGame(game);
         if (player instanceof HumanPlayer)
         {
-            gameState.setPlayer((HumanPlayer) player);
-            player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getAudio())
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState.getAudio())
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
+            game.setPlayer((HumanPlayer) player);
+            player.registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }
 
 
         return player;
     }
 
-    public <T extends Player> Player createPlayerWithShapeWithExtra(GameState gameState,
+    public <T extends Player> Player createPlayerWithShapeWithExtra(Game game,
                                                                     Class<T> clazz,
                                                                     Vector2 position,
                                                                     Shape shape,
@@ -141,7 +133,7 @@ public class PlayerFactory implements Loggable
                                                                     float friction,
                                                                     float restitution)
     {
-        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         Body body = bodyFactory.createWithShapeWithParams(shape,
@@ -154,28 +146,25 @@ public class PlayerFactory implements Loggable
 
         T player = gameObjectFactory.createWithBody(body, clazz, Body.class);
         body.getFixtureList().first().setUserData(player);
-        gameState.getCurrentLevel().addItem(player);
+        game.getCurrentLevel().addItem(player);
 
-        player.setGameState(gameState);
+        player.setGame(game);
         if (player instanceof HumanPlayer)
         {
-            gameState.setPlayer((HumanPlayer) player);
-            player.registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_TRAP_CONTACT, gameState.getAudio())
+            game.setPlayer((HumanPlayer) player);
+            player.registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_TRAP_CONTACT, game.getAudio())
 
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_ENEMY_CONTACT, gameState.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_ENEMY_CONTACT, game.getAudio())
 
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, gameState)
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getPhysics())
-                  .registerEventListener(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT,
-                                         gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_IDLE, gameState.getAudio())
-                  .registerEventListener(PlayerStateEvent.PLAYER_RUN, gameState.getAudio());
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
+                  .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
+                  .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }
 
         return player;
@@ -183,16 +172,16 @@ public class PlayerFactory implements Loggable
 
     public void setupPlayer(Player player,
                             MapObject object,
-                            GameState gameState,
+                            Game game,
                             HashMap<Level.Property, Object> props)
     {
         if (player instanceof HumanPlayer)
         {
-            setupHumanPlayer((HumanPlayer) player, gameState, props);
+            setupHumanPlayer((HumanPlayer) player, game, props);
             setupPlayerBox(player, object);
         } else if (player instanceof AiPlayer)
         {
-            setupAiPlayer((AiPlayer) player, gameState, props);
+            setupAiPlayer((AiPlayer) player, game, props);
             setupPlayerBox(player, object);
         } else
         {
@@ -214,23 +203,21 @@ public class PlayerFactory implements Loggable
     }
 
     private void setupHumanPlayer(HumanPlayer player,
-                                  GameState gameState,
+                                  Game game,
                                   HashMap<Level.Property, Object> props)
     {
         for (Map.Entry<Level.Property, Object> entry : props.entrySet())
         {
             if (Level.HumanPlayerProperty.HEALTH_POINTS.equals(entry.getKey()))
             {
-                gameState.getGameStateProperties()
-                         .compute(GameState.GameStateProperty.PLAYER_HEALTH,
-                                  (k, v) -> v = (Float) entry.getValue());
+                game.getGameProperties()
+                    .compute(Game.GameProperty.PLAYER_HEALTH,
+                             (k, v) -> v = (Float) entry.getValue());
             }
         }
     }
 
-    private void setupAiPlayer(AiPlayer player,
-                               GameState gameState,
-                               HashMap<Level.Property, Object> props)
+    private void setupAiPlayer(AiPlayer player, Game game, HashMap<Level.Property, Object> props)
     {
         if (player instanceof Friend)
         {
@@ -238,16 +225,16 @@ public class PlayerFactory implements Loggable
             {
                 if (Level.AiPlayerProperty.ARRIVE.equals(entry.getKey()))
                 {
-                    player.setBehaviour(new Arrive<>(player, gameState.getPlayer()));
+                    player.setBehaviour(new Arrive<>(player, game.getPlayer()));
                 } else if (Level.AiPlayerProperty.PURSUE.equals(entry.getKey()))
                 {
-                    player.setBehaviour(new Pursue<>(player, gameState.getPlayer()));
+                    player.setBehaviour(new Pursue<>(player, game.getPlayer()));
                 } else if (Level.AiPlayerProperty.EVADE.equals(entry.getKey()))
                 {
-                    player.setBehaviour(new Evade<>(player, gameState.getPlayer()));
+                    player.setBehaviour(new Evade<>(player, game.getPlayer()));
                 } else if (Level.AiPlayerProperty.FACE.equals(entry.getKey()))
                 {
-                    player.setBehaviour(new Face<>(player, gameState.getPlayer()));
+                    player.setBehaviour(new Face<>(player, game.getPlayer()));
                 } else if (Level.AiPlayerProperty.WANDER.equals(entry.getKey()))
                 {
                     player.setBehaviour(new Wander<>(player));

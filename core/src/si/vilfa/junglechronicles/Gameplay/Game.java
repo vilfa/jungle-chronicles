@@ -5,8 +5,8 @@ import si.vilfa.junglechronicles.Audio.SoundSequence;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
-import si.vilfa.junglechronicles.Events.GameStateEvent;
-import si.vilfa.junglechronicles.Events.PlayerStateEvent;
+import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -23,15 +23,15 @@ import java.util.HashMap;
  * @date 28/11/2021
  * @package si.vilfa.junglechronicles.Gameplay
  **/
-public class GameState extends GameComponent implements EventListener
+public class Game extends GameComponent implements EventListener
 {
     private final PhysicsEngine physics;
     private final AudioEngine audio;
     private HumanPlayer player;
     private Level currentLevel;
-    private final HashMap<GameStateProperty, Float> gameStateProperties;
+    private final HashMap<GameProperty, Float> gameProperties;
 
-    public GameState()
+    public Game()
     {
         super(0, true);
 
@@ -42,8 +42,8 @@ public class GameState extends GameComponent implements EventListener
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
         audio.newMusic("Audio/Tracks/theme.mp3",
-                       GameStateEvent.GAMEPLAY_START,
-                       GameStateEvent.GAMEPLAY_STOP);
+                       GameEvent.GAMEPLAY_START,
+                       GameEvent.GAMEPLAY_STOP);
 
         audio.newSoundSequence(new SoundSequence(new String[]{
                                        "Audio/Sounds/Footsteps/footstep_grass_000.ogg",
@@ -51,41 +51,41 @@ public class GameState extends GameComponent implements EventListener
                                        "Audio/Sounds/Footsteps/footstep_grass_002.ogg",
                                        "Audio/Sounds/Footsteps/footstep_grass_003.ogg",
                                        "Audio/Sounds/Footsteps/footstep_grass_004.ogg" }, 0.65f),
-                               PlayerStateEvent.PLAYER_RUN,
-                               PlayerStateEvent.PLAYER_IDLE);
+                               PlayerEvent.PLAYER_RUN,
+                               PlayerEvent.PLAYER_IDLE);
 
         audio.newSound("Audio/Sounds/Coin/handleCoins.ogg",
-                       GameStateEvent.PLAYER_COLLECTIBLE_CONTACT);
+                       GameEvent.PLAYER_COLLECTIBLE_CONTACT);
 
         audio.newSound("Audio/Sounds/Coin/handleCoins2.ogg",
-                       GameStateEvent.PLAYER_COLLECTIBLE_CONTACT);
+                       GameEvent.PLAYER_COLLECTIBLE_CONTACT);
 
         audio.newSound("Audio/Sounds/Dead/jingles_NES00.ogg",
-                       GameStateEvent.PLAYER_ENEMY_CONTACT,
-                       GameStateEvent.PLAYER_TRAP_CONTACT);
+                       GameEvent.PLAYER_ENEMY_CONTACT,
+                       GameEvent.PLAYER_TRAP_CONTACT);
 
-        gameStateProperties = new HashMap<>();
+        gameProperties = new HashMap<>();
         initializeGameProperties();
     }
 
     private void initializeGameProperties()
     {
-        gameStateProperties.put(GameStateProperty.LEVEL_DURATION, 0f);
-        gameStateProperties.put(GameStateProperty.PLAYER_HEALTH, 100f);
-        gameStateProperties.put(GameStateProperty.PLAYER_LIVES, 3f);
-        gameStateProperties.put(GameStateProperty.PLAYER_SCORE, 0f);
+        gameProperties.put(GameProperty.LEVEL_DURATION, 0f);
+        gameProperties.put(GameProperty.PLAYER_HEALTH, 100f);
+        gameProperties.put(GameProperty.PLAYER_LIVES, 3f);
+        gameProperties.put(GameProperty.PLAYER_SCORE, 0f);
     }
 
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType().equals(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
+        if (event.getType().equals(GameEvent.PLAYER_COLLECTIBLE_CONTACT)
             && event.getEventData().size > 0)
         {
             GameBlock object = (GameBlock) event.getEventData().first();
-            gameStateProperties.compute(GameStateProperty.PLAYER_SCORE,
-                                        (k, v) -> v += object.getCollectiblePoints());
-            log("Score:" + gameStateProperties.get(GameStateProperty.PLAYER_SCORE));
+            gameProperties.compute(GameProperty.PLAYER_SCORE,
+                                   (k, v) -> v += object.getCollectiblePoints());
+            log("Score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
 
             for (SceneTile tile : currentLevel.getTiles())
             {
@@ -95,14 +95,14 @@ public class GameState extends GameComponent implements EventListener
                     currentLevel.removeItem(tile);
                 }
             }
-        } else if ((event.getType().equals(GameStateEvent.PLAYER_TRAP_CONTACT) || event.getType()
-                                                                                       .equals(GameStateEvent.PLAYER_ENEMY_CONTACT))
+        } else if ((event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT) || event.getType()
+                                                                                  .equals(GameEvent.PLAYER_ENEMY_CONTACT))
                    && event.getEventData().size > 0)
         {
-            float playerHealth = gameStateProperties.get(GameStateProperty.PLAYER_HEALTH);
-            float playerLives = gameStateProperties.get(GameStateProperty.PLAYER_LIVES);
+            float playerHealth = gameProperties.get(GameProperty.PLAYER_HEALTH);
+            float playerLives = gameProperties.get(GameProperty.PLAYER_LIVES);
 
-            if (event.getType().equals(GameStateEvent.PLAYER_TRAP_CONTACT))
+            if (event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT))
             {
                 GameBlock object = (GameBlock) event.getEventData().first();
 
@@ -114,7 +114,7 @@ public class GameState extends GameComponent implements EventListener
                 {
                     playerHealth -= object.getTrapPoints();
                 }
-            } else if (event.getType().equals(GameStateEvent.PLAYER_ENEMY_CONTACT))
+            } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
             {
                 Enemy enemy = (Enemy) event.getEventData().first();
 
@@ -129,15 +129,15 @@ public class GameState extends GameComponent implements EventListener
                 }
             }
 
-            gameStateProperties.put(GameStateProperty.PLAYER_HEALTH, playerHealth);
-            gameStateProperties.put(GameStateProperty.PLAYER_LIVES, playerLives);
+            gameProperties.put(GameProperty.PLAYER_HEALTH, playerHealth);
+            gameProperties.put(GameProperty.PLAYER_LIVES, playerLives);
 
             log("Health:" + playerHealth);
             log("Lives:" + playerLives);
         }
 
-        if (gameStateProperties.get(GameStateProperty.PLAYER_LIVES) <= 0
-            && gameStateProperties.get(GameStateProperty.PLAYER_HEALTH) <= 0)
+        if (gameProperties.get(GameProperty.PLAYER_LIVES) <= 0
+            && gameProperties.get(GameProperty.PLAYER_HEALTH) <= 0)
         {
             log("YOU ARE DEAD!");
         }
@@ -185,17 +185,17 @@ public class GameState extends GameComponent implements EventListener
         currentLevel = level;
     }
 
-    public HashMap<GameStateProperty, Float> getGameStateProperties()
+    public HashMap<GameProperty, Float> getGameProperties()
     {
-        return gameStateProperties;
+        return gameProperties;
     }
 
     @Override
     public void update()
     {
         if (!isUpdatable) return;
-        gameStateProperties.compute(GameStateProperty.LEVEL_DURATION,
-                                    (k, v) -> v += GameRenderer.gameTime.getDeltaTime());
+        gameProperties.compute(GameProperty.LEVEL_DURATION,
+                               (k, v) -> v += GameRenderer.gameTime.getDeltaTime());
         physics.update();
         audio.update();
         player.update();
@@ -211,7 +211,7 @@ public class GameState extends GameComponent implements EventListener
         currentLevel.dispose();
     }
 
-    public enum GameStateProperty
+    public enum GameProperty
     {
         PLAYER_HEALTH, PLAYER_LIVES, PLAYER_SCORE, LEVEL_DURATION,
     }

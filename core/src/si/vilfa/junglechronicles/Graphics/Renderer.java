@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 
 /**
  * @author luka
@@ -17,7 +17,7 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
 public abstract class Renderer extends DrawableGameComponent implements WindowAdapter
 {
     public static GameTime gameTime;
-    protected final GameState gameState;
+    protected final Game game;
     protected final Viewport viewport;
     protected final float visibleWorldWidth;
     protected final float visibleWorldHeight;
@@ -34,7 +34,7 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
 
     protected final SpriteBatch spriteBatch;
 
-    public Renderer(GameState gameState)
+    public Renderer(Game game)
     {
         super(0, true, 0, true);
 
@@ -54,9 +54,9 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
         visibleWorldWidth = visibleWorldHeight * screenAspectRatio;
         //        Gdx.graphics.setForegroundFPS(screenRefreshRate);
 
-        this.gameState = gameState;
-        worldWidth = gameState.getPhysics().getWorldWidth();
-        worldHeight = gameState.getPhysics().getWorldHeight();
+        this.game = game;
+        worldWidth = game.getPhysics().getWorldWidth();
+        worldHeight = game.getPhysics().getWorldHeight();
 
         viewport = new ExtendViewport(visibleWorldWidth,
                                       visibleWorldHeight,

@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
-import si.vilfa.junglechronicles.Events.GameStateEvent;
+import si.vilfa.junglechronicles.Events.GameEvent;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.Objects.GameObject;
 
@@ -70,7 +70,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType() == GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
+        if (event.getType() == GameEvent.PLAYER_COLLECTIBLE_CONTACT)
         {
             if (event.getEventData().size > 0)
             {

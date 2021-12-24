@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import si.vilfa.junglechronicles.Component.Loggable;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
@@ -51,11 +51,11 @@ public class LevelFactory implements Loggable
         return INSTANCE;
     }
 
-    public Level createLevelFromTmx(GameState gameState, String fileName)
+    public Level createLevelFromTmx(Game game, String fileName)
     {
         TiledMap map = new TmxMapLoader().load(fileName);
         Level level = new Level(map);
-        gameState.setCurrentLevel(level);
+        game.setCurrentLevel(level);
 
         MapLayers layers = map.getLayers();
 
@@ -67,13 +67,13 @@ public class LevelFactory implements Loggable
                 {
                     if (layer.isVisible())
                     {
-                        createTerrainLayer(gameState, layer, Level.MapLayer.COLLECTIBLE_LAYER);
+                        createTerrainLayer(game, layer, Level.MapLayer.COLLECTIBLE_LAYER);
                     }
                 } else if (layer.getName().contains(Level.MapLayer.TERRAIN_LAYER.getLayerName()))
                 {
                     if (layer.isVisible())
                     {
-                        createTerrainLayer(gameState, layer, Level.MapLayer.TERRAIN_LAYER);
+                        createTerrainLayer(game, layer, Level.MapLayer.TERRAIN_LAYER);
                     }
                 }
             }
@@ -81,14 +81,14 @@ public class LevelFactory implements Loggable
         if (layers.get(Level.MapLayer.OBJECT_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.OBJECT_LAYER.getLayerName());
-            if (layer.isVisible()) createObjectLayer(gameState, layer);
+            if (layer.isVisible()) createObjectLayer(game, layer);
         }
         if (layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.BACKGROUND_LAYER.getLayerName());
             if (layer.isVisible())
             {
-                createBackgroundLayer(gameState,
+                createBackgroundLayer(game,
                                       (TiledMapImageLayer) layer,
                                       Level.MapLayer.BACKGROUND_LAYER);
             }
@@ -96,18 +96,18 @@ public class LevelFactory implements Loggable
         if (layers.get(Level.MapLayer.PLAYER_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.PLAYER_LAYER.getLayerName());
-            if (layer.isVisible()) processPlayerLayer(gameState, layer);
+            if (layer.isVisible()) processPlayerLayer(game, layer);
         }
         if (layers.get(Level.MapLayer.AI_LAYER.getLayerName()) != null)
         {
             MapLayer layer = layers.get(Level.MapLayer.AI_LAYER.getLayerName());
-            if (layer.isVisible()) processAiLayer(gameState, layer);
+            if (layer.isVisible()) processAiLayer(game, layer);
         }
 
         return level;
     }
 
-    private void processPlayerLayer(GameState gameState, MapLayer layer)
+    private void processPlayerLayer(Game game, MapLayer layer)
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
         PlayerFactory playerFactory = PlayerFactory.getInstance();
@@ -138,8 +138,7 @@ public class LevelFactory implements Loggable
 
             if (shape == null) continue;
 
-            HumanPlayer player = (HumanPlayer) playerFactory.createPlayerWithShapeWithExtra(
-                    gameState,
+            HumanPlayer player = (HumanPlayer) playerFactory.createPlayerWithShapeWithExtra(game,
                     HumanPlayer.class,
                     PhysicsEngine.toUnits(position),
                     shape,
@@ -148,14 +147,13 @@ public class LevelFactory implements Loggable
                     0.01f);
 
             playerFactory.setupPlayer(player,
-                                      object,
-                                      gameState,
+                                      object, game,
                                       getObjectProperties(object,
                                                           Level.HumanPlayerProperty.values()));
         }
     }
 
-    private void processAiLayer(GameState gameState, MapLayer layer)
+    private void processAiLayer(Game game, MapLayer layer)
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
         PlayerFactory playerFactory = PlayerFactory.getInstance();
@@ -189,7 +187,7 @@ public class LevelFactory implements Loggable
             {
                 if (Level.AiPlayerType.ENEMY.equals(entry.getKey()))
                 {
-                    aiPlayer = (Enemy) playerFactory.createPlayerWithShapeWithExtra(gameState,
+                    aiPlayer = (Enemy) playerFactory.createPlayerWithShapeWithExtra(game,
                                                                                     Enemy.class,
                                                                                     PhysicsEngine.toUnits(
                                                                                             position),
@@ -199,7 +197,7 @@ public class LevelFactory implements Loggable
                                                                                     0f);
                 } else if (Level.AiPlayerType.FRIEND.equals(entry.getKey()))
                 {
-                    aiPlayer = (Friend) playerFactory.createPlayerWithShapeWithExtra(gameState,
+                    aiPlayer = (Friend) playerFactory.createPlayerWithShapeWithExtra(game,
                                                                                      Friend.class,
                                                                                      PhysicsEngine.toUnits(
                                                                                              position),
@@ -214,11 +212,11 @@ public class LevelFactory implements Loggable
 
             HashMap<Level.Property, Object> props = getObjectProperties(object,
                                                                         Level.AiPlayerProperty.values());
-            playerFactory.setupPlayer(aiPlayer, object, gameState, props);
+            playerFactory.setupPlayer(aiPlayer, object, game, props);
         }
     }
 
-    private void createTerrainLayer(GameState gameState, MapLayer layer, Level.MapLayer sourceLayer)
+    private void createTerrainLayer(Game game, MapLayer layer, Level.MapLayer sourceLayer)
     {
         if (!(layer instanceof TiledMapTileLayer))
         {
@@ -236,17 +234,17 @@ public class LevelFactory implements Loggable
                 if (cell == null) continue;
 
                 SceneTile sceneTile = new SceneTile(i, j, l, cell.getTile());
-                sceneTile.setGameState(gameState);
+                sceneTile.setGame(game);
                 sceneTile.setSourceLayer(sourceLayer);
-                gameState.getCurrentLevel().addItem(sceneTile);
+                game.getCurrentLevel().addItem(sceneTile);
             }
         }
     }
 
-    private void createObjectLayer(GameState gameState, MapLayer layer)
+    private void createObjectLayer(Game game, MapLayer layer)
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
-        BodyFactory bodyFactory = BodyFactory.getInstance(gameState);
+        BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
         for (MapObject object : layer.getObjects())
@@ -278,13 +276,13 @@ public class LevelFactory implements Loggable
                 body.getFixtureList().first().setUserData(gameObject);
                 gameObject.setProperties(getObjectProperties(object,
                                                              Level.ObjectProperty.values()));
-                gameObject.setGameState(gameState);
-                gameState.getCurrentLevel().addItem(gameObject);
+                gameObject.setGame(game);
+                game.getCurrentLevel().addItem(gameObject);
             }
         }
     }
 
-    private void createBackgroundLayer(GameState gameState,
+    private void createBackgroundLayer(Game game,
                                        TiledMapImageLayer layer,
                                        Level.MapLayer sourceLayer)
     {
@@ -292,7 +290,7 @@ public class LevelFactory implements Loggable
         {
             BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer);
             backgroundTile.setSourceLayer(sourceLayer);
-            gameState.getCurrentLevel().addItem(backgroundTile);
+            game.getCurrentLevel().addItem(backgroundTile);
         } else
         {
             log("Error: empty background layer");

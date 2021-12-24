@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Physics.CollisionEventListener;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
@@ -22,11 +22,9 @@ public abstract class Player extends GameComponent
         implements PhysicsActor, InputEventListener, CollisionEventListener, Steerable<Vector2>
 {
     protected final Body body;
-    protected GameState gameState;
+    protected Game game;
     protected boolean isActive;
-
     protected Vector2 box;
-
     protected SteeringBehavior<Vector2> steeringBehavior;
     protected boolean isTagged;
     protected float boundingRadius;
@@ -80,14 +78,14 @@ public abstract class Player extends GameComponent
     @Override
     public void handleEndContact(Object contact) { }
 
-    public GameState getGameState()
+    public Game getGame()
     {
-        return gameState;
+        return game;
     }
 
-    public void setGameState(GameState gameState)
+    public void setGame(Game game)
     {
-        this.gameState = gameState;
+        this.game = game;
     }
 
     public Vector2 getBox()

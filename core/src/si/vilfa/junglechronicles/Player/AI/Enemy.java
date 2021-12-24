@@ -46,7 +46,7 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
             setVelocity(new Vector2(0.5f, 0f));
         } else if (stateMachine.getCurrentState() == EnemyState.ATTACK)
         {
-            Vector2 playerPos = gameState.getPlayer().getPosition();
+            Vector2 playerPos = game.getPlayer().getPosition();
             Vector2 myPos = getPosition();
             Vector2 attackVec = playerPos.sub(myPos).nor().scl(2f);
 
@@ -83,21 +83,14 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
     public boolean seesPlayer()
     {
         Vector2 myPos = getPosition();
-        Vector2 playerPos = gameState.getPlayer().getPosition();
+        Vector2 playerPos = game.getPlayer().getPosition();
 
         RayCallback callback = new RayCallback();
-        gameState.getPhysics().getWorld().rayCast(callback, myPos, playerPos);
+        game.getPhysics().getWorld().rayCast(callback, myPos, playerPos);
 
         return callback.getRayContactCount() == 1 && callback.getRayFixtures()
                                                              .first()
                                                              .getUserData() instanceof HumanPlayer;
-    }
-
-    public boolean canAttackPlayer()
-    {
-        Vector2 playerPos = gameState.getPlayer().getPosition();
-        return playerPos.x > leftBoundHorizontal && playerPos.x < rightBoundHorizontal
-               && playerPos.y > bottomBoundVertical && playerPos.y < topBoundVertical;
     }
 
     public boolean withinLeftBound()

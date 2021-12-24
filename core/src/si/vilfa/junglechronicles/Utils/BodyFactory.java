@@ -3,7 +3,7 @@ package si.vilfa.junglechronicles.Utils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import si.vilfa.junglechronicles.Component.Loggable;
-import si.vilfa.junglechronicles.Gameplay.GameState;
+import si.vilfa.junglechronicles.Gameplay.Game;
 
 /**
  * @author luka
@@ -15,16 +15,16 @@ public class BodyFactory implements Loggable
     private static BodyFactory INSTANCE;
     private final World world;
 
-    private BodyFactory(GameState gameState)
+    private BodyFactory(Game game)
     {
-        this.world = gameState.getPhysics().getWorld();
+        this.world = game.getPhysics().getWorld();
     }
 
-    public static BodyFactory getInstance(GameState gameState)
+    public static BodyFactory getInstance(Game game)
     {
         if (INSTANCE == null)
         {
-            INSTANCE = new BodyFactory(gameState);
+            INSTANCE = new BodyFactory(game);
         }
         return INSTANCE;
     }

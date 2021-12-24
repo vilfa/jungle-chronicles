@@ -18,7 +18,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
 {
     private final HashMap<EventType, Array<Sound>> sounds;
     private final HashMap<EventType, Array<Music>> music;
-    private final HashMap<EventType, Array<SoundSequence>> soundSequences;
+    private final HashMap<EventType, Array<SoundSequence>> sequences;
     private float masterVolume = 1f;
 
     public AudioEngine()
@@ -26,13 +26,13 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
         super(0, true);
         sounds = new HashMap<>();
         music = new HashMap<>();
-        soundSequences = new HashMap<>();
+        sequences = new HashMap<>();
     }
 
     @Override
     public void update()
     {
-        for (Array<SoundSequence> sequences : soundSequences.values())
+        for (Array<SoundSequence> sequences : sequences.values())
         {
             for (SoundSequence sequence : sequences)
             {
@@ -46,53 +46,53 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     {
         sounds.forEach((k, v) -> v.forEach(Sound::dispose));
         music.forEach((k, v) -> v.forEach(Music::dispose));
-        soundSequences.forEach((k, v) -> v.forEach(SoundSequence::dispose));
+        sequences.forEach((k, v) -> v.forEach(SoundSequence::dispose));
     }
 
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType() instanceof GameStateEvent)
+        if (event.getType() instanceof GameEvent)
         {
-            switch ((GameStateEvent) event.getType())
+            switch ((GameEvent) event.getType())
             {
                 case GAMEPLAY_START:
-                    sounds.getOrDefault(GameStateEvent.GAMEPLAY_START, new Array<>())
+                    sounds.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
                           .forEach(v -> v.play(masterVolume * 0.5f));
-                    music.getOrDefault(GameStateEvent.GAMEPLAY_START, new Array<>())
+                    music.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
                          .forEach(Music::play);
-                    soundSequences.getOrDefault(GameStateEvent.GAMEPLAY_START, new Array<>())
-                                  .forEach(SoundSequence::play);
+                    sequences.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
+                             .forEach(SoundSequence::play);
                     break;
                 case GAMEPLAY_STOP:
                     sounds.forEach((k, v) -> v.forEach(Sound::stop));
                     music.forEach((k, v) -> v.forEach(Music::stop));
-                    soundSequences.forEach((k, v) -> v.forEach(SoundSequence::stop));
+                    sequences.forEach((k, v) -> v.forEach(SoundSequence::stop));
                     break;
                 case PLAYER_ENEMY_CONTACT:
-                    sounds.getOrDefault(GameStateEvent.PLAYER_ENEMY_CONTACT, new Array<>())
+                    sounds.getOrDefault(GameEvent.PLAYER_ENEMY_CONTACT, new Array<>())
                           .forEach(v -> v.play(masterVolume * 0.5f));
                     break;
                 case PLAYER_TRAP_CONTACT:
-                    sounds.getOrDefault(GameStateEvent.PLAYER_TRAP_CONTACT, new Array<>())
+                    sounds.getOrDefault(GameEvent.PLAYER_TRAP_CONTACT, new Array<>())
                           .forEach(v -> v.play(masterVolume * 0.5f));
                     break;
                 case PLAYER_COLLECTIBLE_CONTACT:
-                    sounds.getOrDefault(GameStateEvent.PLAYER_COLLECTIBLE_CONTACT, new Array<>())
+                    sounds.getOrDefault(GameEvent.PLAYER_COLLECTIBLE_CONTACT, new Array<>())
                           .forEach(v -> v.play(masterVolume * 0.5f));
                     break;
             }
-        } else if (event.getType() instanceof PlayerStateEvent)
+        } else if (event.getType() instanceof PlayerEvent)
         {
-            switch ((PlayerStateEvent) event.getType())
+            switch ((PlayerEvent) event.getType())
             {
                 case PLAYER_RUN:
-                    soundSequences.getOrDefault(PlayerStateEvent.PLAYER_RUN, new Array<>())
-                                  .forEach(SoundSequence::play);
+                    sequences.getOrDefault(PlayerEvent.PLAYER_RUN, new Array<>())
+                             .forEach(SoundSequence::play);
                     break;
                 case PLAYER_IDLE:
-                    soundSequences.getOrDefault(PlayerStateEvent.PLAYER_IDLE, new Array<>())
-                                  .forEach(SoundSequence::stop);
+                    sequences.getOrDefault(PlayerEvent.PLAYER_IDLE, new Array<>())
+                             .forEach(SoundSequence::stop);
                     break;
             }
         }
@@ -137,12 +137,12 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     {
         for (EventType event : onEvents)
         {
-            if (soundSequences.containsKey(event))
+            if (sequences.containsKey(event))
             {
-                soundSequences.get(event).add(sequence);
+                sequences.get(event).add(sequence);
             } else
             {
-                soundSequences.put(event, new Array<>(new SoundSequence[]{ sequence }));
+                sequences.put(event, new Array<>(new SoundSequence[]{ sequence }));
             }
         }
 
@@ -168,7 +168,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     {
         this.masterVolume = Math.min(1f, Math.max(0f, masterVolume));
         music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume * 0.1f)));
-        soundSequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume)));
+        sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume)));
         log("Master volume:" + this.masterVolume);
     }
 
