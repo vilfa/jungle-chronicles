@@ -6,6 +6,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
+import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.Objects.GameObject;
 
 import java.util.HashMap;
@@ -17,14 +18,16 @@ import java.util.HashMap;
  **/
 public class PhysicsEngine extends GameComponent implements CollisionEventDispatcher, EventListener
 {
-    public static float WORLD_WIDTH = 200f;
+    public static float WORLD_WIDTH = 100f;
     public static float WORLD_HEIGHT = 50f;
-    public static float WORLD_PPU = 64f;
+    public static float WORLD_PPU = 128f;
     private final World world;
     private final float timeStep;
+    private final float halfTimeStep;
     private final int velocityIterations;
     private final int positionIterations;
     private final HashMap<Body, Boolean> bodiesStateChanged;
+    private float timer;
 
     public PhysicsEngine()
     {
@@ -36,6 +39,8 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
         super(0, true);
         this.world = new World(new Vector2(0f, -9.81f), true);
         this.timeStep = timeStep;
+        this.halfTimeStep = timeStep / 2f;
+        this.timer = 0f;
         this.velocityIterations = 6;
         this.positionIterations = 6;
         this.bodiesStateChanged = new HashMap<>();
@@ -65,7 +70,6 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     @Override
     public void handleEvent(Event event)
     {
-        log(event.toString());
         if (event.getType() == GameStateEvent.PLAYER_COLLECTIBLE_CONTACT)
         {
             if (event.getEventData().size > 0)
@@ -80,7 +84,12 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     public void update()
     {
         if (!isUpdatable) return;
-        world.step(timeStep, velocityIterations, positionIterations);
+        timer += Renderer.gameTime.getDeltaTime();
+        if (timer > halfTimeStep)
+        {
+            world.step(timeStep, velocityIterations, positionIterations);
+            timer = 0f;
+        }
         processEvents();
     }
 

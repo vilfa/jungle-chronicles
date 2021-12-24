@@ -226,6 +226,7 @@ public class LevelFactory implements Loggable
             return;
         }
 
+        log("Create terrain layer:" + layer.getName());
         TiledMapTileLayer l = (TiledMapTileLayer) layer;
         for (int i = 0; i < l.getHeight(); i++)
         {

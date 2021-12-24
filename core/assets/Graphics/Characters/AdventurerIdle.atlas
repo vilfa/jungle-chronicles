@@ -1,0 +1,6 @@
+AdventurerIdle.png
+size:128,128
+filter:Nearest,Linear
+repeat:none
+adventurer_idle
+bounds:0,0,80,110

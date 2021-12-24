@@ -18,6 +18,7 @@ public class SimpleScene extends GameComponent implements Scene
     protected final Array<SceneTile> tiles;
     protected final Array<Player> players;
     protected final Array<BackgroundSceneTile> backgrounds;
+    protected final Array<GuiSceneTile> guiTiles;
 
     public SimpleScene()
     {
@@ -26,6 +27,7 @@ public class SimpleScene extends GameComponent implements Scene
         tiles = new Array<>();
         players = new Array<>();
         backgrounds = new Array<>();
+        guiTiles = new Array<>();
     }
 
     @Override

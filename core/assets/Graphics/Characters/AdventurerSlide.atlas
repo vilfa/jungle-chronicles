@@ -1,0 +1,8 @@
+AdventurerSlide.png
+size:256,128
+filter:Nearest,Linear
+repeat:none
+adventurer_skid
+bounds:0,0,80,110
+adventurer_slide
+bounds:80,0,80,110

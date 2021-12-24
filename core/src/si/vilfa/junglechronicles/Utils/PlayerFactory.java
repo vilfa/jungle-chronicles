@@ -221,7 +221,9 @@ public class PlayerFactory implements Loggable
         {
             if (Level.HumanPlayerProperty.HEALTH_POINTS.equals(entry.getKey()))
             {
-                gameState.setPlayerHealth((Integer) entry.getValue());
+                gameState.getGameStateProperties()
+                         .compute(GameState.GameStateProperty.PLAYER_HEALTH,
+                                  (k, v) -> v = (Float) entry.getValue());
             }
         }
     }

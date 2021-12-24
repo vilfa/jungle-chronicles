@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Events.GameStateEvent;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
+import si.vilfa.junglechronicles.Graphics.GuiRenderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
@@ -23,6 +24,7 @@ public class Gameplay extends DrawableGameComponent
 {
     private final GameState gameState;
     private final GameRenderer gameRenderer;
+    private final GuiRenderer guiRenderer;
     private final Box2DDebugRenderer debugRenderer;
     private final InputMultiplexer inputMultiplexer;
 
@@ -31,6 +33,7 @@ public class Gameplay extends DrawableGameComponent
         super(0, true, 0, true);
         gameState = new GameState();
         gameRenderer = new GameRenderer(gameState);
+        guiRenderer = new GuiRenderer(gameState);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new PlayerInputProcessor(gameState.getPlayer()));
@@ -46,6 +49,7 @@ public class Gameplay extends DrawableGameComponent
     {
         if (!isDrawable) return;
         gameRenderer.draw();
+        guiRenderer.draw();
         debugRenderer.render(gameState.getPhysics().getWorld(), gameRenderer.getCombined());
     }
 
@@ -55,6 +59,7 @@ public class Gameplay extends DrawableGameComponent
         inputMultiplexer.clear();
         gameState.dispose();
         gameRenderer.dispose();
+        guiRenderer.dispose();
         debugRenderer.dispose();
     }
 
@@ -64,6 +69,7 @@ public class Gameplay extends DrawableGameComponent
         if (!isUpdatable) return;
         gameState.update();
         gameRenderer.update();
+        guiRenderer.update();
     }
 
     @Override

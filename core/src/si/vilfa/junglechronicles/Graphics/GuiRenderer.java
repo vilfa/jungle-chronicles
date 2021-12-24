@@ -1,6 +1,6 @@
 package si.vilfa.junglechronicles.Graphics;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import si.vilfa.junglechronicles.Gameplay.GameState;
 
 /**
@@ -10,13 +10,13 @@ import si.vilfa.junglechronicles.Gameplay.GameState;
  **/
 public class GuiRenderer extends Renderer
 {
-    private final SpriteBatch spriteBatch;
+    private final BitmapFont font;
 
     public GuiRenderer(GameState gameState)
     {
         super(gameState);
 
-        spriteBatch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class GuiRenderer extends Renderer
     @Override
     public void dispose()
     {
-
+        super.dispose();
     }
 
     @Override

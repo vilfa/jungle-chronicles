@@ -1,0 +1,15 @@
+Monster2.png
+size:512,128
+repeat:none
+Frame0
+index:0
+bounds:0,0,96,96
+Frame1
+index:1
+bounds:96,0,96,96
+Frame2
+index:2
+bounds:192,0,96,96
+Frame3
+index:3
+bounds:288,0,96,96

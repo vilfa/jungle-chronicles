@@ -2,6 +2,7 @@ package si.vilfa.junglechronicles.Graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,6 +31,8 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     protected float screenAspectRatio;
     protected float deltaTime;
     protected float fpsTimer;
+
+    protected final SpriteBatch spriteBatch;
 
     public Renderer(GameState gameState)
     {
@@ -60,6 +63,8 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
                                       worldWidth,
                                       worldHeight);
         viewport.apply(true);
+
+        spriteBatch = new SpriteBatch();
     }
 
     public Matrix4 getCombined() { return viewport.getCamera().combined; }
@@ -94,7 +99,10 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     public abstract void draw();
 
     @Override
-    public abstract void dispose();
+    public void dispose()
+    {
+        spriteBatch.dispose();
+    }
 
     @Override
     public abstract void update();

@@ -52,8 +52,6 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     @Override
     public void handleEvent(Event event)
     {
-        log("Event:" + event);
-
         if (event.getType() instanceof GameStateEvent)
         {
             switch ((GameStateEvent) event.getType())

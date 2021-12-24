@@ -2,7 +2,6 @@ package si.vilfa.junglechronicles.Graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -26,8 +25,6 @@ import java.util.TreeMap;
  **/
 public class GameRenderer extends Renderer
 {
-    private final SpriteBatch spriteBatch;
-
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
 
@@ -35,27 +32,25 @@ public class GameRenderer extends Renderer
     {
         super(gameState);
 
-        spriteBatch = new SpriteBatch();
-
         initializePlayerAnimations();
         initializeEnemyAnimations();
 
-        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
+//        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
     }
 
     private void initializePlayerAnimations()
     {
         HashMap<HumanPlayer.State, TextureAtlas> texturesByState = new HashMap<>();
-        texturesByState.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Player/Jump.atlas"));
+        texturesByState.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Graphics/Characters/AdventurerJump.atlas"));
         texturesByState.put(HumanPlayer.State.JUMP_RIGHT,
                             texturesByState.get(HumanPlayer.State.JUMP_LEFT));
-        texturesByState.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Player/Idle.atlas"));
+        texturesByState.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Graphics/Characters/AdventurerIdle.atlas"));
         texturesByState.put(HumanPlayer.State.IDLE_RIGHT,
                             texturesByState.get(HumanPlayer.State.IDLE_LEFT));
-        texturesByState.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Player/Run.atlas"));
+        texturesByState.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Graphics/Characters/AdventurerRun.atlas"));
         texturesByState.put(HumanPlayer.State.RUN_RIGHT,
                             texturesByState.get(HumanPlayer.State.RUN_LEFT));
-        texturesByState.put(HumanPlayer.State.SLIDE_LEFT, new TextureAtlas("Player/Slide.atlas"));
+        texturesByState.put(HumanPlayer.State.SLIDE_LEFT, new TextureAtlas("Graphics/Characters/AdventurerSlide.atlas"));
         texturesByState.put(HumanPlayer.State.SLIDE_RIGHT,
                             texturesByState.get(HumanPlayer.State.SLIDE_LEFT));
 
@@ -82,7 +77,7 @@ public class GameRenderer extends Renderer
             playerAnimations.put(entry.getKey(),
                                  new PlayerSceneTile(animationSpec,
                                                      Animation.PlayMode.LOOP,
-                                                     1 / 14f,
+                                                     1 / 10f,
                                                      HumanPlayer.State.getLeft()
                                                                       .contains(entry.getKey(),
                                                                                 false),
@@ -94,10 +89,10 @@ public class GameRenderer extends Renderer
     private void initializeEnemyAnimations()
     {
         HashMap<Enemy.EnemySprite, TextureAtlas> texturesByEnemies = new HashMap<>();
-        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_ONE, new TextureAtlas("Enemy/Enemy1.atlas"));
-        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_TWO, new TextureAtlas("Enemy/Enemy2.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_ONE, new TextureAtlas("Graphics/Enemies/Monster1.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_TWO, new TextureAtlas("Graphics/Enemies/Monster2.atlas"));
         texturesByEnemies.put(Enemy.EnemySprite.ENEMY_THREE,
-                              new TextureAtlas("Enemy/Enemy3.atlas"));
+                              new TextureAtlas("Graphics/Enemies/Monster3.atlas"));
 
         Vector2 enemyScale = new Vector2(1f, 1f);
         if (gameState.getCurrentLevel().getEnemies().size > 0)
@@ -122,7 +117,7 @@ public class GameRenderer extends Renderer
             enemyAnimations.put(entry.getKey(),
                                 new PlayerSceneTile(animationSpec,
                                                     Animation.PlayMode.LOOP,
-                                                    1 / 14f,
+                                                    1 / 10f,
                                                     false,
                                                     false,
                                                     enemyScale));
@@ -157,7 +152,6 @@ public class GameRenderer extends Renderer
         if (!isDrawable) return;
 
         // TODO: 20/11/2021 Make draw calls use draw order.
-        deltaTime = gameTime.getDeltaTime();
         ScreenUtils.clear(1, 1, 1, 1);
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
@@ -176,7 +170,6 @@ public class GameRenderer extends Renderer
             tile.draw(spriteBatch);
         }
 
-        enemyAnimations.forEach((k, v) -> v.update());
         for (Player player : gameState.getCurrentLevel().getPlayers())
         {
             if (player instanceof Enemy)
@@ -190,7 +183,6 @@ public class GameRenderer extends Renderer
 
         HumanPlayer player = gameState.getPlayer();
         PlayerSceneTile playerAnimation = playerAnimations.get(player.getState());
-        playerAnimation.update();
         playerAnimation.setCenter(player.getPosition());
         playerAnimation.draw(spriteBatch);
 
@@ -200,7 +192,7 @@ public class GameRenderer extends Renderer
     @Override
     public void dispose()
     {
-        spriteBatch.dispose();
+        super.dispose();
     }
 
     @Override
@@ -215,6 +207,9 @@ public class GameRenderer extends Renderer
             log("FPS:" + Gdx.graphics.getFramesPerSecond());
             fpsTimer = 0f;
         }
+
+        enemyAnimations.forEach((k, v) -> v.update());
+        playerAnimations.get(gameState.getPlayer().getState()).update();
 
         followPlayer(gameState.getPlayer());
     }
