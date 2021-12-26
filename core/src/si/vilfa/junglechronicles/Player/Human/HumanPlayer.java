@@ -19,6 +19,8 @@ import si.vilfa.junglechronicles.Player.Player;
  **/
 public class HumanPlayer extends Player
 {
+    public static int MAX_LIVES = 2;
+    public static int MAX_HEALTH = 100;
     private State state;
     private boolean isPressedDown;
 
@@ -59,7 +61,7 @@ public class HumanPlayer extends Player
 
                 if (state == State.SLIDE_LEFT)
                 {
-//                    setRotation((float) Math.toRadians(90f));
+                    //                    setRotation((float) Math.toRadians(90f));
                     body.applyLinearImpulse(new Vector2(-500f, 0f), getPosition(), true);
                 }
                 break;
@@ -77,7 +79,7 @@ public class HumanPlayer extends Player
 
                 if (state == State.SLIDE_RIGHT)
                 {
-//                    setRotation((float) Math.toRadians(-90f));
+                    //                    setRotation((float) Math.toRadians(-90f));
                     body.applyLinearImpulse(new Vector2(500f, 0f), getPosition(), true);
                 }
                 break;
@@ -108,11 +110,11 @@ public class HumanPlayer extends Player
 
                 if (state == State.SLIDE_LEFT)
                 {
-//                    setRotation((float) Math.toRadians(90f));
+                    //                    setRotation((float) Math.toRadians(90f));
                     body.applyLinearImpulse(new Vector2(-500f, 0f), getPosition(), true);
                 } else
                 {
-//                    setRotation((float) Math.toRadians(-90f));
+                    //                    setRotation((float) Math.toRadians(-90f));
                     body.applyLinearImpulse(new Vector2(500f, 0f), getPosition(), true);
                 }
                 break;
@@ -140,7 +142,7 @@ public class HumanPlayer extends Player
                     setState(State.IDLE_LEFT);
                 }
                 setVelocity(new Vector2());
-//                setRotation(0f);
+                //                setRotation(0f);
                 break;
             case Input.Keys.DOWN:
             case Input.Keys.S:
@@ -152,7 +154,7 @@ public class HumanPlayer extends Player
                     setState(State.IDLE_LEFT);
                 }
                 setVelocity(new Vector2());
-//                setRotation(0f);
+                //                setRotation(0f);
                 isPressedDown = false;
                 break;
         }

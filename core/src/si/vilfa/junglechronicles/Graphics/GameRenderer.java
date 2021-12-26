@@ -28,6 +28,8 @@ public class GameRenderer extends Renderer
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
 
+    private float timer = 0f;
+
     public GameRenderer(Game game)
     {
         super(game);
@@ -35,22 +37,26 @@ public class GameRenderer extends Renderer
         initializePlayerAnimations();
         initializeEnemyAnimations();
 
-//        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
+        //        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
     }
 
     private void initializePlayerAnimations()
     {
         HashMap<HumanPlayer.State, TextureAtlas> texturesByState = new HashMap<>();
-        texturesByState.put(HumanPlayer.State.JUMP_LEFT, new TextureAtlas("Graphics/Characters/AdventurerJump.atlas"));
+        texturesByState.put(HumanPlayer.State.JUMP_LEFT,
+                            new TextureAtlas("Graphics/Characters/AdventurerJump.atlas"));
         texturesByState.put(HumanPlayer.State.JUMP_RIGHT,
                             texturesByState.get(HumanPlayer.State.JUMP_LEFT));
-        texturesByState.put(HumanPlayer.State.IDLE_LEFT, new TextureAtlas("Graphics/Characters/AdventurerIdle.atlas"));
+        texturesByState.put(HumanPlayer.State.IDLE_LEFT,
+                            new TextureAtlas("Graphics/Characters/AdventurerIdle.atlas"));
         texturesByState.put(HumanPlayer.State.IDLE_RIGHT,
                             texturesByState.get(HumanPlayer.State.IDLE_LEFT));
-        texturesByState.put(HumanPlayer.State.RUN_LEFT, new TextureAtlas("Graphics/Characters/AdventurerRun.atlas"));
+        texturesByState.put(HumanPlayer.State.RUN_LEFT,
+                            new TextureAtlas("Graphics/Characters/AdventurerRun.atlas"));
         texturesByState.put(HumanPlayer.State.RUN_RIGHT,
                             texturesByState.get(HumanPlayer.State.RUN_LEFT));
-        texturesByState.put(HumanPlayer.State.SLIDE_LEFT, new TextureAtlas("Graphics/Characters/AdventurerSlide.atlas"));
+        texturesByState.put(HumanPlayer.State.SLIDE_LEFT,
+                            new TextureAtlas("Graphics/Characters/AdventurerSlide.atlas"));
         texturesByState.put(HumanPlayer.State.SLIDE_RIGHT,
                             texturesByState.get(HumanPlayer.State.SLIDE_LEFT));
 
@@ -89,16 +95,18 @@ public class GameRenderer extends Renderer
     private void initializeEnemyAnimations()
     {
         HashMap<Enemy.EnemySprite, TextureAtlas> texturesByEnemies = new HashMap<>();
-        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_ONE, new TextureAtlas("Graphics/Enemies/Monster1.atlas"));
-        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_TWO, new TextureAtlas("Graphics/Enemies/Monster2.atlas"));
-        texturesByEnemies.put(Enemy.EnemySprite.ENEMY_THREE,
+        texturesByEnemies.put(Enemy.EnemySprite.MONSTER_ONE,
+                              new TextureAtlas("Graphics/Enemies/Monster1.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.MONSTER_TWO,
+                              new TextureAtlas("Graphics/Enemies/Monster2.atlas"));
+        texturesByEnemies.put(Enemy.EnemySprite.MONSTER_THREE,
                               new TextureAtlas("Graphics/Enemies/Monster3.atlas"));
 
         Vector2 enemyScale = new Vector2(1f, 1f);
         if (game.getCurrentLevel().getEnemies().size > 0)
         {
             Vector2 enemyBox = game.getCurrentLevel().getEnemies().first().getBox();
-            TextureRegion enemyRegion = texturesByEnemies.get(Enemy.EnemySprite.ENEMY_ONE)
+            TextureRegion enemyRegion = texturesByEnemies.get(Enemy.EnemySprite.MONSTER_ONE)
                                                          .getRegions()
                                                          .first();
             enemyScale.set(enemyBox.x / enemyRegion.getRegionWidth(),
@@ -200,12 +208,11 @@ public class GameRenderer extends Renderer
     {
         if (!isUpdatable) return;
 
-        deltaTime = gameTime.getDeltaTime();
-        fpsTimer += deltaTime;
-        if (fpsTimer > 1f)
+        timer += gameTime.getDeltaTime();
+        if (timer > 1f)
         {
-            log("FPS:" + Gdx.graphics.getFramesPerSecond());
-            fpsTimer = 0f;
+            log("fps:" + Gdx.graphics.getFramesPerSecond());
+            timer = 0f;
         }
 
         enemyAnimations.forEach((k, v) -> v.update());

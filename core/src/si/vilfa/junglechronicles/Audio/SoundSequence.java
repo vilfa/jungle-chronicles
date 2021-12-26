@@ -55,7 +55,7 @@ public class SoundSequence extends GameComponent
 
     public void play()
     {
-        log("Play:" + sequence.get(currentState));
+        log("play:" + sequence.get(currentState));
         isPlaying = true;
     }
 

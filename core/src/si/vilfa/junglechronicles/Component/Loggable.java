@@ -30,4 +30,15 @@ public interface Loggable
     {
         Gdx.app.debug(getTag(), message);
     }
+
+    default void error(String message, Throwable... throwable)
+    {
+        if (throwable.length > 0)
+        {
+            Gdx.app.error(getTag(), message, throwable[0]);
+        } else
+        {
+            Gdx.app.error(getTag(), message);
+        }
+    }
 }

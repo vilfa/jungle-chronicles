@@ -169,7 +169,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
         this.masterVolume = Math.min(1f, Math.max(0f, masterVolume));
         music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume * 0.1f)));
         sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume)));
-        log("Master volume:" + this.masterVolume);
+        log("master volume:" + this.masterVolume);
     }
 
     @Override

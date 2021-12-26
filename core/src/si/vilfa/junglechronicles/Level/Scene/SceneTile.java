@@ -48,6 +48,9 @@ public class SceneTile extends SceneObject
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        sprite.draw(spriteBatch);
+        if (isVisible)
+        {
+            sprite.draw(spriteBatch);
+        }
     }
 }

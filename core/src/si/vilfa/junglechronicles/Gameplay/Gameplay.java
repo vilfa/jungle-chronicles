@@ -42,6 +42,9 @@ public class Gameplay extends DrawableGameComponent
 
         registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio());
         registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
+
+        game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer);
+        game.registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class Gameplay extends DrawableGameComponent
         if (!isDrawable) return;
         gameRenderer.draw();
         guiRenderer.draw();
-        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
+        //        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
     }
 
     @Override
@@ -75,21 +78,21 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void create()
     {
-        log("Create");
+        log("create");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
     @Override
     public void pause()
     {
-        log("Pause");
+        log("pause");
         dispatchEvent(GameEvent.GAMEPLAY_STOP);
     }
 
     @Override
     public void resume()
     {
-        log("Resume");
+        log("resume");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
@@ -97,6 +100,7 @@ public class Gameplay extends DrawableGameComponent
     public void resize(int width, int height)
     {
         gameRenderer.resize(width, height);
+        guiRenderer.resize(width, height);
     }
 
     @Override

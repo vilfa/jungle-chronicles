@@ -61,9 +61,12 @@ public class PlayerSceneTile extends SceneObject
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        Sprite sprite = animation.getKeyFrame(animationState);
-        sprite.setScale(scale.x, scale.y);
-        sprite.setCenter(center.x, center.y);
-        sprite.draw(spriteBatch);
+        if (isVisible)
+        {
+            Sprite sprite = animation.getKeyFrame(animationState);
+            sprite.setScale(scale.x, scale.y);
+            sprite.setCenter(center.x, center.y);
+            sprite.draw(spriteBatch);
+        }
     }
 }

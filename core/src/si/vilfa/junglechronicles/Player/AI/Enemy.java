@@ -113,18 +113,18 @@ public class Enemy extends StateAgent<Enemy, EnemyState>
         switch (enemySprite)
         {
             case 1:
-                this.enemySprite = EnemySprite.ENEMY_ONE;
+                this.enemySprite = EnemySprite.MONSTER_ONE;
                 break;
             case 2:
-                this.enemySprite = EnemySprite.ENEMY_TWO;
+                this.enemySprite = EnemySprite.MONSTER_TWO;
                 break;
             case 3:
-                this.enemySprite = EnemySprite.ENEMY_THREE;
+                this.enemySprite = EnemySprite.MONSTER_THREE;
         }
     }
 
     public enum EnemySprite
     {
-        ENEMY_ONE, ENEMY_TWO, ENEMY_THREE
+        MONSTER_ONE, MONSTER_TWO, MONSTER_THREE
     }
 }

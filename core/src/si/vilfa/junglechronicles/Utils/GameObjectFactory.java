@@ -36,8 +36,7 @@ public class GameObjectFactory implements Loggable
             gameObject = objectType.getDeclaredConstructor(ctorParamType).newInstance(body);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
-            log(e.getMessage());
-            System.exit(-1);
+            error(e.getMessage(), e);
         }
 
         return gameObject;

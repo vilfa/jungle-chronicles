@@ -30,7 +30,5 @@ public interface Scene extends Updatable
 
     Array<Friend> getFriends();
 
-    Array<GuiSceneTile> getGuiTiles();
-
     void clear();
 }

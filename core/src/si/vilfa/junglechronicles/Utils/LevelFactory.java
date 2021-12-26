@@ -114,8 +114,10 @@ public class LevelFactory implements Loggable
 
         if (layer.getObjects().getCount() > 1)
         {
-            log("Error: Expected a single human player.");
+            error("expected a single human player.");
         }
+
+        log("process player layer:" + layer.getName());
 
         for (MapObject object : layer.getObjects())
         {
@@ -139,15 +141,17 @@ public class LevelFactory implements Loggable
             if (shape == null) continue;
 
             HumanPlayer player = (HumanPlayer) playerFactory.createPlayerWithShapeWithExtra(game,
-                    HumanPlayer.class,
-                    PhysicsEngine.toUnits(position),
-                    shape,
-                    65f,
-                    0f,
-                    0.01f);
+                                                                                            HumanPlayer.class,
+                                                                                            PhysicsEngine.toUnits(
+                                                                                                    position),
+                                                                                            shape,
+                                                                                            65f,
+                                                                                            0f,
+                                                                                            0.01f);
 
             playerFactory.setupPlayer(player,
-                                      object, game,
+                                      object,
+                                      game,
                                       getObjectProperties(object,
                                                           Level.HumanPlayerProperty.values()));
         }
@@ -157,6 +161,8 @@ public class LevelFactory implements Loggable
     {
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
         PlayerFactory playerFactory = PlayerFactory.getInstance();
+
+        log("process ai layer:" + layer.getName());
 
         for (MapObject object : layer.getObjects())
         {
@@ -220,11 +226,11 @@ public class LevelFactory implements Loggable
     {
         if (!(layer instanceof TiledMapTileLayer))
         {
-            log("Error: expected a tile layer as a terrain layer");
+            error("expected a tile layer as a terrain layer");
             return;
         }
 
-        log("Create terrain layer:" + layer.getName());
+        log("create terrain layer:" + layer.getName());
         TiledMapTileLayer l = (TiledMapTileLayer) layer;
         for (int i = 0; i < l.getHeight(); i++)
         {
@@ -246,6 +252,8 @@ public class LevelFactory implements Loggable
         ShapeFactory shapeFactory = ShapeFactory.getInstance();
         BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
+
+        log("create object layer:" + layer.getName());
 
         for (MapObject object : layer.getObjects())
         {
@@ -288,12 +296,13 @@ public class LevelFactory implements Loggable
     {
         if (layer.getTextureRegion() != null)
         {
+            log("create background layer:" + layer.getName());
             BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer);
             backgroundTile.setSourceLayer(sourceLayer);
             game.getCurrentLevel().addItem(backgroundTile);
         } else
         {
-            log("Error: empty background layer");
+            error("empty background layer");
         }
     }
 

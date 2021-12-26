@@ -18,7 +18,6 @@ public class SimpleScene extends GameComponent implements Scene
     protected final Array<SceneTile> tiles;
     protected final Array<Player> players;
     protected final Array<BackgroundSceneTile> backgrounds;
-    protected final Array<GuiSceneTile> guiTiles;
 
     public SimpleScene()
     {
@@ -27,7 +26,6 @@ public class SimpleScene extends GameComponent implements Scene
         tiles = new Array<>();
         players = new Array<>();
         backgrounds = new Array<>();
-        guiTiles = new Array<>();
     }
 
     @Override
@@ -51,10 +49,6 @@ public class SimpleScene extends GameComponent implements Scene
         {
             background.update();
         }
-        for (GuiSceneTile guiTile : guiTiles)
-        {
-            guiTile.update();
-        }
     }
 
     @Override
@@ -64,7 +58,6 @@ public class SimpleScene extends GameComponent implements Scene
         tiles.forEach(SceneTile::dispose);
         players.forEach(Player::dispose);
         backgrounds.forEach(BackgroundSceneTile::dispose);
-        guiTiles.forEach(GuiSceneTile::dispose);
     }
 
     @Override
@@ -82,12 +75,9 @@ public class SimpleScene extends GameComponent implements Scene
         } else if (item instanceof Player)
         {
             players.add((Player) item);
-        } else if (item instanceof GuiSceneTile)
-        {
-            guiTiles.add((GuiSceneTile) item);
         } else
         {
-            log("Trying to add unknown item:" + item);
+            log("trying to add unknown item:" + item);
         }
     }
 
@@ -106,12 +96,9 @@ public class SimpleScene extends GameComponent implements Scene
         } else if (item instanceof Player)
         {
             players.removeValue((Player) item, false);
-        } else if (item instanceof GuiSceneTile)
-        {
-            guiTiles.removeValue((GuiSceneTile) item, false);
         } else
         {
-            log("Trying to remove unknown item:" + item);
+            log("trying to remove unknown item:" + item);
         }
     }
 
@@ -159,12 +146,6 @@ public class SimpleScene extends GameComponent implements Scene
             if (player instanceof Friend) friends.add((Friend) player);
         }
         return friends;
-    }
-
-    @Override
-    public Array<GuiSceneTile> getGuiTiles()
-    {
-        return guiTiles;
     }
 
     @Override

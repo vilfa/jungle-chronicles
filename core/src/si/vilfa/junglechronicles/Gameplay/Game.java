@@ -27,9 +27,9 @@ public class Game extends GameComponent implements EventListener
 {
     private final PhysicsEngine physics;
     private final AudioEngine audio;
+    private final HashMap<GameProperty, Float> gameProperties;
     private HumanPlayer player;
     private Level currentLevel;
-    private final HashMap<GameProperty, Float> gameProperties;
 
     public Game()
     {
@@ -41,9 +41,7 @@ public class Game extends GameComponent implements EventListener
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
 
-        audio.newMusic("Audio/Tracks/theme.mp3",
-                       GameEvent.GAMEPLAY_START,
-                       GameEvent.GAMEPLAY_STOP);
+        audio.newMusic("Audio/Tracks/theme.mp3", GameEvent.GAMEPLAY_START, GameEvent.GAMEPLAY_STOP);
 
         audio.newSoundSequence(new SoundSequence(new String[]{
                                        "Audio/Sounds/Footsteps/footstep_grass_000.ogg",
@@ -54,11 +52,9 @@ public class Game extends GameComponent implements EventListener
                                PlayerEvent.PLAYER_RUN,
                                PlayerEvent.PLAYER_IDLE);
 
-        audio.newSound("Audio/Sounds/Coin/handleCoins.ogg",
-                       GameEvent.PLAYER_COLLECTIBLE_CONTACT);
+        audio.newSound("Audio/Sounds/Coin/handleCoins.ogg", GameEvent.PLAYER_COLLECTIBLE_CONTACT);
 
-        audio.newSound("Audio/Sounds/Coin/handleCoins2.ogg",
-                       GameEvent.PLAYER_COLLECTIBLE_CONTACT);
+        audio.newSound("Audio/Sounds/Coin/handleCoins2.ogg", GameEvent.PLAYER_COLLECTIBLE_CONTACT);
 
         audio.newSound("Audio/Sounds/Dead/jingles_NES00.ogg",
                        GameEvent.PLAYER_ENEMY_CONTACT,
@@ -70,22 +66,21 @@ public class Game extends GameComponent implements EventListener
 
     private void initializeGameProperties()
     {
-        gameProperties.put(GameProperty.LEVEL_DURATION, 0f);
-        gameProperties.put(GameProperty.PLAYER_HEALTH, 100f);
-        gameProperties.put(GameProperty.PLAYER_LIVES, 3f);
+        gameProperties.put(GameProperty.PLAYER_HEALTH, (float) HumanPlayer.MAX_HEALTH);
+        gameProperties.put(GameProperty.PLAYER_LIVES, (float) HumanPlayer.MAX_LIVES);
         gameProperties.put(GameProperty.PLAYER_SCORE, 0f);
+        gameProperties.put(GameProperty.LEVEL_DURATION, 0f);
     }
 
     @Override
     public void handleEvent(Event event)
     {
         if (event.getType().equals(GameEvent.PLAYER_COLLECTIBLE_CONTACT)
-            && event.getEventData().size > 0)
+            && event.getEventData().size == 1)
         {
             GameBlock object = (GameBlock) event.getEventData().first();
             gameProperties.compute(GameProperty.PLAYER_SCORE,
                                    (k, v) -> v += object.getCollectiblePoints());
-            log("Score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
 
             for (SceneTile tile : currentLevel.getTiles())
             {
@@ -95,9 +90,14 @@ public class Game extends GameComponent implements EventListener
                     currentLevel.removeItem(tile);
                 }
             }
+
+            log("score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
+
+            dispatchEvent(GameEvent.PLAYER_SCORE_CHANGE,
+                          gameProperties.get(GameProperty.PLAYER_SCORE));
         } else if ((event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT) || event.getType()
                                                                                   .equals(GameEvent.PLAYER_ENEMY_CONTACT))
-                   && event.getEventData().size > 0)
+                   && event.getEventData().size == 1)
         {
             float playerHealth = gameProperties.get(GameProperty.PLAYER_HEALTH);
             float playerLives = gameProperties.get(GameProperty.PLAYER_LIVES);
@@ -106,7 +106,7 @@ public class Game extends GameComponent implements EventListener
             {
                 GameBlock object = (GameBlock) event.getEventData().first();
 
-                if (playerHealth - object.getTrapPoints() <= 0)
+                if (playerHealth - object.getTrapPoints() <= 0f)
                 {
                     playerLives -= 1f;
                     playerHealth = 100f;
@@ -119,7 +119,10 @@ public class Game extends GameComponent implements EventListener
                 Enemy enemy = (Enemy) event.getEventData().first();
 
                 // TODO: 24/12/2021 Maybe add different health point decrements for enemies
-                if (playerHealth - 100f <= 0)
+                if (playerHealth - 100f <= 0f && playerLives == 0f)
+                {
+                    playerHealth = 0f;
+                } else if (playerHealth - 100f <= 0f)
                 {
                     playerLives -= 1f;
                     playerHealth = 100f;
@@ -129,15 +132,19 @@ public class Game extends GameComponent implements EventListener
                 }
             }
 
-            gameProperties.put(GameProperty.PLAYER_HEALTH, playerHealth);
             gameProperties.put(GameProperty.PLAYER_LIVES, playerLives);
+            gameProperties.put(GameProperty.PLAYER_HEALTH, playerHealth);
 
-            log("Health:" + playerHealth);
-            log("Lives:" + playerLives);
+            log("lives:" + playerLives);
+            log("health:" + playerHealth);
+
+            dispatchEvent(GameEvent.PLAYER_HEALTH_CHANGE,
+                          gameProperties.get(GameProperty.PLAYER_LIVES),
+                          gameProperties.get(GameProperty.PLAYER_HEALTH));
         }
 
-        if (gameProperties.get(GameProperty.PLAYER_LIVES) <= 0
-            && gameProperties.get(GameProperty.PLAYER_HEALTH) <= 0)
+        if (gameProperties.get(GameProperty.PLAYER_LIVES) == 0f
+            && gameProperties.get(GameProperty.PLAYER_HEALTH) == 0f)
         {
             log("YOU ARE DEAD!");
         }
@@ -173,10 +180,15 @@ public class Game extends GameComponent implements EventListener
         this.currentLevel = currentLevel;
     }
 
+    public float getCurrentLevelDuration()
+    {
+        return gameProperties.get(GameProperty.LEVEL_DURATION);
+    }
+
     public void reset()
     {
         initializeGameProperties();
-        log("Reset");
+        log("reset");
     }
 
     public void reset(Level level)

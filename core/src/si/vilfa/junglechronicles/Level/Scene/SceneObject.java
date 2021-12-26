@@ -19,6 +19,7 @@ public abstract class SceneObject extends GameComponent
     protected Vector2 center;
     protected float width;
     protected float height;
+    protected boolean isVisible;
 
     public SceneObject()
     {
@@ -27,6 +28,7 @@ public abstract class SceneObject extends GameComponent
         height = 0f;
         position = new Vector2();
         center = new Vector2();
+        isVisible = true;
     }
 
     public Game getGame()
@@ -77,5 +79,15 @@ public abstract class SceneObject extends GameComponent
     public void setSourceLayer(Level.MapLayer sourceLayer)
     {
         this.sourceLayer = sourceLayer;
+    }
+
+    public boolean isVisible()
+    {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible)
+    {
+        isVisible = visible;
     }
 }

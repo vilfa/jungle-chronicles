@@ -26,21 +26,16 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     protected final int screenWidthMax;
     protected final int screenHeightMax;
     protected final int screenRefreshRate;
+    protected final SpriteBatch spriteBatch;
     protected int screenWidth;
     protected int screenHeight;
     protected float screenAspectRatio;
-    protected float deltaTime;
-    protected float fpsTimer;
-
-    protected final SpriteBatch spriteBatch;
 
     public Renderer(Game game)
     {
         super(0, true, 0, true);
 
         GameRenderer.gameTime = new GameTime();
-        fpsTimer = 0f;
-        deltaTime = 0f;
 
         Graphics.DisplayMode displayMode
                 = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());

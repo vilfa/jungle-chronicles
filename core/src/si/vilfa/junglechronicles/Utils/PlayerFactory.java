@@ -185,7 +185,7 @@ public class PlayerFactory implements Loggable
             setupPlayerBox(player, object);
         } else
         {
-            log("Error: unknown player type:" + player);
+            error("unknown player type:" + player);
         }
     }
 
@@ -198,7 +198,7 @@ public class PlayerFactory implements Loggable
                                       PhysicsEngine.toUnits(rectangle.getHeight())));
         } else
         {
-            log("Error: wrong player object shape");
+            error("wrong player object shape");
         }
     }
 
@@ -285,7 +285,7 @@ public class PlayerFactory implements Loggable
             }
         } else
         {
-            log("Error: unknown AI player type:" + player);
+            error("unknown ai player type:" + player);
         }
     }
 }

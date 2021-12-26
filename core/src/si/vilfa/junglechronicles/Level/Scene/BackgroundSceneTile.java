@@ -49,11 +49,14 @@ public class BackgroundSceneTile extends SceneObject
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        //        sprite.setRegion(xOffset % sprite.getRegionWidth(),
-        //                         yOffset % sprite.getRegionHeight(),
-        //                         (int) viewport.getCamera().viewportWidth,
-        //                         (int) viewport.getCamera().viewportHeight);
-        sprite.draw(spriteBatch);
+        if (isVisible)
+        {
+            //        sprite.setRegion(xOffset % sprite.getRegionWidth(),
+            //                         yOffset % sprite.getRegionHeight(),
+            //                         (int) viewport.getCamera().viewportWidth,
+            //                         (int) viewport.getCamera().viewportHeight);
+            sprite.draw(spriteBatch);
+        }
     }
 
     public void translate(Vector2 translation)

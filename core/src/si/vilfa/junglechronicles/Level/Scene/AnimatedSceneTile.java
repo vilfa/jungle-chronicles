@@ -77,11 +77,14 @@ public class AnimatedSceneTile extends SceneObject
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        Sprite sprite = animation.getKeyFrame(animationState);
-        sprite.setSize(worldWidth, worldHeight);
-        sprite.setCenter(center.x, center.y);
-        sprite.flip(flipX, flipY);
-        sprite.draw(spriteBatch);
+        if (isVisible)
+        {
+            Sprite sprite = animation.getKeyFrame(animationState);
+            sprite.setSize(worldWidth, worldHeight);
+            sprite.setCenter(center.x, center.y);
+            sprite.flip(flipX, flipY);
+            sprite.draw(spriteBatch);
+        }
     }
 
     public float getFrameDuration()

@@ -15,8 +15,8 @@ import si.vilfa.junglechronicles.Physics.PhysicsActor;
  **/
 public abstract class GameObject extends GameComponent implements PhysicsActor
 {
-    protected Game game;
     protected final Body body;
+    protected Game game;
     protected boolean isActive;
 
     public GameObject(Body body)
