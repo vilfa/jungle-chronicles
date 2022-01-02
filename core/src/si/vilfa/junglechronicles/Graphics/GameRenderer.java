@@ -206,7 +206,7 @@ public class GameRenderer extends Renderer
     @Override
     public void update()
     {
-        if (!isUpdatable) return;
+        if (!isUpdatable || game.isPaused()) return;
 
         timer += gameTime.getDeltaTime();
         if (timer > 1f)

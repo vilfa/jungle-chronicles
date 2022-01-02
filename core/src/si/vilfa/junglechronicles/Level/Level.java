@@ -1,6 +1,8 @@
 package si.vilfa.junglechronicles.Level;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import si.vilfa.junglechronicles.Events.Event;
+import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
 
 /**
@@ -8,7 +10,7 @@ import si.vilfa.junglechronicles.Level.Scene.SimpleScene;
  * @date 11/11/2021
  * @package si.vilfa.junglechronicles.Level
  **/
-public class Level extends GameLevel
+public class Level extends GameLevel implements EventListener
 {
     private final TiledMap map;
 
@@ -31,6 +33,12 @@ public class Level extends GameLevel
     {
         scene.dispose();
         map.dispose();
+    }
+
+    @Override
+    public void handleEvent(Event event)
+    {
+        // TODO: 02/01/2022 Implement this
     }
 
     public enum MapLayer

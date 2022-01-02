@@ -6,6 +6,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Level.Objects.GameObject;
 
@@ -21,26 +22,27 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     public static float WORLD_WIDTH = 100f;
     public static float WORLD_HEIGHT = 50f;
     public static float WORLD_PPU = 128f;
+    private final Game game;
     private final World world;
     private final float timeStep;
     private final float halfTimeStep;
     private final int velocityIterations;
     private final int positionIterations;
     private final HashMap<Body, Boolean> bodiesStateChanged;
-    private float timer;
+    private float timer = 0f;
 
-    public PhysicsEngine()
+    public PhysicsEngine(Game game)
     {
-        this(1 / 60f);
+        this(game, 1 / 60f);
     }
 
-    public PhysicsEngine(float timeStep)
+    public PhysicsEngine(Game game, float timeStep)
     {
         super(0, true);
+        this.game = game;
         this.world = new World(new Vector2(0f, -9.81f), true);
         this.timeStep = timeStep;
         this.halfTimeStep = timeStep / 2f;
-        this.timer = 0f;
         this.velocityIterations = 6;
         this.positionIterations = 6;
         this.bodiesStateChanged = new HashMap<>();
@@ -83,7 +85,7 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     @Override
     public void update()
     {
-        if (!isUpdatable) return;
+        if (!isUpdatable || game.isPaused()) return;
         timer += Renderer.gameTime.getDeltaTime();
         if (timer > halfTimeStep)
         {

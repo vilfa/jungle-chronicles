@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
 import si.vilfa.junglechronicles.Events.GameEvent;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
-import si.vilfa.junglechronicles.Graphics.GuiRenderer;
+import si.vilfa.junglechronicles.Graphics.Gui.GuiRenderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
 import si.vilfa.junglechronicles.Input.Events.*;
 import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
@@ -38,13 +38,14 @@ public class Gameplay extends DrawableGameComponent
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
         inputMultiplexer.addProcessor(new GameplayInputProcessor(this));
+        inputMultiplexer.addProcessor(guiRenderer.getStage());
         Gdx.input.setInputProcessor(this.inputMultiplexer);
 
         registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio());
         registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
 
-        game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer);
-        game.registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer);
+        game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer.getHud());
+        game.registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer.getHud());
     }
 
     @Override
@@ -127,16 +128,16 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void handleKeyUp(KeyUpInputEvent event)
     {
-        float volume;
         switch (event.getKeyCode())
         {
             case Input.Keys.LEFT_BRACKET:
-                volume = game.getAudio().getMasterVolume();
-                game.getAudio().setMasterVolume(volume - 0.05f);
+                game.getAudio().setMasterVolume(game.getAudio().getMasterVolume() - 0.05f);
                 break;
             case Input.Keys.RIGHT_BRACKET:
-                volume = game.getAudio().getMasterVolume();
-                game.getAudio().setMasterVolume(volume + 0.05f);
+                game.getAudio().setMasterVolume(game.getAudio().getMasterVolume() + 0.05f);
+                break;
+            case Input.Keys.ESCAPE:
+                game.pause();
                 break;
         }
     }

@@ -22,52 +22,52 @@ public class GameplayInputProcessor extends TargetInputProcessor<Gameplay>
     public boolean keyDown(int keycode)
     {
         target.handleKeyDown(new KeyDownInputEvent(keycode));
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode)
     {
         target.handleKeyUp(new KeyUpInputEvent(keycode));
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyTyped(char character)
     {
-        return true;
+        return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
         target.handleTouchDown(new TouchDownInputEvent(screenX, screenY, pointer, button));
-        return true;
+        return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
         target.handleTouchUp(new TouchUpInputEvent(screenX, screenY, pointer, button));
-        return true;
+        return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        return true;
+        return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY)
     {
-        return true;
+        return false;
     }
 
     @Override
     public boolean scrolled(float amountX, float amountY)
     {
-        return true;
+        return false;
     }
 
     @Override

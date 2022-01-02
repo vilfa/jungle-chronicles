@@ -1,13 +1,12 @@
 package si.vilfa.junglechronicles.Gameplay;
 
+import com.badlogic.gdx.Gdx;
 import si.vilfa.junglechronicles.Audio.AudioEngine;
 import si.vilfa.junglechronicles.Audio.SoundSequence;
 import si.vilfa.junglechronicles.Component.GameComponent;
-import si.vilfa.junglechronicles.Events.Event;
-import si.vilfa.junglechronicles.Events.EventListener;
-import si.vilfa.junglechronicles.Events.GameEvent;
-import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Events.*;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
+import si.vilfa.junglechronicles.Graphics.Gui.GameScreen;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
@@ -17,6 +16,7 @@ import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * @author luka
@@ -25,18 +25,21 @@ import java.util.HashMap;
  **/
 public class Game extends GameComponent implements EventListener
 {
+    private final Stack<GameScreen> gameScreen;
     private final PhysicsEngine physics;
     private final AudioEngine audio;
     private final HashMap<GameProperty, Float> gameProperties;
     private HumanPlayer player;
     private Level currentLevel;
 
+    private boolean isPaused = false;
+
     public Game()
     {
         super(0, true);
 
-        physics = new PhysicsEngine();
-        audio = new AudioEngine();
+        physics = new PhysicsEngine(this);
+        audio = new AudioEngine(this);
 
         LevelFactory levelFactory = LevelFactory.getInstance();
         currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
@@ -62,6 +65,9 @@ public class Game extends GameComponent implements EventListener
 
         gameProperties = new HashMap<>();
         initializeGameProperties();
+
+        gameScreen = new Stack<>();
+        gameScreen.push(GameScreen.MAIN_MENU);
     }
 
     private void initializeGameProperties()
@@ -72,9 +78,12 @@ public class Game extends GameComponent implements EventListener
         gameProperties.put(GameProperty.LEVEL_DURATION, 0f);
     }
 
-    @Override
-    public void handleEvent(Event event)
+    private void handleGameEvent(Event event)
     {
+        if (!(event.getType() instanceof GameEvent)) return;
+
+        log("game event:" + event);
+
         if (event.getType().equals(GameEvent.PLAYER_COLLECTIBLE_CONTACT)
             && event.getEventData().size == 1)
         {
@@ -150,6 +159,65 @@ public class Game extends GameComponent implements EventListener
         }
     }
 
+    private void handleMenuEvent(Event event)
+    {
+        if (!(event.getType() instanceof MenuEvent)) return;
+
+        log("menu event:" + event);
+
+        if (event.getType().equals(MenuEvent.RESUME_BUTTON_CLICK))
+        {
+            resume();
+        } else if (event.getType().equals(MenuEvent.OPTIONS_BUTTON_CLICK))
+        {
+
+        } else if (event.getType().equals(MenuEvent.EXIT_BUTTON_CLICK))
+        {
+            exit();
+        }
+    }
+
+    @Override
+    public void handleEvent(Event event)
+    {
+        handleGameEvent(event);
+        handleMenuEvent(event);
+    }
+
+    public GameScreen getGameScreen()
+    {
+        return gameScreen.peek();
+    }
+
+    protected void pause()
+    {
+        log("pause");
+        isPaused = true;
+    }
+
+    protected void resume()
+    {
+        log("resume");
+        isPaused = false;
+    }
+
+    protected void exit()
+    {
+        log("exit");
+        Gdx.app.exit();
+    }
+
+    public boolean isPaused()
+    {
+        return isPaused;
+    }
+
+    public void reset()
+    {
+        log("reset");
+        initializeGameProperties();
+    }
+
     public PhysicsEngine getPhysics()
     {
         return physics;
@@ -183,18 +251,6 @@ public class Game extends GameComponent implements EventListener
     public float getCurrentLevelDuration()
     {
         return gameProperties.get(GameProperty.LEVEL_DURATION);
-    }
-
-    public void reset()
-    {
-        initializeGameProperties();
-        log("reset");
-    }
-
-    public void reset(Level level)
-    {
-        reset();
-        currentLevel = level;
     }
 
     public HashMap<GameProperty, Float> getGameProperties()

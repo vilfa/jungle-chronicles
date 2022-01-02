@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.*;
+import si.vilfa.junglechronicles.Gameplay.Game;
 
 import java.util.HashMap;
 
@@ -16,14 +17,17 @@ import java.util.HashMap;
  **/
 public class AudioEngine extends GameComponent implements EventListener, Music.OnCompletionListener
 {
+    private final Game game;
+
     private final HashMap<EventType, Array<Sound>> sounds;
     private final HashMap<EventType, Array<Music>> music;
     private final HashMap<EventType, Array<SoundSequence>> sequences;
     private float masterVolume = 1f;
 
-    public AudioEngine()
+    public AudioEngine(Game game)
     {
         super(0, true);
+        this.game = game;
         sounds = new HashMap<>();
         music = new HashMap<>();
         sequences = new HashMap<>();
@@ -32,6 +36,8 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     @Override
     public void update()
     {
+        if (!isUpdatable || game.isPaused()) return;
+
         for (Array<SoundSequence> sequences : sequences.values())
         {
             for (SoundSequence sequence : sequences)
@@ -52,6 +58,8 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     @Override
     public void handleEvent(Event event)
     {
+        if (game.isPaused()) return;
+
         if (event.getType() instanceof GameEvent)
         {
             switch ((GameEvent) event.getType())

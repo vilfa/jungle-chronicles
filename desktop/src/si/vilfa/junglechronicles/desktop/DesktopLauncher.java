@@ -18,19 +18,8 @@ public class DesktopLauncher
     {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("The Jungle Chronicles");
-        config.setWindowedMode(DesktopLauncher.getDesktopDefaultWindowSizeX(),
-                               DesktopLauncher.getDesktopDefaultWindowSizeY());
+        config.setWindowedMode(DESKTOP_DEFAULT_WINDOW_SIZE_X, DESKTOP_DEFAULT_WINDOW_SIZE_Y);
         config.setInitialVisible(true);
         new Lwjgl3Application(new JungleChronicles(), config);
-    }
-
-    public static int getDesktopDefaultWindowSizeX()
-    {
-        return DESKTOP_DEFAULT_WINDOW_SIZE_X;
-    }
-
-    public static int getDesktopDefaultWindowSizeY()
-    {
-        return DESKTOP_DEFAULT_WINDOW_SIZE_Y;
     }
 }
