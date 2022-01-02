@@ -27,7 +27,7 @@ public class PauseMenuGuiElement extends GuiElement
 
         actor = new Table();
 
-        resumeButton = new TextButton("Play", skin);
+        resumeButton = new TextButton("Resume", skin);
         optionsButton = new TextButton("Options", skin);
         exitButton = new TextButton("Exit", skin);
 

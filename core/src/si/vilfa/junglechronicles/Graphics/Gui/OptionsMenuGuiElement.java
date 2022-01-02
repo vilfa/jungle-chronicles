@@ -14,26 +14,26 @@ import si.vilfa.junglechronicles.Gameplay.Game;
  * @date 02/01/2022
  * @package si.vilfa.junglechronicles.Graphics.Gui
  **/
-public class MainMenuGuiElement extends GuiElement
+public class OptionsMenuGuiElement extends GuiElement
 {
     private final Table actor;
-    private final TextButton playButton;
+    private final TextButton resumeButton;
     private final TextButton optionsButton;
     private final TextButton exitButton;
 
-    public MainMenuGuiElement(Game game)
+    public OptionsMenuGuiElement(Game game)
     {
         super(game);
 
         actor = new Table();
 
-        playButton = new TextButton("Play", skin);
+        resumeButton = new TextButton("Resume", skin);
         optionsButton = new TextButton("Options", skin);
         exitButton = new TextButton("Exit", skin);
 
         initializeElement();
 
-        this.registerEventListener(MenuEvent.PLAY_BUTTON_CLICK, game)
+        this.registerEventListener(MenuEvent.RESUME_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.OPTIONS_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.EXIT_BUTTON_CLICK, game);
     }
@@ -51,14 +51,14 @@ public class MainMenuGuiElement extends GuiElement
         actor.defaults().expandX().pad(12f);
         actor.setFillParent(true);
 
-        playButton.addListener(new ClickListener()
+        resumeButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                dispatchEvent(MenuEvent.PLAY_BUTTON_CLICK);
-                log("play button clicked");
+                log("resume button clicked");
+                dispatchEvent(MenuEvent.RESUME_BUTTON_CLICK);
             }
         });
         optionsButton.addListener(new ClickListener()
@@ -67,8 +67,8 @@ public class MainMenuGuiElement extends GuiElement
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                dispatchEvent(MenuEvent.OPTIONS_BUTTON_CLICK);
                 log("options button clicked");
+                dispatchEvent(MenuEvent.OPTIONS_BUTTON_CLICK);
             }
         });
         exitButton.addListener(new ClickListener()
@@ -77,12 +77,12 @@ public class MainMenuGuiElement extends GuiElement
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                dispatchEvent(MenuEvent.EXIT_BUTTON_CLICK);
                 log("exit button clicked");
+                dispatchEvent(MenuEvent.EXIT_BUTTON_CLICK);
             }
         });
 
-        actor.add(playButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(resumeButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(optionsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(exitButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
     }

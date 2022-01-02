@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import si.vilfa.junglechronicles.Events.Event;
+import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.PlayerSceneTile;
@@ -23,7 +25,7 @@ import java.util.TreeMap;
  * @date 03/11/2021
  * @package si.vilfa.junglechronicles.Graphics
  **/
-public class GameRenderer extends Renderer
+public class GameRenderer extends Renderer implements EventListener
 {
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
@@ -196,6 +198,9 @@ public class GameRenderer extends Renderer
 
         spriteBatch.end();
     }
+
+    @Override
+    public void handleEvent(Event event) { }
 
     @Override
     public void dispose()

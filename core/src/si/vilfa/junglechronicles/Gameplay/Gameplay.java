@@ -1,18 +1,19 @@
 package si.vilfa.junglechronicles.Gameplay;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Events.Event;
+import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameEvent;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
+import si.vilfa.junglechronicles.Graphics.Gui.GameScreen;
 import si.vilfa.junglechronicles.Graphics.Gui.GuiRenderer;
 import si.vilfa.junglechronicles.Graphics.WindowAdapter;
-import si.vilfa.junglechronicles.Input.Events.*;
-import si.vilfa.junglechronicles.Input.Processors.GameplayInputProcessor;
 import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
+import si.vilfa.junglechronicles.Input.Processors.UniversalInputProcessor;
 
 /**
  * @author luka
@@ -20,7 +21,7 @@ import si.vilfa.junglechronicles.Input.Processors.PlayerInputProcessor;
  * @package si.vilfa.junglechronicles.Gameplay
  **/
 public class Gameplay extends DrawableGameComponent
-        implements Disposable, WindowAdapter, InputEventListener, GameplayAdapter
+        implements Disposable, WindowAdapter, GameplayAdapter, EventListener
 {
     private final Game game;
     private final GameRenderer gameRenderer;
@@ -36,16 +37,33 @@ public class Gameplay extends DrawableGameComponent
         guiRenderer = new GuiRenderer(game);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
-        inputMultiplexer.addProcessor(new GameplayInputProcessor(this));
+        inputMultiplexer.addProcessor(new UniversalInputProcessor<>(game.getAudio()));
+        inputMultiplexer.addProcessor(new UniversalInputProcessor<>(game));
         inputMultiplexer.addProcessor(guiRenderer.getStage());
+        inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
         Gdx.input.setInputProcessor(this.inputMultiplexer);
 
-        registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio());
-        registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
+        this.registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio())
+            .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
 
-        game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer.getHud());
-        game.registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer.getHud());
+        game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer.getHud())
+            .registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer.getHud())
+            .registerEventListener(GameEvent.GAMEPLAY_RESET, guiRenderer.getHud())
+            .registerEventListener(GameEvent.GAME_SCREEN_CHANGE, gameRenderer)
+            .registerEventListener(GameEvent.GAME_SCREEN_CHANGE, guiRenderer)
+            .registerEventListener(GameEvent.GAMEPLAY_RESET, this);
+
+        game.pushGameScreen(GameScreen.MAIN_MENU);
+    }
+
+    @Override
+    public void handleEvent(Event event)
+    {
+        if (event.getType() == GameEvent.GAMEPLAY_RESET)
+        {
+            inputMultiplexer.removeProcessor(3);
+            inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
+        }
     }
 
     @Override
@@ -79,21 +97,18 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void create()
     {
-        log("create");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
     @Override
     public void pause()
     {
-        log("pause");
         dispatchEvent(GameEvent.GAMEPLAY_STOP);
     }
 
     @Override
     public void resume()
     {
-        log("resume");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
@@ -121,42 +136,4 @@ public class Gameplay extends DrawableGameComponent
     {
         return gameRenderer.getScreenRefreshRate();
     }
-
-    @Override
-    public void handleKeyDown(KeyDownInputEvent event) { }
-
-    @Override
-    public void handleKeyUp(KeyUpInputEvent event)
-    {
-        switch (event.getKeyCode())
-        {
-            case Input.Keys.LEFT_BRACKET:
-                game.getAudio().setMasterVolume(game.getAudio().getMasterVolume() - 0.05f);
-                break;
-            case Input.Keys.RIGHT_BRACKET:
-                game.getAudio().setMasterVolume(game.getAudio().getMasterVolume() + 0.05f);
-                break;
-            case Input.Keys.ESCAPE:
-                game.pause();
-                break;
-        }
-    }
-
-    @Override
-    public void handleKeyTyped(KeyTypedInputEvent event) { }
-
-    @Override
-    public void handleTouchDown(TouchDownInputEvent event) { }
-
-    @Override
-    public void handleTouchUp(TouchUpInputEvent event) { }
-
-    @Override
-    public void handleTouchDragged(TouchDraggedInputEvent event) { }
-
-    @Override
-    public void handleMouseMoved(MouseMovedInputEvent event) { }
-
-    @Override
-    public void handleScrolled(ScrolledInputEvent event) { }
 }

@@ -49,30 +49,6 @@ public abstract class Player extends GameComponent
     public abstract void dispose();
 
     @Override
-    public void handleKeyDown(KeyDownInputEvent event) { }
-
-    @Override
-    public void handleKeyUp(KeyUpInputEvent event) { }
-
-    @Override
-    public void handleKeyTyped(KeyTypedInputEvent event) { }
-
-    @Override
-    public void handleTouchDown(TouchDownInputEvent event) { }
-
-    @Override
-    public void handleTouchUp(TouchUpInputEvent event) { }
-
-    @Override
-    public void handleTouchDragged(TouchDraggedInputEvent event) { }
-
-    @Override
-    public void handleMouseMoved(MouseMovedInputEvent event) { }
-
-    @Override
-    public void handleScrolled(ScrolledInputEvent event) { }
-
-    @Override
     public void handleBeginContact(Object contact) { }
 
     @Override

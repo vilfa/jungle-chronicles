@@ -1,19 +1,15 @@
 package si.vilfa.junglechronicles.Input.Processors;
 
-import si.vilfa.junglechronicles.Gameplay.Gameplay;
-import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
-import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
-import si.vilfa.junglechronicles.Input.Events.TouchDownInputEvent;
-import si.vilfa.junglechronicles.Input.Events.TouchUpInputEvent;
+import si.vilfa.junglechronicles.Input.Events.*;
 
 /**
  * @author luka
  * @date 10/11/2021
  * @package si.vilfa.junglechronicles.Input.Processors
  **/
-public class GameplayInputProcessor extends TargetInputProcessor<Gameplay>
+public class UniversalInputProcessor<T extends InputEventListener> extends TargetInputProcessor<T>
 {
-    public GameplayInputProcessor(Gameplay target)
+    public UniversalInputProcessor(T target)
     {
         super(target);
     }
@@ -35,6 +31,7 @@ public class GameplayInputProcessor extends TargetInputProcessor<Gameplay>
     @Override
     public boolean keyTyped(char character)
     {
+        target.handleKeyTyped(new KeyTypedInputEvent(character));
         return false;
     }
 
@@ -55,23 +52,26 @@ public class GameplayInputProcessor extends TargetInputProcessor<Gameplay>
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
+        target.handleTouchDragged(new TouchDraggedInputEvent(screenX, screenY, pointer));
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY)
     {
+        target.handleMouseMoved(new MouseMovedInputEvent(screenX, screenY));
         return false;
     }
 
     @Override
     public boolean scrolled(float amountX, float amountY)
     {
+        target.handleScrolled(new ScrolledInputEvent(amountX, amountY));
         return false;
     }
 
     @Override
-    public Gameplay getTarget()
+    public T getTarget()
     {
         return target;
     }

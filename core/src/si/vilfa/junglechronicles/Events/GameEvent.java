@@ -13,5 +13,7 @@ public enum GameEvent implements EventType
     PLAYER_HEALTH_CHANGE,
     PLAYER_SCORE_CHANGE,
     GAMEPLAY_START,
-    GAMEPLAY_STOP
+    GAMEPLAY_STOP,
+    GAMEPLAY_RESET,
+    GAME_SCREEN_CHANGE,
 }

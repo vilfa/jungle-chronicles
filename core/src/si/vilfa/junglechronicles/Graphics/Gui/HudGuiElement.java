@@ -126,6 +126,11 @@ public class HudGuiElement extends GuiElement implements EventListener
             {
                 updateScoreIndicator((float) event.getEventData().first());
             }
+        } else if (event.getType().equals(GameEvent.GAMEPLAY_RESET))
+        {
+            updateScoreIndicator(0f);
+            updateHealthIndicator((float) HumanPlayer.MAX_LIVES + 1f);
+            updateTimeIndicator(0f);
         }
     }
 

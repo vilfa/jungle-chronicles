@@ -4,8 +4,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import si.vilfa.junglechronicles.Events.Event;
-import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameEvent;
 import si.vilfa.junglechronicles.Events.PlayerEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
@@ -19,7 +17,7 @@ import si.vilfa.junglechronicles.Player.Player;
  * @date 07/11/2021
  * @package si.vilfa.junglechronicles.Player.Human
  **/
-public class HumanPlayer extends Player implements EventListener
+public class HumanPlayer extends Player
 {
     public static int MAX_LIVES = 2;
     public static int MAX_HEALTH = 100;
@@ -45,7 +43,7 @@ public class HumanPlayer extends Player implements EventListener
     @Override
     public void handleKeyDown(KeyDownInputEvent event)
     {
-        if (!isUpdatable) return;
+        if (!isUpdatable || game.isPaused()) return;
 
         switch (event.getKeyCode())
         {
@@ -126,7 +124,7 @@ public class HumanPlayer extends Player implements EventListener
     @Override
     public void handleKeyUp(KeyUpInputEvent event)
     {
-        if (!isUpdatable) return;
+        if (!isUpdatable || game.isPaused()) return;
 
         switch (event.getKeyCode())
         {
@@ -201,12 +199,6 @@ public class HumanPlayer extends Player implements EventListener
                 dispatchEvent(PlayerEvent.PLAYER_IDLE);
                 break;
         }
-    }
-
-    @Override
-    public void handleEvent(Event event)
-    {
-        // TODO: 02/01/2022 Implement this
     }
 
     public enum State

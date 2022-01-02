@@ -12,12 +12,12 @@ import si.vilfa.junglechronicles.Gameplay.Game;
  **/
 public class BodyFactory implements Loggable
 {
+    private final Game game;
     private static BodyFactory INSTANCE;
-    private final World world;
 
     private BodyFactory(Game game)
     {
-        this.world = game.getPhysics().getWorld();
+        this.game = game;
     }
 
     public static BodyFactory getInstance(Game game)
@@ -40,7 +40,7 @@ public class BodyFactory implements Loggable
         bodyDef.angle = 0f;
         bodyDef.position.set(position);
 
-        Body body = world.createBody(bodyDef);
+        Body body = game.getPhysics().getWorld().createBody(bodyDef);
         body.createFixture(shape, 0f);
         return body;
     }
@@ -61,7 +61,7 @@ public class BodyFactory implements Loggable
         bodyDef.angle = 0f;
         bodyDef.position.set(position);
 
-        Body body = world.createBody(bodyDef);
+        Body body = game.getPhysics().getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;

@@ -1,17 +1,19 @@
 package si.vilfa.junglechronicles.Gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import si.vilfa.junglechronicles.Audio.AudioEngine;
 import si.vilfa.junglechronicles.Audio.SoundSequence;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.*;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Graphics.Gui.GameScreen;
+import si.vilfa.junglechronicles.Input.Events.InputEventListener;
+import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.Level;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Physics.PhysicsEngine;
-import si.vilfa.junglechronicles.Player.AI.Enemy;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Utils.LevelFactory;
 
@@ -23,16 +25,16 @@ import java.util.Stack;
  * @date 28/11/2021
  * @package si.vilfa.junglechronicles.Gameplay
  **/
-public class Game extends GameComponent implements EventListener
+public class Game extends GameComponent implements EventListener, InputEventListener
 {
-    private final Stack<GameScreen> gameScreen;
-    private final PhysicsEngine physics;
-    private final AudioEngine audio;
+    private final Stack<GameScreen> gameScreens;
     private final HashMap<GameProperty, Float> gameProperties;
+    private PhysicsEngine physics;
+    private AudioEngine audio;
     private HumanPlayer player;
     private Level currentLevel;
 
-    private boolean isPaused = false;
+    private boolean isPaused = true;
 
     public Game()
     {
@@ -41,8 +43,7 @@ public class Game extends GameComponent implements EventListener
         physics = new PhysicsEngine(this);
         audio = new AudioEngine(this);
 
-        LevelFactory levelFactory = LevelFactory.getInstance();
-        currentLevel = levelFactory.createLevelFromTmx(this, "Levels/Level1.tmx");
+        currentLevel = LevelFactory.getInstance().createLevelFromTmx(this, "Levels/Level1.tmx");
 
         audio.newMusic("Audio/Tracks/theme.mp3", GameEvent.GAMEPLAY_START, GameEvent.GAMEPLAY_STOP);
 
@@ -56,9 +57,7 @@ public class Game extends GameComponent implements EventListener
                                PlayerEvent.PLAYER_IDLE);
 
         audio.newSound("Audio/Sounds/Coin/handleCoins.ogg", GameEvent.PLAYER_COLLECTIBLE_CONTACT);
-
         audio.newSound("Audio/Sounds/Coin/handleCoins2.ogg", GameEvent.PLAYER_COLLECTIBLE_CONTACT);
-
         audio.newSound("Audio/Sounds/Dead/jingles_NES00.ogg",
                        GameEvent.PLAYER_ENEMY_CONTACT,
                        GameEvent.PLAYER_TRAP_CONTACT);
@@ -66,8 +65,7 @@ public class Game extends GameComponent implements EventListener
         gameProperties = new HashMap<>();
         initializeGameProperties();
 
-        gameScreen = new Stack<>();
-        gameScreen.push(GameScreen.MAIN_MENU);
+        gameScreens = new Stack<>();
     }
 
     private void initializeGameProperties()
@@ -125,7 +123,7 @@ public class Game extends GameComponent implements EventListener
                 }
             } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
             {
-                Enemy enemy = (Enemy) event.getEventData().first();
+//                Enemy enemy = (Enemy) event.getEventData().first();
 
                 // TODO: 24/12/2021 Maybe add different health point decrements for enemies
                 if (playerHealth - 100f <= 0f && playerLives == 0f)
@@ -165,15 +163,28 @@ public class Game extends GameComponent implements EventListener
 
         log("menu event:" + event);
 
-        if (event.getType().equals(MenuEvent.RESUME_BUTTON_CLICK))
+        if (event.getType().equals(MenuEvent.PLAY_BUTTON_CLICK))
         {
+            pushGameScreen(GameScreen.IN_GAME);
+            resume();
+        } else if (event.getType().equals(MenuEvent.RESUME_BUTTON_CLICK))
+        {
+            popGameScreen(GameScreen.PAUSE_MENU);
             resume();
         } else if (event.getType().equals(MenuEvent.OPTIONS_BUTTON_CLICK))
         {
-
+            pushGameScreen(GameScreen.OPTIONS_MENU);
         } else if (event.getType().equals(MenuEvent.EXIT_BUTTON_CLICK))
         {
-            exit();
+            if (gameScreens.peek() == GameScreen.MAIN_MENU)
+            {
+                exit();
+            } else if (gameScreens.peek() == GameScreen.PAUSE_MENU)
+            {
+                popGameScreen(GameScreen.PAUSE_MENU);
+                popGameScreen(GameScreen.IN_GAME);
+                reset();
+            }
         }
     }
 
@@ -184,24 +195,20 @@ public class Game extends GameComponent implements EventListener
         handleMenuEvent(event);
     }
 
-    public GameScreen getGameScreen()
-    {
-        return gameScreen.peek();
-    }
-
-    protected void pause()
+    private void pause()
     {
         log("pause");
         isPaused = true;
+        pushGameScreen(GameScreen.PAUSE_MENU);
     }
 
-    protected void resume()
+    private void resume()
     {
         log("resume");
         isPaused = false;
     }
 
-    protected void exit()
+    private void exit()
     {
         log("exit");
         Gdx.app.exit();
@@ -212,10 +219,20 @@ public class Game extends GameComponent implements EventListener
         return isPaused;
     }
 
-    public void reset()
+    private void reset()
     {
+        isPaused = true;
         log("reset");
+
+        currentLevel.dispose();
+        player.dispose();
+        physics.dispose();
+
+        physics = new PhysicsEngine(this);
+        currentLevel = LevelFactory.getInstance().createLevelFromTmx(this, "Levels/Level1.tmx");
+
         initializeGameProperties();
+        dispatchEvent(GameEvent.GAMEPLAY_RESET);
     }
 
     public PhysicsEngine getPhysics()
@@ -261,7 +278,7 @@ public class Game extends GameComponent implements EventListener
     @Override
     public void update()
     {
-        if (!isUpdatable) return;
+        if (!isUpdatable || isPaused) return;
         gameProperties.compute(GameProperty.LEVEL_DURATION,
                                (k, v) -> v += GameRenderer.gameTime.getDeltaTime());
         physics.update();
@@ -277,6 +294,35 @@ public class Game extends GameComponent implements EventListener
         audio.dispose();
         player.dispose();
         currentLevel.dispose();
+    }
+
+    @Override
+    public void handleKeyUp(KeyUpInputEvent event)
+    {
+        if (event.getKeyCode() == Input.Keys.ESCAPE)
+        {
+            pause();
+        }
+    }
+
+    public void pushGameScreen(GameScreen gameScreen)
+    {
+        if (gameScreens.isEmpty() || gameScreens.peek() != gameScreen)
+        {
+            gameScreens.push(gameScreen);
+            dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, gameScreens.peek());
+        }
+        log(gameScreens.toString());
+    }
+
+    public void popGameScreen(GameScreen gameScreen)
+    {
+        if (gameScreens.peek() == gameScreen)
+        {
+            gameScreens.pop();
+            dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, gameScreens.peek());
+        }
+        log(gameScreens.toString());
     }
 
     public enum GameProperty

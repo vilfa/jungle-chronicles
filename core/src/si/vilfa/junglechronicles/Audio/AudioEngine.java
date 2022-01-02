@@ -1,12 +1,15 @@
 package si.vilfa.junglechronicles.Audio;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.*;
 import si.vilfa.junglechronicles.Gameplay.Game;
+import si.vilfa.junglechronicles.Input.Events.InputEventListener;
+import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 
 import java.util.HashMap;
 
@@ -15,7 +18,8 @@ import java.util.HashMap;
  * @date 15/12/2021
  * @package si.vilfa.junglechronicles.Audio
  **/
-public class AudioEngine extends GameComponent implements EventListener, Music.OnCompletionListener
+public class AudioEngine extends GameComponent implements EventListener, Music.OnCompletionListener,
+                                                          InputEventListener
 {
     private final Game game;
 
@@ -182,4 +186,18 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
 
     @Override
     public void onCompletion(Music music) { }
+
+    @Override
+    public void handleKeyUp(KeyUpInputEvent event)
+    {
+        switch (event.getKeyCode())
+        {
+            case Input.Keys.LEFT_BRACKET:
+                setMasterVolume(getMasterVolume() - 0.05f);
+                break;
+            case Input.Keys.RIGHT_BRACKET:
+                setMasterVolume(getMasterVolume() + 0.05f);
+                break;
+        }
+    }
 }
