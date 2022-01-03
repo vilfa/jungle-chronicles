@@ -29,8 +29,8 @@ public class Game extends GameComponent implements EventListener, InputEventList
 {
     private final Stack<GameScreen> gameScreens;
     private final HashMap<GameProperty, Float> gameProperties;
+    private final AudioEngine audio;
     private PhysicsEngine physics;
-    private AudioEngine audio;
     private HumanPlayer player;
     private Level currentLevel;
 
@@ -123,7 +123,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 }
             } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
             {
-//                Enemy enemy = (Enemy) event.getEventData().first();
+                //                Enemy enemy = (Enemy) event.getEventData().first();
 
                 // TODO: 24/12/2021 Maybe add different health point decrements for enemies
                 if (playerHealth - 100f <= 0f && playerLives == 0f)

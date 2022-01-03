@@ -18,8 +18,8 @@ import java.util.HashMap;
  * @date 15/12/2021
  * @package si.vilfa.junglechronicles.Audio
  **/
-public class AudioEngine extends GameComponent implements EventListener, Music.OnCompletionListener,
-                                                          InputEventListener
+public class AudioEngine extends GameComponent
+        implements EventListener, Music.OnCompletionListener, InputEventListener
 {
     private final Game game;
 

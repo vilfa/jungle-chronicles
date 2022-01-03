@@ -200,9 +200,6 @@ public class GameRenderer extends Renderer implements EventListener
     }
 
     @Override
-    public void handleEvent(Event event) { }
-
-    @Override
     public void dispose()
     {
         super.dispose();
@@ -225,4 +222,7 @@ public class GameRenderer extends Renderer implements EventListener
 
         followPlayer(game.getPlayer());
     }
+
+    @Override
+    public void handleEvent(Event event) { }
 }

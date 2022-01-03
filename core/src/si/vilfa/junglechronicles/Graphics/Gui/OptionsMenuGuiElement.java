@@ -25,6 +25,8 @@ public class OptionsMenuGuiElement extends GuiElement
     {
         super(game);
 
+        // TODO: 02/01/2022 Implement options menu 
+
         actor = new Table();
 
         resumeButton = new TextButton("Resume", skin);

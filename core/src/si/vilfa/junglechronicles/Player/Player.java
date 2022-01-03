@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Gameplay.Game;
-import si.vilfa.junglechronicles.Input.Events.*;
+import si.vilfa.junglechronicles.Input.Events.InputEventListener;
 import si.vilfa.junglechronicles.Physics.CollisionEventListener;
 import si.vilfa.junglechronicles.Physics.PhysicsActor;
 

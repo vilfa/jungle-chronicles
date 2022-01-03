@@ -41,6 +41,26 @@ public class HumanPlayer extends Player
     public void dispose() { }
 
     @Override
+    public void handleBeginContact(Object contact)
+    {
+        if (contact instanceof GameBlock)
+        {
+            GameBlock gameBlock = (GameBlock) contact;
+            if (gameBlock.isCollectible())
+            {
+                ((GameBlock) contact).setActive(false);
+                dispatchEvent(GameEvent.PLAYER_COLLECTIBLE_CONTACT, contact);
+            } else if (gameBlock.isTrap())
+            {
+                dispatchEvent(GameEvent.PLAYER_TRAP_CONTACT, contact);
+            }
+        } else if (contact instanceof Enemy)
+        {
+            dispatchEvent(GameEvent.PLAYER_ENEMY_CONTACT, contact);
+        }
+    }
+
+    @Override
     public void handleKeyDown(KeyDownInputEvent event)
     {
         if (!isUpdatable || game.isPaused()) return;
@@ -157,26 +177,6 @@ public class HumanPlayer extends Player
                 //                setRotation(0f);
                 isPressedDown = false;
                 break;
-        }
-    }
-
-    @Override
-    public void handleBeginContact(Object contact)
-    {
-        if (contact instanceof GameBlock)
-        {
-            GameBlock gameBlock = (GameBlock) contact;
-            if (gameBlock.isCollectible())
-            {
-                ((GameBlock) contact).setActive(false);
-                dispatchEvent(GameEvent.PLAYER_COLLECTIBLE_CONTACT, contact);
-            } else if (gameBlock.isTrap())
-            {
-                dispatchEvent(GameEvent.PLAYER_TRAP_CONTACT, contact);
-            }
-        } else if (contact instanceof Enemy)
-        {
-            dispatchEvent(GameEvent.PLAYER_ENEMY_CONTACT, contact);
         }
     }
 
