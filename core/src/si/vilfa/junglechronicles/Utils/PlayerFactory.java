@@ -76,6 +76,7 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_LEVEL_END_CONTACT, game)
                   .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
                   .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }
@@ -117,6 +118,7 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_LEVEL_END_CONTACT, game)
                   .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
                   .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }
@@ -163,6 +165,7 @@ public class PlayerFactory implements Loggable
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game)
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getPhysics())
                   .registerEventListener(GameEvent.PLAYER_COLLECTIBLE_CONTACT, game.getAudio())
+                  .registerEventListener(GameEvent.PLAYER_LEVEL_END_CONTACT, game)
                   .registerEventListener(PlayerEvent.PLAYER_IDLE, game.getAudio())
                   .registerEventListener(PlayerEvent.PLAYER_RUN, game.getAudio());
         }

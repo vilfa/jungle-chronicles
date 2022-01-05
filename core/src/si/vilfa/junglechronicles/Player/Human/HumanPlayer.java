@@ -53,6 +53,9 @@ public class HumanPlayer extends Player
             } else if (gameBlock.isTrap())
             {
                 dispatchEvent(GameEvent.PLAYER_TRAP_CONTACT, contact);
+            } else if (gameBlock.isLevelEnd())
+            {
+                dispatchEvent(GameEvent.PLAYER_LEVEL_END_CONTACT, contact);
             }
         } else if (contact instanceof Enemy)
         {

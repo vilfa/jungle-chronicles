@@ -60,7 +60,8 @@ public class Level extends GameLevel
         COLLECTIBLE("isCollectible"),
         COLLECTIBLE_POINTS("collectiblePoints"),
         TRAP("isTrap"),
-        TRAP_HEALTH_POINTS("trapHealthPoints");
+        TRAP_HEALTH_POINTS("trapHealthPoints"),
+        LEVEL_END("isLevelEnd");
 
         final String propertyName;
 

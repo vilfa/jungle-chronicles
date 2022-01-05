@@ -42,6 +42,12 @@ public class GameBlock extends GameObject implements CollisionEventListener
         return properties.get(Level.ObjectProperty.TRAP) != null;
     }
 
+    public boolean isLevelEnd()
+    {
+        if (properties == null || properties.isEmpty()) return false;
+        return properties.get(Level.ObjectProperty.LEVEL_END) != null;
+    }
+
     public int getCollectiblePoints()
     {
         if (properties == null || properties.isEmpty()) return -1;

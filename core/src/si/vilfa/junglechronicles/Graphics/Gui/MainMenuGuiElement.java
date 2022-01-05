@@ -19,6 +19,7 @@ public class MainMenuGuiElement extends GuiElement
     private final Table actor;
     private final TextButton playButton;
     private final TextButton optionsButton;
+    private final TextButton leaderboardButton;
     private final TextButton exitButton;
 
     public MainMenuGuiElement(Game game)
@@ -29,12 +30,14 @@ public class MainMenuGuiElement extends GuiElement
 
         playButton = new TextButton("Play", skin);
         optionsButton = new TextButton("Options", skin);
+        leaderboardButton = new TextButton("Leaderboard", skin);
         exitButton = new TextButton("Exit", skin);
 
         initializeElement();
 
         this.registerEventListener(MenuEvent.PLAY_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.OPTIONS_BUTTON_CLICK, game)
+            .registerEventListener(MenuEvent.LEADERBOARD_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.EXIT_BUTTON_CLICK, game);
     }
 
@@ -71,6 +74,16 @@ public class MainMenuGuiElement extends GuiElement
                 log("options button clicked");
             }
         });
+        leaderboardButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                dispatchEvent(MenuEvent.LEADERBOARD_BUTTON_CLICK);
+                log("leaderboard button clicked");
+            }
+        });
         exitButton.addListener(new ClickListener()
         {
             @Override
@@ -84,6 +97,7 @@ public class MainMenuGuiElement extends GuiElement
 
         actor.add(playButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(optionsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(leaderboardButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(exitButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
     }
 

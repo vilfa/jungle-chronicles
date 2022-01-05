@@ -24,6 +24,7 @@ public class GuiRenderer extends Renderer implements EventListener
     private final MainMenuGuiElement mainMenu;
     private final PauseMenuGuiElement pauseMenu;
     private final OptionsMenuGuiElement optionsMenu;
+    private final LeaderboardGuiElement leaderboardMenu;
 
     private final Image background;
 
@@ -37,6 +38,7 @@ public class GuiRenderer extends Renderer implements EventListener
         mainMenu = new MainMenuGuiElement(game);
         pauseMenu = new PauseMenuGuiElement(game);
         optionsMenu = new OptionsMenuGuiElement(game);
+        leaderboardMenu = new LeaderboardGuiElement(game);
 
         background = new Image();
         background.setFillParent(true);
@@ -63,6 +65,11 @@ public class GuiRenderer extends Renderer implements EventListener
     public OptionsMenuGuiElement getOptionsMenu()
     {
         return optionsMenu;
+    }
+
+    public LeaderboardGuiElement getLeaderboardMenu()
+    {
+        return leaderboardMenu;
     }
 
     public Stage getStage()
@@ -97,6 +104,11 @@ public class GuiRenderer extends Renderer implements EventListener
                     stage.addActor(background);
                     stage.addActor(optionsMenu.getActor());
                     break;
+                case LEADERBOARD_MENU:
+                    stage.clear();
+                    stage.addActor(background);
+                    stage.addActor(leaderboardMenu.getActor());
+                    break;
             }
         }
     }
@@ -123,6 +135,7 @@ public class GuiRenderer extends Renderer implements EventListener
         mainMenu.dispose();
         pauseMenu.dispose();
         optionsMenu.dispose();
+        leaderboardMenu.dispose();
     }
 
     @Override

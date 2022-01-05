@@ -163,6 +163,13 @@ public class Game extends GameComponent implements EventListener, InputEventList
                                   gameProperties.get(GameProperty.PLAYER_HEALTH));
                 }
                 break;
+            case PLAYER_LEVEL_END_CONTACT:
+                log("finished level!");
+                log("level score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
+                log("level duration:" + gameProperties.get(GameProperty.LEVEL_DURATION));
+                preferences.addHighScore(gameProperties.get(GameProperty.PLAYER_SCORE).intValue());
+                dispatchEvent(GameEvent.GAME_LEADERBOARD_UPDATE);
+                break;
             case GAMEPLAY_START:
             case GAMEPLAY_STOP:
                 dispatchEvent(event.getType());
@@ -193,6 +200,9 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 break;
             case OPTIONS_BUTTON_CLICK:
                 pushGameScreen(GameScreen.OPTIONS_MENU);
+                break;
+            case LEADERBOARD_BUTTON_CLICK:
+                pushGameScreen(GameScreen.LEADERBOARD_MENU);
                 break;
             case EXIT_BUTTON_CLICK:
                 if (gameScreens.peek() == GameScreen.MAIN_MENU)
@@ -334,7 +344,8 @@ public class Game extends GameComponent implements EventListener, InputEventList
     {
         if (event.getKeyCode() == Input.Keys.ESCAPE)
         {
-            if (isPaused && gameScreens.peek() != GameScreen.PAUSE_MENU)
+            if (isPaused && gameScreens.peek() != GameScreen.PAUSE_MENU
+                && gameScreens.peek() != GameScreen.MAIN_MENU)
             {
                 popGameScreen(gameScreens.peek());
             } else

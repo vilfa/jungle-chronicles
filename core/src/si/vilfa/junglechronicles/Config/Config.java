@@ -35,18 +35,18 @@ public class Config
         }
 
         @Override
+        public int hashCode()
+        {
+            return Objects.hash(one, two);
+        }
+
+        @Override
         public boolean equals(Object o)
         {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Pair<?> pair = (Pair<?>) o;
             return one.equals(pair.one) && two.equals(pair.two);
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return Objects.hash(one, two);
         }
 
         @Override

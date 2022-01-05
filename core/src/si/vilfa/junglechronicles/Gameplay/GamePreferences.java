@@ -2,7 +2,11 @@ package si.vilfa.junglechronicles.Gameplay;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Config.Config;
+
+import java.util.Comparator;
+import java.util.UUID;
 
 /**
  * @author luka
@@ -11,28 +15,39 @@ import si.vilfa.junglechronicles.Config.Config;
  **/
 public class GamePreferences
 {
-    private static final String PREFS_NAME = "tjc-prefs";
-    private final Preferences preferences;
-
+    private static final String PREFS_SETTINGS_NAME = "tjc-prefs";
+    private static final String PREFS_LEADERBOARD_NAME = "tjc-leaderboard";
+    private static final int LEADERBOARD_SIZE = 10;
+    private final Preferences settingsPrefs;
+    private final Preferences scorePrefs;
+    private final Array<Integer> leaderboard;
     private boolean isSoundEnabled;
     private boolean isMusicEnabled;
     private Config.Pair<Integer> resolution;
 
     public GamePreferences()
     {
-        preferences = Gdx.app.getPreferences(PREFS_NAME);
+        settingsPrefs = Gdx.app.getPreferences(PREFS_SETTINGS_NAME);
+        scorePrefs = Gdx.app.getPreferences(PREFS_LEADERBOARD_NAME);
 
-        isSoundEnabled = preferences.getBoolean("isSoundEnabled", true);
-        isMusicEnabled = preferences.getBoolean("isMusicEnabled", true);
-        resolution = new Config.Pair<>(preferences.getInteger("resolutionX",
-                                                              Config.RESOLUTIONS.first().one),
-                                       preferences.getInteger("resolutionY",
-                                                              Config.RESOLUTIONS.first().two));
+        isSoundEnabled = settingsPrefs.getBoolean("isSoundEnabled", true);
+        isMusicEnabled = settingsPrefs.getBoolean("isMusicEnabled", true);
+        resolution = new Config.Pair<>(settingsPrefs.getInteger("resolutionX",
+                                                                Config.RESOLUTIONS.first().one),
+                                       settingsPrefs.getInteger("resolutionY",
+                                                                Config.RESOLUTIONS.first().two));
+
+        leaderboard = new Array<>();
+        scorePrefs.get().forEach((k, v) -> leaderboard.add(Integer.valueOf((String) v)));
+        scorePrefs.get().keySet().forEach(scorePrefs::remove);
+        leaderboard.sort(Comparator.reverseOrder());
     }
 
     public void flush()
     {
-        preferences.flush();
+        leaderboard.forEach((v) -> scorePrefs.putInteger(UUID.randomUUID().toString(), v));
+        settingsPrefs.flush();
+        scorePrefs.flush();
     }
 
     public boolean isSoundEnabled()
@@ -43,7 +58,7 @@ public class GamePreferences
     public void setSoundEnabled(boolean soundEnabled)
     {
         isSoundEnabled = soundEnabled;
-        preferences.putBoolean("isSoundEnabled", soundEnabled);
+        settingsPrefs.putBoolean("isSoundEnabled", soundEnabled);
     }
 
     public boolean isMusicEnabled()
@@ -54,7 +69,7 @@ public class GamePreferences
     public void setMusicEnabled(boolean musicEnabled)
     {
         isMusicEnabled = musicEnabled;
-        preferences.putBoolean("isMusicEnabled", musicEnabled);
+        settingsPrefs.putBoolean("isMusicEnabled", musicEnabled);
     }
 
     public Config.Pair<Integer> getResolution()
@@ -65,7 +80,19 @@ public class GamePreferences
     public void setResolution(Config.Pair<Integer> resolution)
     {
         this.resolution = resolution;
-        preferences.putInteger("resolutionX", resolution.one);
-        preferences.putInteger("resolutionY", resolution.two);
+        settingsPrefs.putInteger("resolutionX", resolution.one);
+        settingsPrefs.putInteger("resolutionY", resolution.two);
+    }
+
+    public Array<Integer> getLeaderboard()
+    {
+        return leaderboard;
+    }
+
+    public void addHighScore(int highScore)
+    {
+        leaderboard.add(highScore);
+        leaderboard.sort(Comparator.reverseOrder());
+        leaderboard.truncate(LEADERBOARD_SIZE);
     }
 }

@@ -8,6 +8,7 @@ package si.vilfa.junglechronicles.Events;
 public enum GameEvent implements EventType
 {
     PLAYER_COLLECTIBLE_CONTACT,
+    PLAYER_LEVEL_END_CONTACT,
     PLAYER_TRAP_CONTACT,
     PLAYER_ENEMY_CONTACT,
     PLAYER_HEALTH_CHANGE,
@@ -16,4 +17,5 @@ public enum GameEvent implements EventType
     GAMEPLAY_STOP,
     GAMEPLAY_RESET,
     GAME_SCREEN_CHANGE,
+    GAME_LEADERBOARD_UPDATE
 }

@@ -55,7 +55,9 @@ public class Gameplay extends DrawableGameComponent
             .registerEventListener(GameEvent.GAMEPLAY_RESET, this)
             .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, this)
             .registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio())
-            .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
+            .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio())
+            .registerEventListener(GameEvent.GAME_LEADERBOARD_UPDATE,
+                                   guiRenderer.getLeaderboardMenu());
 
         game.pushGameScreen(GameScreen.MAIN_MENU);
     }
@@ -139,10 +141,12 @@ public class Gameplay extends DrawableGameComponent
         {
             initialResize = false;
             Config.Pair<Integer> resolution = game.getPreferences().getResolution();
-            if (Config.RESOLUTIONS.contains(resolution, false)) {
+            if (Config.RESOLUTIONS.contains(resolution, false))
+            {
                 setWindowResolution(resolution);
                 log("set resolution from preferences:" + getWindowResolution());
-            } else {
+            } else
+            {
                 setWindowResolution(Config.RESOLUTIONS.first());
             }
         }
