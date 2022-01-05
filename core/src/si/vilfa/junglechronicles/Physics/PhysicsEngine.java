@@ -72,13 +72,11 @@ public class PhysicsEngine extends GameComponent implements CollisionEventDispat
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType() == GameEvent.PLAYER_COLLECTIBLE_CONTACT)
+        if (event.getType() == GameEvent.PLAYER_COLLECTIBLE_CONTACT
+            && event.getEventData().size == 1)
         {
-            if (event.getEventData().size == 1)
-            {
-                GameObject object = ((GameObject) event.getEventData().first());
-                bodiesStateChanged.put(object.getBody(), object.isActive());
-            }
+            GameObject object = ((GameObject) event.getEventData().first());
+            bodiesStateChanged.put(object.getBody(), object.isActive());
         }
     }
 

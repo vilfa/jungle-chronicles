@@ -91,5 +91,8 @@ public class PauseMenuGuiElement extends GuiElement
     public void update() { }
 
     @Override
-    public void dispose() { }
+    public void dispose()
+    {
+        super.dispose();
+    }
 }

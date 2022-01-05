@@ -1,15 +1,12 @@
 package si.vilfa.junglechronicles.Audio;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.*;
 import si.vilfa.junglechronicles.Gameplay.Game;
-import si.vilfa.junglechronicles.Input.Events.InputEventListener;
-import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 
 import java.util.HashMap;
 
@@ -18,15 +15,15 @@ import java.util.HashMap;
  * @date 15/12/2021
  * @package si.vilfa.junglechronicles.Audio
  **/
-public class AudioEngine extends GameComponent
-        implements EventListener, Music.OnCompletionListener, InputEventListener
+public class AudioEngine extends GameComponent implements EventListener, Music.OnCompletionListener
 {
     private final Game game;
 
     private final HashMap<EventType, Array<Sound>> sounds;
     private final HashMap<EventType, Array<Music>> music;
     private final HashMap<EventType, Array<SoundSequence>> sequences;
-    private float masterVolume = 1f;
+    private float soundVolume = 1f;
+    private float musicVolume = 1f;
 
     public AudioEngine(Game game)
     {
@@ -62,15 +59,14 @@ public class AudioEngine extends GameComponent
     @Override
     public void handleEvent(Event event)
     {
-        if (game.isPaused()) return;
-
         if (event.getType() instanceof GameEvent)
         {
+            if (game.isPaused()) return;
             switch ((GameEvent) event.getType())
             {
                 case GAMEPLAY_START:
                     sounds.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
-                          .forEach(v -> v.play(masterVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.5f));
                     music.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
                          .forEach(Music::play);
                     sequences.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
@@ -83,19 +79,20 @@ public class AudioEngine extends GameComponent
                     break;
                 case PLAYER_ENEMY_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_ENEMY_CONTACT, new Array<>())
-                          .forEach(v -> v.play(masterVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.5f));
                     break;
                 case PLAYER_TRAP_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_TRAP_CONTACT, new Array<>())
-                          .forEach(v -> v.play(masterVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.5f));
                     break;
                 case PLAYER_COLLECTIBLE_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_COLLECTIBLE_CONTACT, new Array<>())
-                          .forEach(v -> v.play(masterVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.5f));
                     break;
             }
         } else if (event.getType() instanceof PlayerEvent)
         {
+            if (game.isPaused()) return;
             switch ((PlayerEvent) event.getType())
             {
                 case PLAYER_RUN:
@@ -105,6 +102,33 @@ public class AudioEngine extends GameComponent
                 case PLAYER_IDLE:
                     sequences.getOrDefault(PlayerEvent.PLAYER_IDLE, new Array<>())
                              .forEach(SoundSequence::stop);
+                    break;
+            }
+        } else if (event.getType() instanceof MenuEvent)
+        {
+            switch ((MenuEvent) event.getType())
+            {
+                case SOUND_BUTTON_CLICK:
+                    if (soundVolume > 0f)
+                    {
+                        setSoundVolume(0f);
+                        game.getPreferences().setSoundEnabled(false);
+                    } else
+                    {
+                        setSoundVolume(1f);
+                        game.getPreferences().setSoundEnabled(true);
+                    }
+                    break;
+                case MUSIC_BUTTON_CLICK:
+                    if (musicVolume > 0f)
+                    {
+                        setMusicVolume(0f);
+                        game.getPreferences().setMusicEnabled(false);
+                    } else
+                    {
+                        setMusicVolume(1f);
+                        game.getPreferences().setMusicEnabled(true);
+                    }
                     break;
             }
         }
@@ -124,7 +148,7 @@ public class AudioEngine extends GameComponent
             }
         }
 
-        setMasterVolume(1f);
+        setSoundVolume(1f);
     }
 
     public void newMusic(String internalFilePath, EventType... onEvents)
@@ -142,7 +166,7 @@ public class AudioEngine extends GameComponent
             }
         }
 
-        setMasterVolume(1f);
+        setMusicVolume(1f);
     }
 
     public void newSoundSequence(SoundSequence sequence, EventType... onEvents)
@@ -158,7 +182,7 @@ public class AudioEngine extends GameComponent
             }
         }
 
-        setMasterVolume(1f);
+        setSoundVolume(1f);
     }
 
     public HashMap<EventType, Array<Sound>> getSounds()
@@ -171,33 +195,28 @@ public class AudioEngine extends GameComponent
         return music;
     }
 
-    public float getMasterVolume()
+    public float getSoundVolume()
     {
-        return masterVolume;
+        return soundVolume;
     }
 
-    public void setMasterVolume(float masterVolume)
+    public void setSoundVolume(float soundVolume)
     {
-        this.masterVolume = Math.min(1f, Math.max(0f, masterVolume));
-        music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume * 0.1f)));
-        sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.masterVolume)));
-        log("master volume:" + this.masterVolume);
+        this.soundVolume = Math.min(1f, Math.max(0f, soundVolume));
+        sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.soundVolume)));
+    }
+
+    public float getMusicVolume()
+    {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(float musicVolume)
+    {
+        this.musicVolume = Math.min(1f, Math.max(0f, musicVolume));
+        music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.musicVolume * 0.1f)));
     }
 
     @Override
     public void onCompletion(Music music) { }
-
-    @Override
-    public void handleKeyUp(KeyUpInputEvent event)
-    {
-        switch (event.getKeyCode())
-        {
-            case Input.Keys.LEFT_BRACKET:
-                setMasterVolume(getMasterVolume() - 0.05f);
-                break;
-            case Input.Keys.RIGHT_BRACKET:
-                setMasterVolume(getMasterVolume() + 0.05f);
-                break;
-        }
-    }
 }

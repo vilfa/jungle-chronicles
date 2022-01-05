@@ -2,6 +2,7 @@ package si.vilfa.junglechronicles.Graphics.Gui;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
@@ -24,6 +25,8 @@ public class GuiRenderer extends Renderer implements EventListener
     private final PauseMenuGuiElement pauseMenu;
     private final OptionsMenuGuiElement optionsMenu;
 
+    private final Image background;
+
     public GuiRenderer(Game game)
     {
         super(game);
@@ -34,6 +37,10 @@ public class GuiRenderer extends Renderer implements EventListener
         mainMenu = new MainMenuGuiElement(game);
         pauseMenu = new PauseMenuGuiElement(game);
         optionsMenu = new OptionsMenuGuiElement(game);
+
+        background = new Image();
+        background.setFillParent(true);
+        background.setColor(0, 0, 0, 0.25f);
 
         stage = new Stage(guiViewport);
     }
@@ -77,14 +84,17 @@ public class GuiRenderer extends Renderer implements EventListener
                     break;
                 case MAIN_MENU:
                     stage.clear();
+                    stage.addActor(background);
                     stage.addActor(mainMenu.getActor());
                     break;
                 case PAUSE_MENU:
                     stage.clear();
+                    stage.addActor(background);
                     stage.addActor(pauseMenu.getActor());
                     break;
                 case OPTIONS_MENU:
                     stage.clear();
+                    stage.addActor(background);
                     stage.addActor(optionsMenu.getActor());
                     break;
             }
@@ -112,15 +122,17 @@ public class GuiRenderer extends Renderer implements EventListener
         hud.dispose();
         mainMenu.dispose();
         pauseMenu.dispose();
+        optionsMenu.dispose();
     }
 
     @Override
     public void update()
     {
-        if (!isUpdatable || game.isPaused()) return;
-        hud.update();
         mainMenu.update();
         pauseMenu.update();
+        optionsMenu.update();
+        if (!isUpdatable || game.isPaused()) return;
+        hud.update();
         stage.act();
     }
 }

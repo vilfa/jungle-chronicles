@@ -1,5 +1,7 @@
 package si.vilfa.junglechronicles.Graphics;
 
+import si.vilfa.junglechronicles.Config.Config;
+
 /**
  * @author luka
  * @date 07/11/2021
@@ -11,7 +13,9 @@ public interface WindowAdapter
 
     float getScreenAspectRatio();
 
-    void setScreenAspectRatio(float aspectRatio);
-
     int getScreenRefreshRate();
+
+    Config.Pair<Integer> getWindowResolution();
+
+    void setWindowResolution(Config.Pair<Integer> windowResolution);
 }

@@ -30,6 +30,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
     private final Stack<GameScreen> gameScreens;
     private final HashMap<GameProperty, Float> gameProperties;
     private final AudioEngine audio;
+    private final GamePreferences preferences;
     private PhysicsEngine physics;
     private HumanPlayer player;
     private Level currentLevel;
@@ -42,6 +43,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
         physics = new PhysicsEngine(this);
         audio = new AudioEngine(this);
+        preferences = new GamePreferences();
 
         currentLevel = LevelFactory.getInstance().createLevelFromTmx(this, "Levels/Level1.tmx");
 
@@ -66,6 +68,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
         initializeGameProperties();
 
         gameScreens = new Stack<>();
+        initializeGamePreferences();
     }
 
     private void initializeGameProperties()
@@ -76,78 +79,93 @@ public class Game extends GameComponent implements EventListener, InputEventList
         gameProperties.put(GameProperty.LEVEL_DURATION, 0f);
     }
 
+    private void initializeGamePreferences()
+    {
+        audio.setSoundVolume((preferences.isSoundEnabled()) ? 1f : 0f);
+        audio.setMusicVolume((preferences.isMusicEnabled()) ? 1f : 0f);
+    }
+
     private void handleGameEvent(Event event)
     {
         if (!(event.getType() instanceof GameEvent)) return;
 
         log("game event:" + event);
 
-        if (event.getType().equals(GameEvent.PLAYER_COLLECTIBLE_CONTACT)
-            && event.getEventData().size == 1)
+        switch ((GameEvent) event.getType())
         {
-            GameBlock object = (GameBlock) event.getEventData().first();
-            gameProperties.compute(GameProperty.PLAYER_SCORE,
-                                   (k, v) -> v += object.getCollectiblePoints());
-
-            for (SceneTile tile : currentLevel.getTiles())
-            {
-                if (object.getFixtures().first().testPoint(tile.getCenter())
-                    && tile.getSourceLayer().equals(Level.MapLayer.COLLECTIBLE_LAYER))
+            case PLAYER_COLLECTIBLE_CONTACT:
+                if (event.getEventData().size == 1)
                 {
-                    currentLevel.removeItem(tile);
+                    GameBlock object = (GameBlock) event.getEventData().first();
+                    gameProperties.compute(GameProperty.PLAYER_SCORE,
+                                           (k, v) -> v += object.getCollectiblePoints());
+
+                    for (SceneTile tile : currentLevel.getTiles())
+                    {
+                        if (object.getFixtures().first().testPoint(tile.getCenter())
+                            && tile.getSourceLayer().equals(Level.MapLayer.COLLECTIBLE_LAYER))
+                        {
+                            currentLevel.removeItem(tile);
+                        }
+                    }
+
+                    log("score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
+
+                    dispatchEvent(GameEvent.PLAYER_SCORE_CHANGE,
+                                  gameProperties.get(GameProperty.PLAYER_SCORE));
                 }
-            }
-
-            log("score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
-
-            dispatchEvent(GameEvent.PLAYER_SCORE_CHANGE,
-                          gameProperties.get(GameProperty.PLAYER_SCORE));
-        } else if ((event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT) || event.getType()
-                                                                                  .equals(GameEvent.PLAYER_ENEMY_CONTACT))
-                   && event.getEventData().size == 1)
-        {
-            float playerHealth = gameProperties.get(GameProperty.PLAYER_HEALTH);
-            float playerLives = gameProperties.get(GameProperty.PLAYER_LIVES);
-
-            if (event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT))
-            {
-                GameBlock object = (GameBlock) event.getEventData().first();
-
-                if (playerHealth - object.getTrapPoints() <= 0f)
+                break;
+            case PLAYER_TRAP_CONTACT:
+            case PLAYER_ENEMY_CONTACT:
+                if (event.getEventData().size == 1)
                 {
-                    playerLives -= 1f;
-                    playerHealth = 100f;
-                } else
-                {
-                    playerHealth -= object.getTrapPoints();
+                    float playerHealth = gameProperties.get(GameProperty.PLAYER_HEALTH);
+                    float playerLives = gameProperties.get(GameProperty.PLAYER_LIVES);
+
+                    if (event.getType().equals(GameEvent.PLAYER_TRAP_CONTACT))
+                    {
+                        GameBlock object = (GameBlock) event.getEventData().first();
+
+                        if (playerHealth - object.getTrapPoints() <= 0f)
+                        {
+                            playerLives -= 1f;
+                            playerHealth = 100f;
+                        } else
+                        {
+                            playerHealth -= object.getTrapPoints();
+                        }
+                    } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
+                    {
+                        //                Enemy enemy = (Enemy) event.getEventData().first();
+
+                        // TODO: 24/12/2021 Maybe add different health point decrements for enemies
+                        if (playerHealth - 100f <= 0f && playerLives == 0f)
+                        {
+                            playerHealth = 0f;
+                        } else if (playerHealth - 100f <= 0f)
+                        {
+                            playerLives -= 1f;
+                            playerHealth = 100f;
+                        } else
+                        {
+                            playerHealth -= 100f;
+                        }
+                    }
+
+                    gameProperties.put(GameProperty.PLAYER_LIVES, playerLives);
+                    gameProperties.put(GameProperty.PLAYER_HEALTH, playerHealth);
+
+                    log("lives:" + playerLives);
+                    log("health:" + playerHealth);
+
+                    dispatchEvent(GameEvent.PLAYER_HEALTH_CHANGE,
+                                  gameProperties.get(GameProperty.PLAYER_LIVES),
+                                  gameProperties.get(GameProperty.PLAYER_HEALTH));
                 }
-            } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
-            {
-                //                Enemy enemy = (Enemy) event.getEventData().first();
-
-                // TODO: 24/12/2021 Maybe add different health point decrements for enemies
-                if (playerHealth - 100f <= 0f && playerLives == 0f)
-                {
-                    playerHealth = 0f;
-                } else if (playerHealth - 100f <= 0f)
-                {
-                    playerLives -= 1f;
-                    playerHealth = 100f;
-                } else
-                {
-                    playerHealth -= 100f;
-                }
-            }
-
-            gameProperties.put(GameProperty.PLAYER_LIVES, playerLives);
-            gameProperties.put(GameProperty.PLAYER_HEALTH, playerHealth);
-
-            log("lives:" + playerLives);
-            log("health:" + playerHealth);
-
-            dispatchEvent(GameEvent.PLAYER_HEALTH_CHANGE,
-                          gameProperties.get(GameProperty.PLAYER_LIVES),
-                          gameProperties.get(GameProperty.PLAYER_HEALTH));
+                break;
+            case GAMEPLAY_START:
+            case GAMEPLAY_STOP:
+                dispatchEvent(event.getType());
         }
 
         if (gameProperties.get(GameProperty.PLAYER_LIVES) == 0f
@@ -163,28 +181,33 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
         log("menu event:" + event);
 
-        if (event.getType().equals(MenuEvent.PLAY_BUTTON_CLICK))
+        switch ((MenuEvent) event.getType())
         {
-            pushGameScreen(GameScreen.IN_GAME);
-            resume();
-        } else if (event.getType().equals(MenuEvent.RESUME_BUTTON_CLICK))
-        {
-            popGameScreen(GameScreen.PAUSE_MENU);
-            resume();
-        } else if (event.getType().equals(MenuEvent.OPTIONS_BUTTON_CLICK))
-        {
-            pushGameScreen(GameScreen.OPTIONS_MENU);
-        } else if (event.getType().equals(MenuEvent.EXIT_BUTTON_CLICK))
-        {
-            if (gameScreens.peek() == GameScreen.MAIN_MENU)
-            {
-                exit();
-            } else if (gameScreens.peek() == GameScreen.PAUSE_MENU)
-            {
+            case PLAY_BUTTON_CLICK:
+                pushGameScreen(GameScreen.IN_GAME);
+                resume();
+                break;
+            case RESUME_BUTTON_CLICK:
                 popGameScreen(GameScreen.PAUSE_MENU);
-                popGameScreen(GameScreen.IN_GAME);
-                reset();
-            }
+                resume();
+                break;
+            case OPTIONS_BUTTON_CLICK:
+                pushGameScreen(GameScreen.OPTIONS_MENU);
+                break;
+            case EXIT_BUTTON_CLICK:
+                if (gameScreens.peek() == GameScreen.MAIN_MENU)
+                {
+                    exit();
+                } else if (gameScreens.peek() == GameScreen.PAUSE_MENU)
+                {
+                    popGameScreen(GameScreen.PAUSE_MENU);
+                    popGameScreen(GameScreen.IN_GAME);
+                    reset();
+                }
+                break;
+            case RESOLUTION_BUTTON_CLICK:
+                dispatchEvent(MenuEvent.RESOLUTION_BUTTON_CLICK);
+                break;
         }
     }
 
@@ -199,7 +222,10 @@ public class Game extends GameComponent implements EventListener, InputEventList
     {
         log("pause");
         isPaused = true;
-        pushGameScreen(GameScreen.PAUSE_MENU);
+        if (gameScreens.peek() == GameScreen.IN_GAME)
+        {
+            pushGameScreen(GameScreen.PAUSE_MENU);
+        }
     }
 
     private void resume()
@@ -210,6 +236,8 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
     private void exit()
     {
+        log("flush preferences");
+        preferences.flush();
         log("exit");
         Gdx.app.exit();
     }
@@ -275,6 +303,11 @@ public class Game extends GameComponent implements EventListener, InputEventList
         return gameProperties;
     }
 
+    public GamePreferences getPreferences()
+    {
+        return preferences;
+    }
+
     @Override
     public void update()
     {
@@ -301,7 +334,13 @@ public class Game extends GameComponent implements EventListener, InputEventList
     {
         if (event.getKeyCode() == Input.Keys.ESCAPE)
         {
-            pause();
+            if (isPaused && gameScreens.peek() != GameScreen.PAUSE_MENU)
+            {
+                popGameScreen(gameScreens.peek());
+            } else
+            {
+                pause();
+            }
         }
     }
 

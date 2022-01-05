@@ -31,7 +31,10 @@ public abstract class GuiElement extends GameComponent
     public abstract void update();
 
     @Override
-    public abstract void dispose();
+    public void dispose()
+    {
+        skin.dispose();
+    }
 
     public enum HudSprite
     {

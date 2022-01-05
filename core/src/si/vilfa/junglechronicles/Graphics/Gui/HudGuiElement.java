@@ -105,32 +105,37 @@ public class HudGuiElement extends GuiElement implements EventListener
     @Override
     public void dispose()
     {
+        super.dispose();
         textureAtlas.dispose();
     }
 
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType().equals(GameEvent.PLAYER_HEALTH_CHANGE))
+        if (!(event.getType() instanceof GameEvent)) return;
+
+        switch ((GameEvent) event.getType())
         {
-            if (event.getEventData().size == 2)
-            {
-                float health = (float) event.getEventData().get(0)
-                               + (float) event.getEventData().get(1)
-                                 / (float) HumanPlayer.MAX_HEALTH;
-                updateHealthIndicator(health);
-            }
-        } else if (event.getType().equals(GameEvent.PLAYER_SCORE_CHANGE))
-        {
-            if (event.getEventData().size == 1)
-            {
-                updateScoreIndicator((float) event.getEventData().first());
-            }
-        } else if (event.getType().equals(GameEvent.GAMEPLAY_RESET))
-        {
-            updateScoreIndicator(0f);
-            updateHealthIndicator((float) HumanPlayer.MAX_LIVES + 1f);
-            updateTimeIndicator(0f);
+            case PLAYER_HEALTH_CHANGE:
+                if (event.getEventData().size == 2)
+                {
+                    float health = (float) event.getEventData().get(0)
+                                   + (float) event.getEventData().get(1)
+                                     / (float) HumanPlayer.MAX_HEALTH;
+                    updateHealthIndicator(health);
+                }
+                break;
+            case PLAYER_SCORE_CHANGE:
+                if (event.getEventData().size == 1)
+                {
+                    updateScoreIndicator((float) event.getEventData().first());
+                }
+                break;
+            case GAMEPLAY_RESET:
+                updateScoreIndicator(0f);
+                updateHealthIndicator((float) HumanPlayer.MAX_LIVES + 1f);
+                updateTimeIndicator(0f);
+                break;
         }
     }
 

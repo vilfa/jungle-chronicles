@@ -1,5 +1,6 @@
 package si.vilfa.junglechronicles.Graphics.Gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,27 +18,25 @@ import si.vilfa.junglechronicles.Gameplay.Game;
 public class OptionsMenuGuiElement extends GuiElement
 {
     private final Table actor;
-    private final TextButton resumeButton;
-    private final TextButton optionsButton;
-    private final TextButton exitButton;
+    private final TextButton soundButton;
+    private final TextButton musicButton;
+    private final TextButton resolutionButton;
 
     public OptionsMenuGuiElement(Game game)
     {
         super(game);
 
-        // TODO: 02/01/2022 Implement options menu 
-
         actor = new Table();
 
-        resumeButton = new TextButton("Resume", skin);
-        optionsButton = new TextButton("Options", skin);
-        exitButton = new TextButton("Exit", skin);
+        soundButton = new TextButton("", skin);
+        musicButton = new TextButton("", skin);
+        resolutionButton = new TextButton("", skin);
 
         initializeElement();
 
-        this.registerEventListener(MenuEvent.RESUME_BUTTON_CLICK, game)
-            .registerEventListener(MenuEvent.OPTIONS_BUTTON_CLICK, game)
-            .registerEventListener(MenuEvent.EXIT_BUTTON_CLICK, game);
+        this.registerEventListener(MenuEvent.SOUND_BUTTON_CLICK, game.getAudio())
+            .registerEventListener(MenuEvent.MUSIC_BUTTON_CLICK, game.getAudio())
+            .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, game);
     }
 
     @Override
@@ -53,45 +52,62 @@ public class OptionsMenuGuiElement extends GuiElement
         actor.defaults().expandX().pad(12f);
         actor.setFillParent(true);
 
-        resumeButton.addListener(new ClickListener()
+        soundButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                log("resume button clicked");
-                dispatchEvent(MenuEvent.RESUME_BUTTON_CLICK);
+                log("sound button clicked");
+                dispatchEvent(MenuEvent.SOUND_BUTTON_CLICK);
             }
         });
-        optionsButton.addListener(new ClickListener()
+        musicButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                log("options button clicked");
-                dispatchEvent(MenuEvent.OPTIONS_BUTTON_CLICK);
+                log("music button clicked");
+                dispatchEvent(MenuEvent.MUSIC_BUTTON_CLICK);
             }
         });
-        exitButton.addListener(new ClickListener()
+        resolutionButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 super.clicked(event, x, y);
-                log("exit button clicked");
-                dispatchEvent(MenuEvent.EXIT_BUTTON_CLICK);
+                log("resolution button clicked");
+                dispatchEvent(MenuEvent.RESOLUTION_BUTTON_CLICK);
             }
         });
 
-        actor.add(resumeButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
-        actor.add(optionsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
-        actor.add(exitButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(soundButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(musicButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(resolutionButton).pad(10f, 0f, 10f, 0f).width(300f).height(50f).row();
+
+        update();
     }
 
     @Override
-    public void update() { }
+    public void update()
+    {
+        soundButton.getLabel()
+                   .setText(String.format("Sound: %s",
+                                          (game.getAudio().getSoundVolume() > 0f) ? "On" : "Off"));
+        musicButton.getLabel()
+                   .setText(String.format("Music: %s",
+                                          (game.getAudio().getMusicVolume() > 0f) ? "On" : "Off"));
+        resolutionButton.getLabel()
+                        .setText(String.format("Resolution: %dx%d",
+                                               Gdx.graphics.getWidth(),
+                                               Gdx.graphics.getHeight()));
+    }
 
     @Override
-    public void dispose() { }
+    public void dispose()
+    {
+        super.dispose();
+    }
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Config.Config;
 import si.vilfa.junglechronicles.Gameplay.Game;
 
 /**
@@ -23,13 +24,12 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     protected final float visibleWorldHeight;
     protected final float worldWidth;
     protected final float worldHeight;
-    protected final int screenWidthMax;
-    protected final int screenHeightMax;
+    protected final int screenWidth;
+    protected final int screenHeight;
     protected final int screenRefreshRate;
+    protected final float screenAspectRatio;
     protected final SpriteBatch spriteBatch;
-    protected int screenWidth;
-    protected int screenHeight;
-    protected float screenAspectRatio;
+    protected Config.Pair<Integer> windowResolution;
 
     public Renderer(Game game)
     {
@@ -40,14 +40,14 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
         Graphics.DisplayMode displayMode
                 = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());
         screenWidth = displayMode.width;
-        screenWidthMax = displayMode.width;
         screenHeight = displayMode.height;
-        screenHeightMax = displayMode.height;
         screenRefreshRate = displayMode.refreshRate;
-        screenAspectRatio = (float) screenWidthMax / (float) screenHeightMax;
+        screenAspectRatio = (float) screenWidth / (float) screenHeight;
         visibleWorldHeight = 13;
         visibleWorldWidth = visibleWorldHeight * screenAspectRatio;
         //        Gdx.graphics.setForegroundFPS(screenRefreshRate);
+
+        windowResolution = Config.RESOLUTIONS.first();
 
         this.game = game;
         worldWidth = game.getPhysics().getWorldWidth();
@@ -67,9 +67,7 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     @Override
     public void resize(int width, int height)
     {
-        screenWidth = width;
-        screenHeight = height;
-        viewport.update(screenWidth, screenHeight, true);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -79,15 +77,22 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
     }
 
     @Override
-    public void setScreenAspectRatio(float screenAspectRatio)
-    {
-        this.screenAspectRatio = screenAspectRatio;
-    }
-
-    @Override
     public int getScreenRefreshRate()
     {
         return screenRefreshRate;
+    }
+
+    @Override
+    public Config.Pair<Integer> getWindowResolution()
+    {
+        return windowResolution;
+    }
+
+    @Override
+    public void setWindowResolution(Config.Pair<Integer> windowResolution)
+    {
+        this.windowResolution = windowResolution;
+        Gdx.graphics.setWindowedMode(windowResolution.one, windowResolution.two);
     }
 
     @Override

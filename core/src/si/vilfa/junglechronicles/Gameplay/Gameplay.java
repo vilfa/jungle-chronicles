@@ -5,9 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import si.vilfa.junglechronicles.Component.DrawableGameComponent;
+import si.vilfa.junglechronicles.Config.Config;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Events.MenuEvent;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Graphics.Gui.GameScreen;
 import si.vilfa.junglechronicles.Graphics.Gui.GuiRenderer;
@@ -28,6 +30,7 @@ public class Gameplay extends DrawableGameComponent
     private final GuiRenderer guiRenderer;
     private final Box2DDebugRenderer debugRenderer;
     private final InputMultiplexer inputMultiplexer;
+    private boolean initialResize = true;
 
     public Gameplay()
     {
@@ -37,21 +40,22 @@ public class Gameplay extends DrawableGameComponent
         guiRenderer = new GuiRenderer(game);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(new UniversalInputProcessor<>(game.getAudio()));
         inputMultiplexer.addProcessor(new UniversalInputProcessor<>(game));
         inputMultiplexer.addProcessor(guiRenderer.getStage());
         inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
         Gdx.input.setInputProcessor(this.inputMultiplexer);
 
-        this.registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio())
-            .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
+        this.registerEventListener(GameEvent.GAMEPLAY_START, game)
+            .registerEventListener(GameEvent.GAMEPLAY_STOP, game);
 
         game.registerEventListener(GameEvent.PLAYER_HEALTH_CHANGE, guiRenderer.getHud())
             .registerEventListener(GameEvent.PLAYER_SCORE_CHANGE, guiRenderer.getHud())
             .registerEventListener(GameEvent.GAMEPLAY_RESET, guiRenderer.getHud())
-            .registerEventListener(GameEvent.GAME_SCREEN_CHANGE, gameRenderer)
             .registerEventListener(GameEvent.GAME_SCREEN_CHANGE, guiRenderer)
-            .registerEventListener(GameEvent.GAMEPLAY_RESET, this);
+            .registerEventListener(GameEvent.GAMEPLAY_RESET, this)
+            .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, this)
+            .registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio())
+            .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio());
 
         game.pushGameScreen(GameScreen.MAIN_MENU);
     }
@@ -59,10 +63,20 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void handleEvent(Event event)
     {
-        if (event.getType() == GameEvent.GAMEPLAY_RESET)
+        if (event.getType().equals(GameEvent.GAMEPLAY_RESET))
         {
-            inputMultiplexer.removeProcessor(3);
+            inputMultiplexer.removeProcessor(2);
             inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
+        } else if (event.getType().equals(MenuEvent.RESOLUTION_BUTTON_CLICK) && event.getEventData()
+                                                                                     .isEmpty())
+        {
+            int resolutionIndex = Config.RESOLUTIONS.indexOf(gameRenderer.getWindowResolution(),
+                                                             false);
+            int nextResolutionIndex = (resolutionIndex + 1) % Config.RESOLUTIONS.size;
+            Config.Pair<Integer> resolution = Config.RESOLUTIONS.get(nextResolutionIndex);
+            gameRenderer.setWindowResolution(resolution);
+            game.getPreferences().setResolution(resolution);
+            log("set window resolution:" + resolution);
         }
     }
 
@@ -97,26 +111,41 @@ public class Gameplay extends DrawableGameComponent
     @Override
     public void create()
     {
+        log("create");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
     @Override
     public void pause()
     {
+        log("pause");
         dispatchEvent(GameEvent.GAMEPLAY_STOP);
     }
 
     @Override
     public void resume()
     {
+        log("resume");
         dispatchEvent(GameEvent.GAMEPLAY_START);
     }
 
     @Override
     public void resize(int width, int height)
     {
+        log("resize");
         gameRenderer.resize(width, height);
         guiRenderer.resize(width, height);
+        if (initialResize)
+        {
+            initialResize = false;
+            Config.Pair<Integer> resolution = game.getPreferences().getResolution();
+            if (Config.RESOLUTIONS.contains(resolution, false)) {
+                setWindowResolution(resolution);
+                log("set resolution from preferences:" + getWindowResolution());
+            } else {
+                setWindowResolution(Config.RESOLUTIONS.first());
+            }
+        }
     }
 
     @Override
@@ -126,14 +155,20 @@ public class Gameplay extends DrawableGameComponent
     }
 
     @Override
-    public void setScreenAspectRatio(float aspectRatio)
-    {
-        gameRenderer.setScreenAspectRatio(aspectRatio);
-    }
-
-    @Override
     public int getScreenRefreshRate()
     {
         return gameRenderer.getScreenRefreshRate();
+    }
+
+    @Override
+    public Config.Pair<Integer> getWindowResolution()
+    {
+        return gameRenderer.getWindowResolution();
+    }
+
+    @Override
+    public void setWindowResolution(Config.Pair<Integer> windowResolution)
+    {
+        gameRenderer.setWindowResolution(windowResolution);
     }
 }
