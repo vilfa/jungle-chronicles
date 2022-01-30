@@ -61,10 +61,11 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     {
         if (event.getType() instanceof GameEvent)
         {
-            if (game.isPaused()) return;
+//            if (game.isPaused()) return;
             switch ((GameEvent) event.getType())
             {
                 case GAMEPLAY_START:
+                case GAMEPLAY_RESUME:
                     sounds.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
                           .forEach(v -> v.play(soundVolume * 0.5f));
                     music.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
@@ -73,8 +74,9 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
                              .forEach(SoundSequence::play);
                     break;
                 case GAMEPLAY_STOP:
+                case GAMEPLAY_PAUSE:
                     sounds.forEach((k, v) -> v.forEach(Sound::stop));
-                    music.forEach((k, v) -> v.forEach(Music::stop));
+                    music.forEach((k, v) -> v.forEach(Music::pause));
                     sequences.forEach((k, v) -> v.forEach(SoundSequence::stop));
                     break;
                 case PLAYER_ENEMY_CONTACT:

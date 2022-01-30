@@ -19,6 +19,7 @@ public class PlayerSceneTile extends SceneObject
 {
     private final Animation<Sprite> animation;
     private final Vector2 scale;
+    private Vector2 offset;
     private float animationState;
 
     public PlayerSceneTile(TreeMap<Integer, TextureAtlas.AtlasRegion> spec,
@@ -28,6 +29,7 @@ public class PlayerSceneTile extends SceneObject
                            boolean flipY,
                            Vector2 scale)
     {
+        this.offset = new Vector2();
         this.scale = scale;
         this.animationState = 0f;
 
@@ -41,6 +43,23 @@ public class PlayerSceneTile extends SceneObject
 
         animation = new Animation<>(frameDuration, keyframes);
         animation.setPlayMode(playMode);
+    }
+
+    public PlayerSceneTile(TreeMap<Integer, TextureAtlas.AtlasRegion> spec,
+                           Animation.PlayMode playMode,
+                           float frameDuration,
+                           boolean flipX,
+                           boolean flipY,
+                           Vector2 scale,
+                           Vector2 offset)
+    {
+        this(spec, playMode, frameDuration, flipX, flipY, scale);
+        this.offset = offset;
+    }
+
+    public void setOffset(Vector2 offset)
+    {
+        this.offset.set(offset);
     }
 
     @Override
@@ -65,7 +84,7 @@ public class PlayerSceneTile extends SceneObject
         {
             Sprite sprite = animation.getKeyFrame(animationState);
             sprite.setScale(scale.x, scale.y);
-            sprite.setCenter(center.x, center.y);
+            sprite.setCenter(center.x + offset.x, center.y + offset.y);
             sprite.draw(spriteBatch);
         }
     }

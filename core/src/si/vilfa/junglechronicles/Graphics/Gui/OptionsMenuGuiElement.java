@@ -21,6 +21,7 @@ public class OptionsMenuGuiElement extends GuiElement
     private final TextButton soundButton;
     private final TextButton musicButton;
     private final TextButton resolutionButton;
+    private final TextButton renderStatsButton;
 
     public OptionsMenuGuiElement(Game game)
     {
@@ -31,12 +32,14 @@ public class OptionsMenuGuiElement extends GuiElement
         soundButton = new TextButton("", skin);
         musicButton = new TextButton("", skin);
         resolutionButton = new TextButton("", skin);
+        renderStatsButton = new TextButton("", skin);
 
         initializeElement();
 
         this.registerEventListener(MenuEvent.SOUND_BUTTON_CLICK, game.getAudio())
             .registerEventListener(MenuEvent.MUSIC_BUTTON_CLICK, game.getAudio())
-            .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, game);
+            .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, game)
+            .registerEventListener(MenuEvent.RENDER_STATS_BUTTON_CLICK, game);
     }
 
     @Override
@@ -82,12 +85,21 @@ public class OptionsMenuGuiElement extends GuiElement
                 dispatchEvent(MenuEvent.RESOLUTION_BUTTON_CLICK);
             }
         });
+        renderStatsButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                log("renderer stats button clicked");
+                dispatchEvent(MenuEvent.RENDER_STATS_BUTTON_CLICK);
+            }
+        });
 
         actor.add(soundButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(musicButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(resolutionButton).pad(10f, 0f, 10f, 0f).width(300f).height(50f).row();
-
-        update();
+        actor.add(renderStatsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
     }
 
     @Override
@@ -103,6 +115,10 @@ public class OptionsMenuGuiElement extends GuiElement
                         .setText(String.format("Resolution: %dx%d",
                                                Gdx.graphics.getWidth(),
                                                Gdx.graphics.getHeight()));
+        renderStatsButton.getLabel()
+                         .setText(String.format("Render stats: %s",
+                                                game.getGuiRenderer().isRenderStatsEnabled() ?
+                                                "On" : "Off"));
     }
 
     @Override

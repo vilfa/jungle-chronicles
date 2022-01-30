@@ -37,13 +37,16 @@ public class Gameplay extends DrawableGameComponent
         super(0, true, 0, true);
         game = new Game();
         gameRenderer = new GameRenderer(game);
+        game.setGameRenderer(gameRenderer);
         guiRenderer = new GuiRenderer(game);
+        game.setGuiRenderer(guiRenderer);
         debugRenderer = new Box2DDebugRenderer();
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(new UniversalInputProcessor<>(game));
         inputMultiplexer.addProcessor(guiRenderer.getStage());
         inputMultiplexer.addProcessor(new PlayerInputProcessor(game.getPlayer()));
         Gdx.input.setInputProcessor(this.inputMultiplexer);
+
 
         this.registerEventListener(GameEvent.GAMEPLAY_START, game)
             .registerEventListener(GameEvent.GAMEPLAY_STOP, game);
@@ -56,8 +59,11 @@ public class Gameplay extends DrawableGameComponent
             .registerEventListener(MenuEvent.RESOLUTION_BUTTON_CLICK, this)
             .registerEventListener(GameEvent.GAMEPLAY_START, game.getAudio())
             .registerEventListener(GameEvent.GAMEPLAY_STOP, game.getAudio())
+            .registerEventListener(GameEvent.GAMEPLAY_PAUSE, game.getAudio())
+            .registerEventListener(GameEvent.GAMEPLAY_RESUME, game.getAudio())
             .registerEventListener(GameEvent.GAME_LEADERBOARD_UPDATE,
-                                   guiRenderer.getLeaderboardMenu());
+                                   guiRenderer.getLeaderboardMenu())
+            .registerEventListener(MenuEvent.RENDER_STATS_BUTTON_CLICK, guiRenderer);
 
         game.pushGameScreen(GameScreen.MAIN_MENU);
     }
@@ -88,7 +94,7 @@ public class Gameplay extends DrawableGameComponent
         if (!isDrawable) return;
         gameRenderer.draw();
         guiRenderer.draw();
-        //        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
+        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
     }
 
     @Override
@@ -106,8 +112,8 @@ public class Gameplay extends DrawableGameComponent
     {
         if (!isUpdatable) return;
         game.update();
-        gameRenderer.update();
         guiRenderer.update();
+        gameRenderer.update();
     }
 
     @Override

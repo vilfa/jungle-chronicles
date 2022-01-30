@@ -1,8 +1,6 @@
 AdventurerJump.png
-size:256,128
+size:128,128
 filter:Nearest,Linear
 repeat:none
-adventurer_duck
-bounds:0,0,80,110
 adventurer_jump
 bounds:80,0,80,110

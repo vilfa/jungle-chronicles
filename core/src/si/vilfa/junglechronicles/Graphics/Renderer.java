@@ -45,7 +45,7 @@ public abstract class Renderer extends DrawableGameComponent implements WindowAd
         screenAspectRatio = (float) screenWidth / (float) screenHeight;
         visibleWorldHeight = 13;
         visibleWorldWidth = visibleWorldHeight * screenAspectRatio;
-        //        Gdx.graphics.setForegroundFPS(screenRefreshRate);
+        Gdx.graphics.setForegroundFPS(screenRefreshRate);
 
         windowResolution = Config.RESOLUTIONS.first();
 

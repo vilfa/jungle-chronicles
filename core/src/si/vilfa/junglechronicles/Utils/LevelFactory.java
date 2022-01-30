@@ -230,11 +230,11 @@ public class LevelFactory implements Loggable
             return;
         }
 
-        log("create terrain layer:" + layer.getName());
+        log("process terrain layer:" + layer.getName());
         TiledMapTileLayer l = (TiledMapTileLayer) layer;
-        for (int i = 0; i < l.getHeight(); i++)
+        for (int i = 0; i < l.getWidth(); i++)
         {
-            for (int j = 0; j < l.getWidth(); j++)
+            for (int j = 0; j < l.getHeight(); j++)
             {
                 TiledMapTileLayer.Cell cell = l.getCell(i, j);
                 if (cell == null) continue;
@@ -253,7 +253,7 @@ public class LevelFactory implements Loggable
         BodyFactory bodyFactory = BodyFactory.getInstance(game);
         GameObjectFactory gameObjectFactory = GameObjectFactory.getInstance();
 
-        log("create object layer:" + layer.getName());
+        log("process object layer:" + layer.getName());
 
         for (MapObject object : layer.getObjects())
         {
@@ -296,7 +296,7 @@ public class LevelFactory implements Loggable
     {
         if (layer.getTextureRegion() != null)
         {
-            log("create background layer:" + layer.getName());
+            log("process background layer:" + layer.getName());
             BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer);
             backgroundTile.setSourceLayer(sourceLayer);
             game.getCurrentLevel().addItem(backgroundTile);

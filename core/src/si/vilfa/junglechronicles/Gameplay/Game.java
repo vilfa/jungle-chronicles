@@ -8,6 +8,7 @@ import si.vilfa.junglechronicles.Component.GameComponent;
 import si.vilfa.junglechronicles.Events.*;
 import si.vilfa.junglechronicles.Graphics.GameRenderer;
 import si.vilfa.junglechronicles.Graphics.Gui.GameScreen;
+import si.vilfa.junglechronicles.Graphics.Gui.GuiRenderer;
 import si.vilfa.junglechronicles.Input.Events.InputEventListener;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.Level;
@@ -34,6 +35,9 @@ public class Game extends GameComponent implements EventListener, InputEventList
     private PhysicsEngine physics;
     private HumanPlayer player;
     private Level currentLevel;
+
+    private GameRenderer gameRenderer;
+    private GuiRenderer guiRenderer;
 
     private boolean isPaused = true;
 
@@ -172,6 +176,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 break;
             case GAMEPLAY_START:
             case GAMEPLAY_STOP:
+                log("dispatch event:" + event.getType());
                 dispatchEvent(event.getType());
         }
 
@@ -218,6 +223,9 @@ public class Game extends GameComponent implements EventListener, InputEventList
             case RESOLUTION_BUTTON_CLICK:
                 dispatchEvent(MenuEvent.RESOLUTION_BUTTON_CLICK);
                 break;
+            case RENDER_STATS_BUTTON_CLICK:
+                dispatchEvent(MenuEvent.RENDER_STATS_BUTTON_CLICK);
+                break;
         }
     }
 
@@ -236,12 +244,14 @@ public class Game extends GameComponent implements EventListener, InputEventList
         {
             pushGameScreen(GameScreen.PAUSE_MENU);
         }
+        dispatchEvent(GameEvent.GAMEPLAY_PAUSE);
     }
 
     private void resume()
     {
         log("resume");
         isPaused = false;
+        dispatchEvent(GameEvent.GAMEPLAY_RESUME);
     }
 
     private void exit()
@@ -271,6 +281,26 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
         initializeGameProperties();
         dispatchEvent(GameEvent.GAMEPLAY_RESET);
+    }
+
+    public GameRenderer getGameRenderer()
+    {
+        return gameRenderer;
+    }
+
+    public void setGameRenderer(GameRenderer gameRenderer)
+    {
+        this.gameRenderer = gameRenderer;
+    }
+
+    public GuiRenderer getGuiRenderer()
+    {
+        return guiRenderer;
+    }
+
+    public void setGuiRenderer(GuiRenderer guiRenderer)
+    {
+        this.guiRenderer = guiRenderer;
     }
 
     public PhysicsEngine getPhysics()
@@ -316,6 +346,11 @@ public class Game extends GameComponent implements EventListener, InputEventList
     public GamePreferences getPreferences()
     {
         return preferences;
+    }
+
+    public GameScreen getGameScreen()
+    {
+        return gameScreens.peek();
     }
 
     @Override

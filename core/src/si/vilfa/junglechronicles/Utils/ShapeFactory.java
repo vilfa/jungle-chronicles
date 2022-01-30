@@ -69,7 +69,7 @@ public class ShapeFactory implements Loggable
     public CircleShape createCircleShape(CircleMapObject circleMapObject, Vector2 position)
     {
         Circle circle = circleMapObject.getCircle();
-        Vector2 circlePosition = new Vector2(circle.x, circle.y);
+        Vector2 circlePosition = new Vector2(circle.x + circle.radius, circle.y + circle.radius);
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(PhysicsEngine.toUnits(circle.radius));
         position.set(circlePosition);
@@ -79,9 +79,10 @@ public class ShapeFactory implements Loggable
     public CircleShape createEllipseShape(EllipseMapObject ellipseMapObject, Vector2 position)
     {
         Ellipse ellipse = ellipseMapObject.getEllipse();
-        Vector2 ellipsePosition = new Vector2(ellipse.x, ellipse.y);
+        Vector2 ellipsePosition = new Vector2(ellipse.x + ellipse.width / 2f,
+                                              ellipse.y + ellipse.height / 2f);
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(PhysicsEngine.toUnits(ellipse.width / 2));
+        circleShape.setRadius(PhysicsEngine.toUnits(ellipse.width / 2f));
         position.set(ellipsePosition);
         return circleShape;
     }

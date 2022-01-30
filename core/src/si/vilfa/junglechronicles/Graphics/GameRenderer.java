@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
@@ -27,6 +29,11 @@ public class GameRenderer extends Renderer
 {
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
+
+    private int tileCount = 0;
+    private int tilesSkipped = 0;
+    private int playerCount = 0;
+    private int playersSkipped = 0;
 
     private float timer = 0f;
 
@@ -61,14 +68,16 @@ public class GameRenderer extends Renderer
                             texturesByState.get(HumanPlayer.State.SLIDE_LEFT));
 
         Vector2 playerScale = new Vector2(1f, 1f);
+        Vector2 playerOffset = new Vector2();
         if (game.getPlayer() != null)
         {
             Vector2 playerBox = game.getPlayer().getBox();
             TextureRegion playerRegion = texturesByState.get(HumanPlayer.State.IDLE_LEFT)
                                                         .getRegions()
                                                         .first();
-            playerScale.set(playerBox.x / playerRegion.getRegionWidth(),
-                            playerBox.y / playerRegion.getRegionHeight());
+            playerScale.set(playerBox.x * 1.25f / playerRegion.getRegionWidth(),
+                            playerBox.y * 1.25f / playerRegion.getRegionHeight());
+            playerOffset.set(0f, (playerBox.y * 1.25f - playerBox.y) / (playerBox.y * 1.5f));
         }
 
         for (Map.Entry<HumanPlayer.State, TextureAtlas> entry : texturesByState.entrySet())
@@ -88,7 +97,8 @@ public class GameRenderer extends Renderer
                                                                       .contains(entry.getKey(),
                                                                                 false),
                                                      false,
-                                                     playerScale));
+                                                     playerScale,
+                                                     playerOffset));
         }
     }
 
@@ -147,6 +157,28 @@ public class GameRenderer extends Renderer
         viewport.getCamera().update();
     }
 
+    private boolean visible(Vector2 position)
+    {
+        Vector3 cp = viewport.getCamera().position;
+        float hvw = viewport.getWorldWidth() / 2f + 1f;
+        float hvh = viewport.getWorldHeight() / 2f + 1f;
+        return (position.x > cp.x - hvw && position.x < cp.x + hvw && position.y > cp.y - hvh
+                && position.y < cp.y + hvh);
+    }
+
+    private String getLastDrawCallStats()
+    {
+        return String.format("Renderer stats\n" + "FPS: %d\n" + "Objects drawn: %d/%d\n"
+                             + "Tiles skipped: %d/%d\n" + "Players skipped: %d/%d",
+                             Gdx.graphics.getFramesPerSecond(),
+                             (tileCount + playerCount) - (tilesSkipped + playersSkipped),
+                             tileCount + playerCount,
+                             tilesSkipped,
+                             tileCount,
+                             playersSkipped,
+                             playerCount);
+    }
+
     @Override
     public void resize(int width, int height)
     {
@@ -170,22 +202,39 @@ public class GameRenderer extends Renderer
 
             //            Vector2 parallax = player.getLinearVelocity();
             //            parallax.scl(-.15f * Renderer.gameTime.getDeltaTime());
-            tile.draw(spriteBatch);
+            //            tile.draw(spriteBatch);
         }
 
-        for (SceneTile tile : game.getCurrentLevel().getTiles())
+        Array<SceneTile> tiles = game.getCurrentLevel().getTiles();
+        tileCount = tiles.size;
+        for (SceneTile tile : tiles)
         {
-            tile.draw(spriteBatch);
+            if (visible(tile.getPosition()))
+            {
+                tile.draw(spriteBatch);
+            } else
+            {
+                tilesSkipped++;
+            }
         }
 
-        for (Player player : game.getCurrentLevel().getPlayers())
+        Array<Player> players = game.getCurrentLevel().getPlayers();
+        playerCount = players.size;
+        for (Player player : players)
         {
             if (player instanceof Enemy)
             {
                 Enemy enemy = (Enemy) player;
-                PlayerSceneTile enemyAnimation = enemyAnimations.get(enemy.getEnemySprite());
-                enemyAnimation.setCenter(enemy.getPosition());
-                enemyAnimation.draw(spriteBatch);
+                Vector2 pos = enemy.getPosition();
+                if (visible(pos))
+                {
+                    PlayerSceneTile enemyAnimation = enemyAnimations.get(enemy.getEnemySprite());
+                    enemyAnimation.setCenter(pos);
+                    enemyAnimation.draw(spriteBatch);
+                } else
+                {
+                    playersSkipped++;
+                }
             }
         }
 
@@ -206,6 +255,13 @@ public class GameRenderer extends Renderer
     @Override
     public void update()
     {
+        game.getGuiRenderer().getRenderStats().getLabel().setText(getLastDrawCallStats());
+
+        tileCount = 0;
+        tilesSkipped = 0;
+        playerCount = 0;
+        playersSkipped = 0;
+
         if (!isUpdatable || game.isPaused()) return;
 
         timer += gameTime.getDeltaTime();

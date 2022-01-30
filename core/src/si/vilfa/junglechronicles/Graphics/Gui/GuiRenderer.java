@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import si.vilfa.junglechronicles.Events.Event;
 import si.vilfa.junglechronicles.Events.EventListener;
 import si.vilfa.junglechronicles.Events.GameEvent;
+import si.vilfa.junglechronicles.Events.MenuEvent;
 import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Graphics.Renderer;
 
@@ -25,6 +26,9 @@ public class GuiRenderer extends Renderer implements EventListener
     private final PauseMenuGuiElement pauseMenu;
     private final OptionsMenuGuiElement optionsMenu;
     private final LeaderboardGuiElement leaderboardMenu;
+    private final RendererStatsGuiElement renderStats;
+
+    private boolean isRenderStatsEnabled = false;
 
     private final Image background;
 
@@ -39,12 +43,15 @@ public class GuiRenderer extends Renderer implements EventListener
         pauseMenu = new PauseMenuGuiElement(game);
         optionsMenu = new OptionsMenuGuiElement(game);
         leaderboardMenu = new LeaderboardGuiElement(game);
+        renderStats = new RendererStatsGuiElement(game);
 
         background = new Image();
         background.setFillParent(true);
         background.setColor(0, 0, 0, 0.25f);
 
         stage = new Stage(guiViewport);
+
+        stage.addActor(renderStats.getActor());
     }
 
     public HudGuiElement getHud()
@@ -72,9 +79,19 @@ public class GuiRenderer extends Renderer implements EventListener
         return leaderboardMenu;
     }
 
+    public RendererStatsGuiElement getRenderStats()
+    {
+        return renderStats;
+    }
+
     public Stage getStage()
     {
         return stage;
+    }
+
+    public boolean isRenderStatsEnabled()
+    {
+        return isRenderStatsEnabled;
     }
 
     @Override
@@ -83,29 +100,58 @@ public class GuiRenderer extends Renderer implements EventListener
         if (event.getType().equals(GameEvent.GAME_SCREEN_CHANGE) && event.getEventData().size == 1)
         {
             GameScreen gameScreen = (GameScreen) event.getEventData().first();
+            stage.clear();
+            if (isRenderStatsEnabled) stage.addActor(renderStats.getActor());
+
             switch (gameScreen)
             {
                 case IN_GAME:
-                    stage.clear();
                     stage.addActor(hud.getActor());
                     break;
                 case MAIN_MENU:
-                    stage.clear();
                     stage.addActor(background);
                     stage.addActor(mainMenu.getActor());
                     break;
                 case PAUSE_MENU:
-                    stage.clear();
                     stage.addActor(background);
                     stage.addActor(pauseMenu.getActor());
                     break;
                 case OPTIONS_MENU:
-                    stage.clear();
                     stage.addActor(background);
                     stage.addActor(optionsMenu.getActor());
                     break;
                 case LEADERBOARD_MENU:
-                    stage.clear();
+                    stage.addActor(background);
+                    stage.addActor(leaderboardMenu.getActor());
+                    break;
+            }
+        }
+
+        if (event.getType().equals(MenuEvent.RENDER_STATS_BUTTON_CLICK))
+        {
+            isRenderStatsEnabled = !isRenderStatsEnabled;
+
+            stage.clear();
+            if (isRenderStatsEnabled) stage.addActor(renderStats.getActor());
+
+            switch (game.getGameScreen())
+            {
+                case IN_GAME:
+                    stage.addActor(hud.getActor());
+                    break;
+                case MAIN_MENU:
+                    stage.addActor(background);
+                    stage.addActor(mainMenu.getActor());
+                    break;
+                case PAUSE_MENU:
+                    stage.addActor(background);
+                    stage.addActor(pauseMenu.getActor());
+                    break;
+                case OPTIONS_MENU:
+                    stage.addActor(background);
+                    stage.addActor(optionsMenu.getActor());
+                    break;
+                case LEADERBOARD_MENU:
                     stage.addActor(background);
                     stage.addActor(leaderboardMenu.getActor());
                     break;
@@ -136,6 +182,7 @@ public class GuiRenderer extends Renderer implements EventListener
         pauseMenu.dispose();
         optionsMenu.dispose();
         leaderboardMenu.dispose();
+        renderStats.dispose();
     }
 
     @Override
@@ -144,6 +191,7 @@ public class GuiRenderer extends Renderer implements EventListener
         mainMenu.update();
         pauseMenu.update();
         optionsMenu.update();
+        renderStats.update();
         if (!isUpdatable || game.isPaused()) return;
         hud.update();
         stage.act();
