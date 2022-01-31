@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import si.vilfa.junglechronicles.Events.GameEvent;
 import si.vilfa.junglechronicles.Events.PlayerEvent;
+import si.vilfa.junglechronicles.Graphics.Renderer;
 import si.vilfa.junglechronicles.Input.Events.KeyDownInputEvent;
 import si.vilfa.junglechronicles.Input.Events.KeyUpInputEvent;
 import si.vilfa.junglechronicles.Level.Objects.GameBlock;
@@ -24,6 +25,11 @@ public class HumanPlayer extends Player
     private State state;
     private boolean isPressedDown;
 
+    private float timer = 0f;
+    private boolean jumpLock = false;
+    private int jumpCount = 0;
+    private final float jumpTimeout = 0.5f;
+
     public HumanPlayer(Body body)
     {
         super(body);
@@ -35,6 +41,22 @@ public class HumanPlayer extends Player
     public void update()
     {
         if (!isUpdatable) return;
+
+        if (jumpCount >= 3)
+        {
+            jumpLock = true;
+        }
+
+        if (jumpLock)
+        {
+            timer += Renderer.gameTime.getDeltaTime();
+            if (timer >= jumpTimeout)
+            {
+                jumpLock = false;
+                jumpCount = 0;
+                timer = 0f;
+            }
+        }
     }
 
     @Override
@@ -108,6 +130,8 @@ public class HumanPlayer extends Player
                 break;
             case Input.Keys.UP:
             case Input.Keys.W:
+                if (jumpLock) break;
+
                 setVelocity(new Vector2(0f, 6.5f));
 
                 if (State.getRight().contains(state, false))
@@ -117,6 +141,8 @@ public class HumanPlayer extends Player
                 {
                     setState(State.JUMP_LEFT);
                 }
+
+                jumpCount++;
                 break;
             case Input.Keys.DOWN:
             case Input.Keys.S:

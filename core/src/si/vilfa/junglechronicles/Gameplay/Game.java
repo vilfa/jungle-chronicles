@@ -225,10 +225,17 @@ public class Game extends GameComponent implements EventListener, InputEventList
                     resume();
                 }
                 break;
+            case NEXT_LEVEL_BUTTON_CLICK:
+                currentLevelOrdinal = (currentLevelOrdinal + 1) % 3 + 1;
+                resetWithLevel(currentLevelOrdinal);
+                gameScreens.clear();
+                pushGameScreen(GameScreen.MAIN_MENU);
+                pushGameScreen(GameScreen.IN_GAME);
             case MAIN_MENU_BUTTON_CLICK:
                 reset();
                 gameScreens.clear();
                 pushGameScreen(GameScreen.MAIN_MENU);
+                gameRenderer.followPlayer(player);
                 break;
             case REPLAY_BUTTON_CLICK:
                 reset();
@@ -257,6 +264,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
                     popGameScreen(GameScreen.IN_GAME);
                     reset();
                 }
+                gameRenderer.followPlayer(player);
                 break;
             case RESOLUTION_BUTTON_CLICK:
                 dispatchEvent(MenuEvent.RESOLUTION_BUTTON_CLICK);

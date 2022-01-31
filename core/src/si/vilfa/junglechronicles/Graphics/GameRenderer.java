@@ -143,7 +143,7 @@ public class GameRenderer extends Renderer
         }
     }
 
-    private void followPlayer(Player player)
+    public void followPlayer(Player player)
     {
         Vector2 newCameraPos = new Vector2(player.getPosition());
         if (newCameraPos.x < viewport.getWorldWidth() / 2f)
