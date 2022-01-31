@@ -22,13 +22,12 @@ public class HumanPlayer extends Player
 {
     public static int MAX_LIVES = 2;
     public static int MAX_HEALTH = 100;
+    private final float jumpTimeout = 0.5f;
     private State state;
     private boolean isPressedDown;
-
     private float timer = 0f;
     private boolean jumpLock = false;
     private int jumpCount = 0;
-    private final float jumpTimeout = 0.5f;
 
     public HumanPlayer(Body body)
     {

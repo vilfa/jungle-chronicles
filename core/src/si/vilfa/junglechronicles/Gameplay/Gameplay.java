@@ -94,7 +94,7 @@ public class Gameplay extends DrawableGameComponent
         if (!isDrawable) return;
         gameRenderer.draw();
         guiRenderer.draw();
-//        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
+        //        debugRenderer.render(game.getPhysics().getWorld(), gameRenderer.getCombined());
     }
 
     @Override

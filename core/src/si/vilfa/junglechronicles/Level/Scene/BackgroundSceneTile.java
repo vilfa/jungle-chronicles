@@ -17,9 +17,8 @@ public class BackgroundSceneTile extends SceneObject
 {
     private final TextureRegion background;
     private final Game game;
-    private Viewport viewport;
-
     private final Vector2 position;
+    private Viewport viewport;
 
     public BackgroundSceneTile(TiledMapImageLayer layer, Game game)
     {
