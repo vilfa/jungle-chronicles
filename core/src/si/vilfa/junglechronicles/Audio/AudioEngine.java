@@ -67,7 +67,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
                 case GAMEPLAY_START:
                 case GAMEPLAY_RESUME:
                     sounds.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
-                          .forEach(v -> v.play(soundVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.2f));
                     music.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
                          .forEach(Music::play);
                     sequences.getOrDefault(GameEvent.GAMEPLAY_START, new Array<>())
@@ -81,15 +81,15 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
                     break;
                 case PLAYER_ENEMY_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_ENEMY_CONTACT, new Array<>())
-                          .forEach(v -> v.play(soundVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.2f));
                     break;
                 case PLAYER_TRAP_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_TRAP_CONTACT, new Array<>())
-                          .forEach(v -> v.play(soundVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.2f));
                     break;
                 case PLAYER_COLLECTIBLE_CONTACT:
                     sounds.getOrDefault(GameEvent.PLAYER_COLLECTIBLE_CONTACT, new Array<>())
-                          .forEach(v -> v.play(soundVolume * 0.5f));
+                          .forEach(v -> v.play(soundVolume * 0.2f));
                     break;
             }
         } else if (event.getType() instanceof PlayerEvent)
@@ -205,7 +205,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     public void setSoundVolume(float soundVolume)
     {
         this.soundVolume = Math.min(1f, Math.max(0f, soundVolume));
-        sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.soundVolume)));
+        sequences.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.soundVolume * 0.2f)));
     }
 
     public float getMusicVolume()
@@ -216,7 +216,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     public void setMusicVolume(float musicVolume)
     {
         this.musicVolume = Math.min(1f, Math.max(0f, musicVolume));
-        music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.musicVolume * 0.1f)));
+        music.forEach((k, v) -> v.forEach(vv -> vv.setVolume(this.musicVolume * 0.2f)));
     }
 
     @Override
