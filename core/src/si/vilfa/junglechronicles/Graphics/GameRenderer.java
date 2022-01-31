@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import si.vilfa.junglechronicles.Gameplay.Game;
 import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.PlayerSceneTile;
@@ -44,7 +45,7 @@ public class GameRenderer extends Renderer
         initializePlayerAnimations();
         initializeEnemyAnimations();
 
-        //        gameState.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
+        game.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
     }
 
     private void initializePlayerAnimations()
@@ -179,6 +180,11 @@ public class GameRenderer extends Renderer
                              playerCount);
     }
 
+    public Viewport getViewport()
+    {
+        return viewport;
+    }
+
     @Override
     public void resize(int width, int height)
     {
@@ -198,11 +204,7 @@ public class GameRenderer extends Renderer
 
         for (BackgroundSceneTile tile : game.getCurrentLevel().getBackgrounds())
         {
-            // TODO: 17/12/2021 Implement parallax background scrolling
-
-            //            Vector2 parallax = player.getLinearVelocity();
-            //            parallax.scl(-.15f * Renderer.gameTime.getDeltaTime());
-            //            tile.draw(spriteBatch);
+            tile.draw(spriteBatch);
         }
 
         Array<SceneTile> tiles = game.getCurrentLevel().getTiles();

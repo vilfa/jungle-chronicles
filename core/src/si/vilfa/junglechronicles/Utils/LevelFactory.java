@@ -298,7 +298,7 @@ public class LevelFactory implements Loggable
         if (layer.getTextureRegion() != null)
         {
             log("process background layer:" + layer.getName());
-            BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer);
+            BackgroundSceneTile backgroundTile = new BackgroundSceneTile(layer, game);
             backgroundTile.setSourceLayer(sourceLayer);
             game.getCurrentLevel().addItem(backgroundTile);
         } else

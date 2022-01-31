@@ -135,7 +135,7 @@ public class GameEndMenuGuiElement extends GuiElement
     @Override
     public void update()
     {
-        scoreLabel.setText(String.format("Score: %d\nTime: %.2fs",
+        scoreLabel.setText(String.format("Score: %d\nTime: %.1fs",
                                          game.getPlayerScore(),
                                          game.getCurrentLevelDuration()));
     }

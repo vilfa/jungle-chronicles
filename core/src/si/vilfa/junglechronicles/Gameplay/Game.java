@@ -41,6 +41,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
     private boolean isPaused = true;
     private boolean isGameEnd = false;
+    private int currentLevelOrdinal = 1;
 
     public Game()
     {
@@ -131,7 +132,10 @@ public class Game extends GameComponent implements EventListener, InputEventList
                     {
                         GameBlock object = (GameBlock) event.getEventData().first();
 
-                        if (playerHealth - object.getTrapPoints() <= 0f)
+                        if (playerHealth - object.getTrapPoints() <= 0f && playerLives == 0f)
+                        {
+                            playerHealth = 0f;
+                        } else if (playerHealth - object.getTrapPoints() <= 0f)
                         {
                             playerLives -= 1f;
                             playerHealth = 100f;
@@ -141,9 +145,6 @@ public class Game extends GameComponent implements EventListener, InputEventList
                         }
                     } else if (event.getType().equals(GameEvent.PLAYER_ENEMY_CONTACT))
                     {
-                        //                Enemy enemy = (Enemy) event.getEventData().first();
-
-                        // TODO: 24/12/2021 Maybe add different health point decrements for enemies
                         if (playerHealth - 100f <= 0f && playerLives == 0f)
                         {
                             playerHealth = 0f;
@@ -169,10 +170,10 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 }
                 break;
             case PLAYER_LEVEL_END_CONTACT:
-                log("finished level!");
-                log("level score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
-                log("level duration:" + gameProperties.get(GameProperty.LEVEL_DURATION));
-                preferences.addHighScore(gameProperties.get(GameProperty.PLAYER_SCORE).intValue());
+                log("FINISHED LEVEL!");
+                log("level score:" + getPlayerScore());
+                log("level duration:" + getCurrentLevelDuration());
+                preferences.addHighScore(getPlayerScore());
                 dispatchEvent(GameEvent.GAME_LEADERBOARD_UPDATE);
                 dispatchEvent(GameEvent.GAME_END);
                 dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, GameScreen.GAME_END, false);
@@ -188,8 +189,10 @@ public class Game extends GameComponent implements EventListener, InputEventList
             && gameProperties.get(GameProperty.PLAYER_HEALTH) == 0f)
         {
             log("PLAYER DIED!");
-            log("level score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
-            log("level duration:" + gameProperties.get(GameProperty.LEVEL_DURATION));
+            log("level score:" + getPlayerScore());
+            log("level duration:" + getCurrentLevelDuration());
+            preferences.addHighScore(getPlayerScore());
+            dispatchEvent(GameEvent.GAME_LEADERBOARD_UPDATE);
             dispatchEvent(GameEvent.GAME_END);
             dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, GameScreen.GAME_END, true);
             isGameEnd = true;
@@ -215,6 +218,11 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 if (event.getEventData().size == 1)
                 {
                     log("change level to:" + event.getEventData().first());
+                    resetWithLevel((int) event.getEventData().first());
+                    gameScreens.clear();
+                    pushGameScreen(GameScreen.MAIN_MENU);
+                    pushGameScreen(GameScreen.IN_GAME);
+                    resume();
                 }
                 break;
             case MAIN_MENU_BUTTON_CLICK:
@@ -307,7 +315,12 @@ public class Game extends GameComponent implements EventListener, InputEventList
         physics.dispose();
 
         physics = new PhysicsEngine(this);
-        currentLevel = LevelFactory.getInstance().createLevelFromTmx(this, "Levels/Level1.tmx");
+        currentLevel = LevelFactory.getInstance()
+                                   .createLevelFromTmx(this,
+                                                       "Levels/Level" + currentLevelOrdinal
+                                                       + ".tmx");
+
+        currentLevel.getBackgrounds().first().setViewport(gameRenderer.getViewport());
 
         initializeGameProperties();
         dispatchEvent(GameEvent.GAMEPLAY_RESET);
@@ -316,13 +329,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
     private void resetWithLevel(int level)
     {
-        if (level > 3)
-        {
-            error("unknown level:" + level);
-            log("loading default level:1");
-            level = 1;
-        }
-
+        currentLevelOrdinal = level;
         isPaused = true;
         log("reset with level:" + level);
 
@@ -332,7 +339,11 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
         physics = new PhysicsEngine(this);
         currentLevel = LevelFactory.getInstance()
-                                   .createLevelFromTmx(this, "Levels/Level" + level + ".tmx");
+                                   .createLevelFromTmx(this,
+                                                       "Levels/Level" + currentLevelOrdinal
+                                                       + ".tmx");
+
+        currentLevel.getBackgrounds().first().setViewport(gameRenderer.getViewport());
 
         initializeGameProperties();
         dispatchEvent(GameEvent.GAMEPLAY_RESET);
@@ -396,7 +407,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
     public int getPlayerScore()
     {
-        return Math.round(gameProperties.get(GameProperty.PLAYER_SCORE));
+        return gameProperties.get(GameProperty.PLAYER_SCORE).intValue();
     }
 
     public HashMap<GameProperty, Float> getGameProperties()
