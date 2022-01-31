@@ -7,5 +7,5 @@ package si.vilfa.junglechronicles.Graphics.Gui;
  **/
 public enum GameScreen
 {
-    MAIN_MENU, PAUSE_MENU, OPTIONS_MENU, IN_GAME, LEADERBOARD_MENU
+    MAIN_MENU, PAUSE_MENU, LEVELS_MENU, OPTIONS_MENU, IN_GAME, LEADERBOARD_MENU, GAME_END
 }

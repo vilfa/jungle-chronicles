@@ -61,7 +61,7 @@ public class AudioEngine extends GameComponent implements EventListener, Music.O
     {
         if (event.getType() instanceof GameEvent)
         {
-//            if (game.isPaused()) return;
+            //            if (game.isPaused()) return;
             switch ((GameEvent) event.getType())
             {
                 case GAMEPLAY_START:

@@ -19,5 +19,6 @@ public enum GameEvent implements EventType
     GAMEPLAY_PAUSE,
     GAMEPLAY_RESUME,
     GAME_SCREEN_CHANGE,
-    GAME_LEADERBOARD_UPDATE
+    GAME_LEADERBOARD_UPDATE,
+    GAME_END
 }

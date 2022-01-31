@@ -18,6 +18,7 @@ public class MainMenuGuiElement extends GuiElement
 {
     private final Table actor;
     private final TextButton playButton;
+    private final TextButton levelsButton;
     private final TextButton optionsButton;
     private final TextButton leaderboardButton;
     private final TextButton exitButton;
@@ -29,6 +30,7 @@ public class MainMenuGuiElement extends GuiElement
         actor = new Table();
 
         playButton = new TextButton("Play", skin);
+        levelsButton = new TextButton("Levels", skin);
         optionsButton = new TextButton("Options", skin);
         leaderboardButton = new TextButton("Leaderboard", skin);
         exitButton = new TextButton("Exit", skin);
@@ -36,6 +38,7 @@ public class MainMenuGuiElement extends GuiElement
         initializeElement();
 
         this.registerEventListener(MenuEvent.PLAY_BUTTON_CLICK, game)
+            .registerEventListener(MenuEvent.LEVELS_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.OPTIONS_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.LEADERBOARD_BUTTON_CLICK, game)
             .registerEventListener(MenuEvent.EXIT_BUTTON_CLICK, game);
@@ -62,6 +65,16 @@ public class MainMenuGuiElement extends GuiElement
                 super.clicked(event, x, y);
                 dispatchEvent(MenuEvent.PLAY_BUTTON_CLICK);
                 log("play button clicked");
+            }
+        });
+        levelsButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                dispatchEvent(MenuEvent.LEVELS_BUTTON_CLICK);
+                log("levels button clicked");
             }
         });
         optionsButton.addListener(new ClickListener()
@@ -96,6 +109,7 @@ public class MainMenuGuiElement extends GuiElement
         });
 
         actor.add(playButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
+        actor.add(levelsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(optionsButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(leaderboardButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();
         actor.add(exitButton).pad(10f, 0f, 10f, 0f).width(200f).height(50f).row();

@@ -40,6 +40,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
     private GuiRenderer guiRenderer;
 
     private boolean isPaused = true;
+    private boolean isGameEnd = false;
 
     public Game()
     {
@@ -173,6 +174,9 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 log("level duration:" + gameProperties.get(GameProperty.LEVEL_DURATION));
                 preferences.addHighScore(gameProperties.get(GameProperty.PLAYER_SCORE).intValue());
                 dispatchEvent(GameEvent.GAME_LEADERBOARD_UPDATE);
+                dispatchEvent(GameEvent.GAME_END);
+                dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, GameScreen.GAME_END, false);
+                isGameEnd = true;
                 break;
             case GAMEPLAY_START:
             case GAMEPLAY_STOP:
@@ -183,7 +187,12 @@ public class Game extends GameComponent implements EventListener, InputEventList
         if (gameProperties.get(GameProperty.PLAYER_LIVES) == 0f
             && gameProperties.get(GameProperty.PLAYER_HEALTH) == 0f)
         {
-            log("YOU ARE DEAD!");
+            log("PLAYER DIED!");
+            log("level score:" + gameProperties.get(GameProperty.PLAYER_SCORE));
+            log("level duration:" + gameProperties.get(GameProperty.LEVEL_DURATION));
+            dispatchEvent(GameEvent.GAME_END);
+            dispatchEvent(GameEvent.GAME_SCREEN_CHANGE, GameScreen.GAME_END, true);
+            isGameEnd = true;
         }
     }
 
@@ -196,6 +205,27 @@ public class Game extends GameComponent implements EventListener, InputEventList
         switch ((MenuEvent) event.getType())
         {
             case PLAY_BUTTON_CLICK:
+                pushGameScreen(GameScreen.IN_GAME);
+                resume();
+                break;
+            case LEVELS_BUTTON_CLICK:
+                pushGameScreen(GameScreen.LEVELS_MENU);
+                break;
+            case LEVEL_CHANGE_BUTTON_CLICK:
+                if (event.getEventData().size == 1)
+                {
+                    log("change level to:" + event.getEventData().first());
+                }
+                break;
+            case MAIN_MENU_BUTTON_CLICK:
+                reset();
+                gameScreens.clear();
+                pushGameScreen(GameScreen.MAIN_MENU);
+                break;
+            case REPLAY_BUTTON_CLICK:
+                reset();
+                gameScreens.clear();
+                pushGameScreen(GameScreen.MAIN_MENU);
                 pushGameScreen(GameScreen.IN_GAME);
                 resume();
                 break;
@@ -281,6 +311,32 @@ public class Game extends GameComponent implements EventListener, InputEventList
 
         initializeGameProperties();
         dispatchEvent(GameEvent.GAMEPLAY_RESET);
+        isGameEnd = false;
+    }
+
+    private void resetWithLevel(int level)
+    {
+        if (level > 3)
+        {
+            error("unknown level:" + level);
+            log("loading default level:1");
+            level = 1;
+        }
+
+        isPaused = true;
+        log("reset with level:" + level);
+
+        currentLevel.dispose();
+        player.dispose();
+        physics.dispose();
+
+        physics = new PhysicsEngine(this);
+        currentLevel = LevelFactory.getInstance()
+                                   .createLevelFromTmx(this, "Levels/Level" + level + ".tmx");
+
+        initializeGameProperties();
+        dispatchEvent(GameEvent.GAMEPLAY_RESET);
+        isGameEnd = false;
     }
 
     public GameRenderer getGameRenderer()
@@ -338,6 +394,11 @@ public class Game extends GameComponent implements EventListener, InputEventList
         return gameProperties.get(GameProperty.LEVEL_DURATION);
     }
 
+    public int getPlayerScore()
+    {
+        return Math.round(gameProperties.get(GameProperty.PLAYER_SCORE));
+    }
+
     public HashMap<GameProperty, Float> getGameProperties()
     {
         return gameProperties;
@@ -356,7 +417,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
     @Override
     public void update()
     {
-        if (!isUpdatable || isPaused) return;
+        if (!isUpdatable || isPaused || isGameEnd) return;
         gameProperties.compute(GameProperty.LEVEL_DURATION,
                                (k, v) -> v += GameRenderer.gameTime.getDeltaTime());
         physics.update();

@@ -168,8 +168,8 @@ public class GameRenderer extends Renderer
 
     private String getLastDrawCallStats()
     {
-        return String.format("Renderer stats\n" + "FPS: %d\n" + "Objects drawn: %d/%d\n"
-                             + "Tiles skipped: %d/%d\n" + "Players skipped: %d/%d",
+        return String.format("FPS: %d\n" + "Objects drawn: %d/%d\n" + "Tiles skipped: %d/%d\n"
+                             + "Players skipped: %d/%d",
                              Gdx.graphics.getFramesPerSecond(),
                              (tileCount + playerCount) - (tilesSkipped + playersSkipped),
                              tileCount + playerCount,

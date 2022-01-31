@@ -210,7 +210,8 @@ public class LevelFactory implements Loggable
                                                                                      shape,
                                                                                      5f,
                                                                                      0.05f,
-                                                                                     0f);
+                            //                                                                                     0f);
+                                                                                     0.15f);
                 }
             }
 
