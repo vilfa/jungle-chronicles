@@ -24,6 +24,7 @@ $ archlinux-java status
 
 If using any other distro, use the appropriate equivalent commands. As LibGDX supports many other
 platforms, this should also work on Windows with the appropriate requirements, but is yet untested.
+Just make sure that your graphics driver is up-to-date and supports OpenGL.
 
 ## Installation/Usage
 
