@@ -226,7 +226,7 @@ public class Game extends GameComponent implements EventListener, InputEventList
                 }
                 break;
             case NEXT_LEVEL_BUTTON_CLICK:
-                currentLevelOrdinal = (currentLevelOrdinal + 1) % 3 + 1;
+                currentLevelOrdinal = currentLevelOrdinal + 1 > 3 ? 1 : currentLevelOrdinal + 1;
                 resetWithLevel(currentLevelOrdinal);
                 gameScreens.clear();
                 pushGameScreen(GameScreen.MAIN_MENU);
