@@ -123,6 +123,7 @@ public class Level extends GameLevel
         ARRIVE_DECELERATION_RADIUS("arriveDecelerationRadius"),
         ARRIVE_TOLERANCE("arriveTolerance"),
         ARRIVE_TTT("arriveTimeToTarget"),
+        FRIEND_SPRITE_TYPE("friendSpriteType"),
         ENEMY_LEFT_BOUND("enemyLeftBound"),
         ENEMY_RIGHT_BOUND("enemyRightBound"),
         ENEMY_TOP_BOUND("enemyTopBound"),

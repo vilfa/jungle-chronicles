@@ -10,6 +10,8 @@ import si.vilfa.junglechronicles.Player.AI.Agents.SimpleAgent;
  **/
 public class Friend extends SimpleAgent
 {
+    private FriendSprite friendSprite;
+
     public Friend(Body body)
     {
         super(body);
@@ -21,5 +23,27 @@ public class Friend extends SimpleAgent
     {
         body.applyLinearImpulse(steeringOutput.linear, body.getLocalCenter(), true);
         body.applyAngularImpulse(steeringOutput.angular, true);
+    }
+
+    public Friend.FriendSprite getFriendSprite()
+    {
+        return friendSprite;
+    }
+
+    public void setFriendSprite(Integer friendSprite)
+    {
+        switch (friendSprite)
+        {
+            case 1:
+                this.friendSprite = Friend.FriendSprite.FRIEND_ONE;
+                break;
+            default:
+                this.friendSprite = Friend.FriendSprite.FRIEND_ONE;
+                break;
+        }
+    }
+
+    public enum FriendSprite {
+        FRIEND_ONE
     }
 }

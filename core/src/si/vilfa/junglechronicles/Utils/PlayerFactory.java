@@ -241,6 +241,9 @@ public class PlayerFactory implements Loggable
                 } else if (Level.AiPlayerProperty.WANDER.equals(entry.getKey()))
                 {
                     player.setBehaviour(new Wander<>(player));
+                } else if (Level.AiPlayerProperty.FRIEND_SPRITE_TYPE.equals(entry.getKey()))
+                {
+                    ((Friend) player).setFriendSprite((Integer) entry.getValue());
                 }
             }
             for (Map.Entry<Level.Property, Object> entry : props.entrySet())

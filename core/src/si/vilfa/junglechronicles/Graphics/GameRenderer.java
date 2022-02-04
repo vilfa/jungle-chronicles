@@ -14,6 +14,7 @@ import si.vilfa.junglechronicles.Level.Scene.BackgroundSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.PlayerSceneTile;
 import si.vilfa.junglechronicles.Level.Scene.SceneTile;
 import si.vilfa.junglechronicles.Player.AI.Enemy;
+import si.vilfa.junglechronicles.Player.AI.Friend;
 import si.vilfa.junglechronicles.Player.Human.HumanPlayer;
 import si.vilfa.junglechronicles.Player.Player;
 
@@ -30,6 +31,7 @@ public class GameRenderer extends Renderer
 {
     private final HashMap<HumanPlayer.State, PlayerSceneTile> playerAnimations = new HashMap<>();
     private final HashMap<Enemy.EnemySprite, PlayerSceneTile> enemyAnimations = new HashMap<>();
+    private final HashMap<Friend.FriendSprite, PlayerSceneTile> friendAnimations = new HashMap<>();
 
     private int tileCount = 0;
     private int tilesSkipped = 0;
@@ -43,6 +45,7 @@ public class GameRenderer extends Renderer
         super(game);
 
         initializePlayerAnimations();
+        initializeFriendAnimations();
         initializeEnemyAnimations();
 
         game.getCurrentLevel().getBackgrounds().first().setViewport(viewport);
@@ -100,6 +103,41 @@ public class GameRenderer extends Renderer
                                                      false,
                                                      playerScale,
                                                      playerOffset));
+        }
+    }
+
+    private void initializeFriendAnimations()
+    {
+        HashMap<Friend.FriendSprite, TextureAtlas> texturesByFriends = new HashMap<>();
+        texturesByFriends.put(Friend.FriendSprite.FRIEND_ONE,
+                              new TextureAtlas("Graphics/Friends/Friend1.atlas"));
+
+        Vector2 friendScale = new Vector2(1f, 1f);
+        if (game.getCurrentLevel().getFriends().size > 0)
+        {
+            Vector2 friendBox = game.getCurrentLevel().getFriends().first().getBox();
+            TextureRegion friendRegion = texturesByFriends.get(Friend.FriendSprite.FRIEND_ONE)
+                                                          .getRegions()
+                                                          .first();
+            friendScale.set(friendBox.x / friendRegion.getRegionWidth(),
+                            friendBox.y / friendRegion.getRegionHeight());
+        }
+
+        for (Map.Entry<Friend.FriendSprite, TextureAtlas> entry : texturesByFriends.entrySet())
+        {
+            int i = 0;
+            TreeMap<Integer, TextureAtlas.AtlasRegion> animationSpec = new TreeMap<>();
+            for (TextureAtlas.AtlasRegion region : entry.getValue().getRegions())
+            {
+                animationSpec.put(i++, region);
+            }
+
+            friendAnimations.put(entry.getKey(), new PlayerSceneTile(animationSpec,
+                                                                     Animation.PlayMode.LOOP,
+                                                        1 / 10f,
+                                                               false,
+                                                               false,
+                                                                     friendScale));
         }
     }
 
@@ -237,6 +275,19 @@ public class GameRenderer extends Renderer
                 {
                     playersSkipped++;
                 }
+            } else if (player instanceof Friend)
+            {
+                Friend friend = (Friend) player;
+                Vector2 pos = friend.getPosition();
+                if (visible(pos))
+                {
+                    PlayerSceneTile friendAnimation = friendAnimations.get(friend.getFriendSprite());
+                    friendAnimation.setCenter(pos);
+                    friendAnimation.draw(spriteBatch);
+                } else
+                {
+                    playersSkipped++;
+                }
             }
         }
 
@@ -273,6 +324,7 @@ public class GameRenderer extends Renderer
             timer = 0f;
         }
 
+        friendAnimations.forEach((k, v) -> v.update());
         enemyAnimations.forEach((k, v) -> v.update());
         playerAnimations.get(game.getPlayer().getState()).update();
 
