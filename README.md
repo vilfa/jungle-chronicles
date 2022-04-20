@@ -41,4 +41,4 @@ $ ./gradlew run
 
 ## License
 
-No license.
+[MIT](https://github.com/vilfa/jungle-chronicles/blob/master/LICENSE)
